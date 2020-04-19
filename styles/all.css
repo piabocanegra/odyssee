@@ -1,0 +1,99 @@
+
+body {
+  font-family: minion-pro-caption,serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #484848;
+  font-size: 35px;
+  text-align: left;
+  background: #FFF8EB;
+  margin: 30px;
+}
+
+#titleText {
+  width: 800px;
+  margin: 0 auto;
+  font-size: 35px;
+  font-family: minion-pro-caption,serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+#content {
+  width: 800px;
+  margin: 0 auto;
+}
+
+h4 {
+  font-size: 35px;
+  color: #484848;
+  font-family: minion-pro-caption,serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+#text {
+  height: 820px;
+  background-color: #FFF8EB;
+  font-size: 20px;
+}
+
+#awareness {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+
+#reflection {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+
+#vulnerability {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+li a {
+  display: block;
+  color: #484848;
+  text-align: center;
+  padding: 8px 10px;
+  text-decoration: none;
+}
+
+li a:hover {
+  text-decoration: line-through;
+}
+
+#odyssee {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+#button {
+font-family: 'Courier new';
+display: block;
+color: #484848;
+text-align: center;
+padding: 8px 10px;
+text-decoration: none;
+}
+
+#button:hover {
+  text-decoration: line-through;
+}
