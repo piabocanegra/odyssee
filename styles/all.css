@@ -97,3 +97,6 @@ text-decoration: none;
 #button:hover {
   text-decoration: line-through;
 }
+
+.container { display: table; }
+.container__inner { display: table-cell; vertical-align: middle; }
