@@ -98,5 +98,10 @@ text-decoration: none;
   text-decoration: line-through;
 }
 
-.container { display: table; }
-.container__inner { display: table-cell; vertical-align: middle; }
+.container {
+  display: table;
+}
+
+.container__inner {
+  display: table-cell; vertical-align: middle;
+}
