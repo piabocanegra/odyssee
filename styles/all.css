@@ -85,7 +85,7 @@ li a:hover {
   width: 50%;
 }
 
-#button {
+.exploring_button {
 font-family: 'Courier new';
 display: block;
 color: #484848;
@@ -94,7 +94,7 @@ padding: 8px 10px;
 text-decoration: none;
 }
 
-#button:hover {
+.exploring_button:hover {
   text-decoration: line-through;
 }
 
@@ -104,4 +104,41 @@ text-decoration: none;
 
 .container__inner {
   display: table-cell; vertical-align: middle;
+}
+
+#slogan {
+  width: 800px;
+  margin: 0 auto;
+  font-size: 35px;
+  text-align: center;
+}
+
+.landing_btn {
+  border: 1px solid #484848;
+  background-color: white;
+  color: #484848;
+  padding: 20px 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+  border-radius: 15px;
+  font-family: 'Courier new';
+  text-decoration: none;
+  text-align: center;
+}
+
+.landing_btn:hover {
+  background-color: #F3F3F3;
+  color: #484848;
+}
+
+.center {
+  text-align: center;
+}
+
+#shiro-logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
