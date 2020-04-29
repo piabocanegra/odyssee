@@ -9,13 +9,17 @@
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-drag.v1.min.js"></script>
 </head>
+  <ul>
+    <li style="float:right;vertical-align:top"><a href="about.html">About</a></li>
+  </ul>
+<body>
+<br>
+<br>
 
-<ul>
-<li style="float:right"><a href="about.html">About</a></li>
-</ul>
-
-<body bgcolor= "#fff8eb" style= "text-align: center; color: #fff8eb; margin-bottom: 20px;">
-  <svg style="margin-top: 20" height="600" width="1000" class="main"/>
+<div style= "text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
+  <svg style="margin-top: 100;margin-bottom: 100" height="600" width="1000" class="indTwoWeeks"/>
+  <svg style="margin-top: 20; margin-bottom: 100" height="600" width="1000" class="aggTwoWeeks"/>
+</div>
   <script>
     let data;
     let email = "lh484@cornell.edu"; //hardcode
@@ -44,7 +48,8 @@
 
       var categoryMap = getFrequencyByKey("Activity", personData);
       var categoryFullMap = getFrequencyByKey("Activity", personData, 1);
-      drawMoodByActvitiy(".main", categoryMap, categoryFullMap);
+      drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks");
+      drawMoodByActvitiy(".aggTwoWeeks", categoryMap, categoryFullMap, "Everyone's last 2 weeks");
 
     }
 
@@ -177,7 +182,7 @@
       return finalMap;
     }
 
-    function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap) {
+    function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title) {
       let svg = d3.select(svgClass);
 
       let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
@@ -267,7 +272,7 @@
       svg.append('text')
         .attr('x', width/2)
         .attr('y', 50)
-        .text("Your last 2 weeks")
+        .text(title)
         .style("font-family", "Courier new")
         .style("font-size", 25)
         .style("fill", textColor)
@@ -360,7 +365,7 @@
     }
 
     function main() {
-      setUpFilters(".main");
+      setUpFilters(".indTwoWeeks");
       getData();
     }
 
