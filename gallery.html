@@ -187,6 +187,9 @@
 
       let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
       let keyList2 = Array.from(categoryFullMap.keys()).slice(0, numIcons);
+      console.log(categoryFullMap)
+      console.log(keyList);
+      console.log(keyList2);
       
       let reasonByActivity = getFrequencyByKeys("Activity", "Reason", personData);
       let feelingByActivity = getFrequencyByKeys("Activity", "Feeling", personData);
@@ -243,7 +246,7 @@
             return 'url(#' + moodList[avgMap[keyList[i]]] +')';
           })
           .on("mousemove", function() {
-            console.log(d)
+            console.log(keyList2)
             var tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].split("(")[0].toLowerCase() +"</br></br><b>FREQUENCY: </b>" + categoryMap.get(d) + "</br></br><b>AVERAGE MOOD: </b>" + moodList[avgMap[keyList[i]]].toLowerCase() + 
               "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[reasonMap[keyList[i]]];
             tooltip
