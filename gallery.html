@@ -42,14 +42,19 @@
 
     const getData = async () => {
       personData = await d3.json("fakeData.txt");
+      var everyoneData = await d3.csv("odyssee_data.csv");
+      console.log(everyoneData);
       
       // TODO for Jamal: replace next line with json list
       // personData = getPersonData(data, email);
 
       var categoryMap = getFrequencyByKey("Activity", personData);
       var categoryFullMap = getFrequencyByKey("Activity", personData, 1);
-      drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks");
-      drawMoodByActvitiy(".aggTwoWeeks", categoryMap, categoryFullMap, "Everyone's last 2 weeks");
+      drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks", personData);
+
+      var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
+      var categoryFullMap2 = getFrequencyByKey("Activity", everyoneData, 1);
+      drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap2, "Everyone's last 2 weeks", everyoneData);
 
     }
 
@@ -182,7 +187,7 @@
       return finalMap;
     }
 
-    function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title) {
+    function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, personData) {
       let svg = d3.select(svgClass);
 
       let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
