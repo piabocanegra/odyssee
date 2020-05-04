@@ -17,15 +17,15 @@
 <br>
 
 <div style= "text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
-  <svg style="margin-top: 100;margin-bottom: 100" height="600" width="1000" class="indTwoWeeks"/>
-  <svg style="margin-top: 20; margin-bottom: 100" height="600" width="1000" class="aggTwoWeeks"/>
+  <svg style="margin-top: 100;margin-bottom: 100" height="700" width="1000" class="indTwoWeeks"/>
+  <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="aggTwoWeeks"/>
 </div>
   <script>
     let data;
     let email = "lh484@cornell.edu"; //hardcode
     let personData = [];
     let width = 1000;
-    let height = 600;
+    let height = 700;
     let padding = 50;
     let numIcons = 6;
     let textColor = "#484848";
@@ -41,12 +41,11 @@
     let colorHexArray = {"Awful": "#9f265b", "Bad": "#ca614d", "Ok": "#edc3a3", "Good": "#f2d878", "Amazing": "#ffc500"};
 
     const getData = async () => {
+      // TODO for Jamal: replace next two lines with json list
+      // personData = getPersonData(data, email);
       personData = await d3.json("fakeData.txt");
       var everyoneData = await d3.csv("odyssee_data.csv");
-      console.log(everyoneData);
       
-      // TODO for Jamal: replace next line with json list
-      // personData = getPersonData(data, email);
 
       var categoryMap = getFrequencyByKey("Activity", personData);
       var categoryFullMap = getFrequencyByKey("Activity", personData, 1);
@@ -209,7 +208,7 @@
 
       let yScale = d3.scaleLinear()
         .domain([0, d3.max(keyList, function(d) {return categoryMap.get(d)})])
-        .range([height-padding*2, padding*2]);
+        .range([height-padding*5, padding*2]);
 
       // add tooltip
       let tooltip = d3.select("body")
@@ -304,11 +303,13 @@
         let moodLegend = d3.select(svgClass)
           .append("g")
           .attr("class", "moodLegend")
-          .attr("transform", "translate("+ (width-padding*3) + ","+ (padding*2) +")");
+          .attr("transform", "translate("+ (padding*2) + ","+ (height-padding*2.5) +")");
         moodLegend.append("text")
-          .attr("x", 0)
-          .attr("y", 0)
+          .attr("x", 2*padding*1.75)
+          .attr("y", 15)
           .text("Average mood")
+          .style("font-weight", "bold")
+          .style("text-anchor","middle")
           .style("font-family", "Courier new")
           .style("fill", textColor)
           .style("font-size", 12);
@@ -316,17 +317,19 @@
           .data(moodList)
           .enter()
           .append('circle')
-          .attr("cx", 5)
-          .attr("cy", function(d, i) { return (i)*padding/2.5 + padding/2.5})
+          .attr("cx", function(d, i) {return i*padding*1.75;})
+          .attr("cy", padding*1)
           .attr("r", 5)
           .style("fill", function(d) { return colorHexArray[d];});
         moodLegend.selectAll(".moodText")
           .data(moodList)
           .enter()
           .append('text')
-          .attr("x", padding/2)
-          .attr("y", function(d, i) { return (i)*padding/2.5 + padding/2.5 + 5})
+          .attr("x", function(d, i) {return i*padding*1.75;})
+          .attr("y", padding*1.65)
           .text(function(d) {return d;})
+          .style("font-weight", "bold")
+          .style("text-anchor","middle")
           .style("font-family", "Courier new")
           .style("fill", textColor)
           .style("font-size", 12);
@@ -336,11 +339,12 @@
           .append("g")
           .attr("class", "attitudeLegend")
           .attr("transform", "translate("+ (width-padding*9
-            ) + ","+ (padding*2) +")");
+            ) + ","+ (height-padding*2.5) +")");
         attitudeLegend.append("text")
-          .attr("x", 4*1.5*padding - 20)
-          .attr("y", 0)
+          .attr("x", 2.5*padding*1.75+padding)
+          .attr("y", 15)
           .text("Most frequent attitude")
+          .style("font-weight", "bold")
           .style("font-family", "Courier new")
           .style("text-anchor", "end")
           .style("fill", textColor)
@@ -349,10 +353,11 @@
           .data(attitudeList)
           .enter()
           .append('text')
-          .attr("x", function(d, i) {return i*padding*1.25+67;})
-          .attr("y", padding*1.5)
+          .attr("x", function(d, i) {return i*padding*1.75+padding;})
+          .attr("y", padding*1.65)
           .text(function(d) {return d;})
           .style("text-anchor","middle")
+          .style("font-weight", "bold")
           .style("font-family", "Courier new")
           .style("fill", textColor)
           .style("font-size", 12);
@@ -360,10 +365,10 @@
           .data(attitudeList)
           .enter()
           .append('line')
-          .attr("x1", function(d, i) {return i*padding*1.25+67;})
-          .attr("x2", function(d, i) {return i*padding*1.25+67;})
+          .attr("x1", function(d, i) {return i*padding*1.75+padding;})
+          .attr("x2", function(d, i) {return i*padding*1.75+padding;})
           .attr("y1", padding*1.2)
-          .attr("y2", 20)
+          .attr("y2", 35)
           .attr("stroke", textColor)
         .attr("stroke-width", 2.5)
         .style("stroke-linecap", "round") 
