@@ -2,10 +2,10 @@
 
 <head>
   <title> odyssee - Gallery </title>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <link rel="stylesheet" type="text/css" href="styles/all.css" media="all"/>
-  <link rel="stylesheet" href="https://use.typekit.net/qep5qwj.css">
-  <link rel="icon" type="image/png" href="images/icon.png">
+  <link rel="stylesheet" href="https://use.typekit.net/qep5qwj.css"/>
+  <link rel="icon" type="image/png" href="images/icon.png"/>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="https://d3js.org/d3-drag.v1.min.js"></script>
 </head>
@@ -19,10 +19,11 @@
 <div style= "text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
   <svg style="margin-top: 100;margin-bottom: 100" height="700" width="1000" class="indTwoWeeks"/>
   <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="aggTwoWeeks"/>
+  <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="indBursts"/>
 </div>
   <script>
     let data;
-    let email = "lh484@cornell.edu"; //hardcode
+    let email = "lh484@cornell.edu"; //hardcoded
     let personData = [];
     let width = 1000;
     let height = 700;
@@ -50,6 +51,7 @@
       var categoryMap = getFrequencyByKey("Activity", personData);
       var categoryFullMap = getFrequencyByKey("Activity", personData, 1);
       drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks", personData);
+      drawMoodByActivityBursts(".indBursts", categoryMap, personData);
 
       var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
       var categoryFullMap2 = getFrequencyByKey("Activity", everyoneData, 1);
@@ -75,7 +77,7 @@
     *   data: list of data entries 
     *   index: used for split (ie. "b5" or "Intellectual")
     *   returns sorted map of keys to frequency, ie ("b5: 24")
-    **/
+    */
     function getFrequencyByKey(str, data, index = 0) {
       var map = new Map();
       for (var i = 0 ; i < data.length; i++) {
@@ -96,7 +98,7 @@
     /** 
     *   data: list of data entries
     *   returns sorted map divided first by str1 then by str2
-    **/
+    */
     function getFrequencyByKeys(str1, str2, data) {
       var map = {};
       for (var i = 0 ; i < data.length; i++) {
@@ -159,7 +161,7 @@
     *   keyList: list of keys, usually top 5/6 keys
     *   map: map of (all) keys to list of frequencies, ie "b5: {"Good": 3, "Ok": 5}"
     *   returns map of keys in keyList to mode of second breakdown, ie "b5: Ok"
-    **/
+    */
     function findMode(keyList, map) {
       let finalMap = {};
 
@@ -185,17 +187,17 @@
     /**
     *   keyList: list of keys, usually top 5/6 keys
     *   map: map of (all) keys to list of frequencies, ie "b5: {"Good": 3, "Ok": 5}"
-    *   returns map of keys in keyList to average moodLegend
-    **/
-    function findAvgMood(keyList, map) {
+    *   returns map of keys in keyList to average moodLegend, starts at 0
+    */
+    function findAvgMood(keyList, map, isRounded = true) {
       let finalMap = {};
       let overallMax = 0;
       let overallMin = 1000000;
 
       keyList.forEach(function(id) {
-        var keys = Object.keys(map[id]);
-        var value = 0;
-        var count = 0;
+        let keys = Object.keys(map[id]);
+        let value = 0;
+        let count = 0;
 
         keys.forEach(function(mood) {
           value = value + map[id][mood]*(moodList.indexOf(mood));
@@ -205,11 +207,37 @@
         if (value/count > overallMax) { overallMax = value/count;}
         if (value/count < overallMin) { overallMin = value/count;}
 
-        finalMap[id] = Math.round(value/count);
+        finalMap[id] = isRounded ? Math.round(value/count) : value/count;
       });
 
       return finalMap;
     }
+
+    /**
+    *   keyList: list of keys, usually top 5/6 keys
+    *   map: map of (all) keys to list of frequencies, ie "b5: {"Good": 3, "Ok": 5}"
+    *   avgMap: map of keys to averages, ie "b5: 2.722"
+    *   returns map of keys in keyList to average moodLegend, starts at 0
+    */
+    function findStdDevMood(keyList, map, avgMap) {
+      let finalMap = {};
+
+      keyList.forEach(function (id) {
+        let keys = Object.keys(map[id]);
+        let value = 0;
+        let count = 0;
+
+        keys.forEach(function(mood) {
+          value = value + map[id][mood]*Math.pow(moodList.indexOf(mood) - avgMap[id], 2);
+          count = count + map[id][mood];
+        });
+
+        finalMap[id] = Math.sqrt(value/count);
+      });
+
+      return finalMap;
+     }
+    
 
     /**
     *   svgClass: tag for svg clas, must include the '.'
@@ -218,7 +246,7 @@
     *   title: title of graph
     *   personData: list of data entries
     *   returns void, draws data vis for line bar chart
-    **/
+    */
     function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, personData) {
       let svg = d3.select(svgClass);
 
@@ -308,7 +336,7 @@
           });
       });
 
-      //add title
+      // add title
       svg.append('text')
         .attr('x', width/2)
         .attr('y', 50)
@@ -408,6 +436,83 @@
         .style("stroke-dasharray", function(d, i) {
           return dashArray2[i];
         });
+    }
+
+    function drawMoodByActivityBursts(svgClass, categoryMap, personData) {
+      let svg = d3.select(svgClass);
+
+      let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
+      console.log(keyList);
+      console.log(personData);
+
+      let reasonByActivity = getFrequencyByKeys("Activity", "Reason", personData);
+      let feelingByActivity = getFrequencyByKeys("Activity", "Feeling", personData);
+
+      let avgMap = findAvgMood(keyList, feelingByActivity, false);
+
+      console.log(avgMap);
+      let stdDevMap = findStdDevMood(keyList, feelingByActivity, avgMap);
+      console.log(stdDevMap);
+
+      let xScale = d3.scaleBand()
+        .domain(keyList)
+        .range([padding*2.5, width]);
+
+      let yScale = d3.scaleLinear()
+        .domain([0, 4])
+        .range([height-padding*5, padding*2]);
+
+      // draw std dev lines per activity
+      svg.selectAll(".stdDevLines")
+        .data(keyList)
+        .enter()
+        .append("line")
+          .attr("x1", function(d) {return xScale(d)+10;})
+          .attr("x2", function(d) {return xScale(d)+10;})
+          .attr("y1", function(d) {return yScale(avgMap[d]-stdDevMap[d]);})
+          .attr("y2", function(d) {return yScale(avgMap[d]+stdDevMap[d])})
+          .attr("stroke", "#cdcdcd")
+          .attr("stroke-width", 2.5)
+          .style("opacity", 0.5);
+
+      // draw dots for average mood per activity
+      svg.selectAll(".avgDots")
+        .data(keyList)
+        .enter()
+        .append("circle")
+          .attr("cx", function(d) {return xScale(d)+10;})
+          .attr("cy", function(d) {return yScale(avgMap[d]);})
+          .attr("r", 5)
+          .style("fill", function(d) {return colorHexArray[moodList[Math.round(avgMap[d])]];});
+
+      // add icons
+      keyList.forEach(function(d, i) {
+        svg.append('image')
+          .attr('xlink:href', 'images/' + d + '.svg')
+          .attr('x', xScale(keyList[i])-25)
+          .attr('y', yScale(0)+40)
+          .attr('width', iconWidth)
+          .attr('height', iconWidth)
+          .style('filter', function() {
+            console.log(keyList[i]);
+            return 'url(#' + moodList[Math.round(avgMap[keyList[i]])] +')';
+          });
+        });
+
+      //add y axis
+      let yAxis = d3.select(svgClass)
+        .append("g")
+            .attr("class", "y_axis")
+            .attr("transform", "translate("+ (padding*1.5)+", 0)")
+            .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d) {
+              return moodList[d];
+            }));
+        yAxis.selectAll("text")
+          .style("font-family", "Courier new")
+          .style("font-weight", "bold")
+          .style("text-anchor", "end")
+          .style("fill", function(d) { return colorHexArray[moodList[d]];})
+          .style("font-size", 12);
     }
 
     function main() {
