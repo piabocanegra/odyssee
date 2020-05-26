@@ -51,7 +51,7 @@
       var categoryMap = getFrequencyByKey("Activity", personData);
       var categoryFullMap = getFrequencyByKey("Activity", personData, 1);
       drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks", personData);
-      drawMoodByActivityBursts(".indBursts", categoryMap, everyoneData);
+      drawMoodByActivityBursts(".indBursts", categoryMap, everyoneData, "Mood by Activity");
 
       var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
       var categoryFullMap2 = getFrequencyByKey("Activity", everyoneData, 1);
@@ -385,7 +385,7 @@
         .style("font-family", "Courier new")
         .style("font-size", 25)
         .style("fill", textColor)
-        .style("text-anchor", "middle")
+        .style("text-anchor", "middle");
 
       //add y axis
       let yAxis = d3.select(svgClass)
@@ -514,7 +514,7 @@
       
     }
 
-    function drawMoodByActivityBursts(svgClass, categoryMap, personData) {
+    function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
       let svg = d3.select(svgClass);
 
       let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
@@ -596,6 +596,16 @@
           .style("text-anchor", "end")
           .style("fill", function(d) { return colorHexArray[moodList[d]];})
           .style("font-size", 12);
+
+      // add title
+      svg.append('text')
+        .attr('x', width/2)
+        .attr('y', 35)
+        .text(title)
+        .style("font-family", "Courier new")
+        .style("font-size", 25)
+        .style("fill", textColor)
+        .style("text-anchor", "middle")
     }
 
     function main() {
