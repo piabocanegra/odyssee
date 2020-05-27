@@ -135,3 +135,42 @@ function drawAttitudeLegend(svgClass) {
 
     drawAttitudeLegendData(attitudeLegend);
 }
+
+// add color filters to website, must call this per svg 
+function setUpFilters(svgClass) {
+    let svg = d3.select(svgClass);
+    svg.append('filter')
+        .attr('id', 'Amazing')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 1 0 0 0 0 0.772549 0 0 0 0 0 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Good')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.9490196 0 0 0 0 0.84705882 0 0 0 0 0.4705882 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Ok')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.92941176 0 0 0 0 0.76470588 0 0 0 0 0.63921568 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Bad')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.79215686 0 0 0 0 0.380392156 0 0 0 0 0.30196078 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Awful')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.6235294 0 0 0 0 0.1490196 0 0 0 0 0.3568627 0 0 0 1 0");
+}
