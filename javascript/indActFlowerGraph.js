@@ -55,9 +55,6 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         // drawing lines for single burst
         data.forEach(d => {
             let mood = d['Feeling']
-
-            console.log(Math.cos(radialScale(count)))
-            console.log("x1: " + innerRadius)
             svg.append("line")
                 .attr("x1", centerX + innerRadius * Math.cos(radialScale(count)))
                 .attr("x2", centerX + outerRadius * Math.cos(radialScale(count)))
