@@ -118,7 +118,7 @@ function drawAttitudeLegend(svgClass) {
         y: height - padding * 2.5,
         width: width - (width / 2 + padding * 2) - (padding * 2)
     }
-    let attitudeLegendStart = width / 2 + padding * 2
+
     let attitudeLegend = svg.append("g")
         .attr("class", "attitudeLegend")
         .attr("width", attitudeLegendAttr.width)
