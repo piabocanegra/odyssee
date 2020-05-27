@@ -26,12 +26,6 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         .domain(keyList)
         .range([padding * 2, width - padding * 2]);
 
-    let yScale = d3.scaleLinear()
-        .domain([0, d3.max(keyList, function(d) {
-            return categoryMap.get(d)
-        })])
-        .range([height - padding * 5, padding * 2]);
-
     // Add title.
     drawTitle(svg, title);
 
@@ -78,7 +72,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
 
         let length = data.length <= 5 ? l : n * l / 5;
         let centeringOffset = (width - 4 * padding) / keyList.length / 2
-        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: yScale(0) + 10 - length };
+        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height / 2 };
 
         svg.append('filter')
             .attr('id', 'Grey')
