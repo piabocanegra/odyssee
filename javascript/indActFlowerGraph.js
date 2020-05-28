@@ -63,16 +63,16 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     }
 
     // Draw flowers.
+    let l = 27; // l: Multiplier constant for length.
+
     // TODO: Account for activity with greater than 40 entries.
     keyList.forEach(function(d, i) {
         let data = getPersonDataByActivity(personData, d);
 
         let n = data.length; // n: Number of petals.
-        let l = 27; // l: Multiplier constant for length.
-
         let length = data.length <= 5 ? l : n * l / 5;
         let centeringOffset = (width - 4 * padding) / keyList.length / 2
-        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height / 2 };
+        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height / 2 - length + l };
 
         svg.append('filter')
             .attr('id', 'Grey')
