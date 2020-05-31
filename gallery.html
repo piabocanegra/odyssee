@@ -27,6 +27,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="aggTwoWeeks"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="indBursts"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower2"></svg>
     </div>
 
     <script>
@@ -67,7 +68,7 @@
         const getData = async() => {
             // TODO for Jamal: replace next two lines with json list
             // personData = getPersonData(data, email);
-            personData = await d3.json("fakeData.txt");
+            var personData = await d3.json("fakeData.txt");
             var everyoneData = await d3.csv("odyssee_data.csv");
 
             var categoryMap = getFrequencyByKey("Activity", personData);
@@ -80,6 +81,10 @@
             drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap2, "Everyone's last 2 weeks", everyoneData);
 
             drawIndActivityFlower(".indActFlower", categoryMap, categoryFullMap, "Activity", personData);
+
+            var personData2 = await d3.json("fakeIndActFlowerData.json");
+            drawIndActivityFlower(".indActFlower2", categoryMap, categoryFullMap, "Activity", personData2);
+
         }
 
         function main() {
