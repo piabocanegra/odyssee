@@ -108,7 +108,6 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     // Check if there are more than 40 entries.
     let maxPoints = d3.max(keyList, d => { return getPersonDataByActivity(personData, d).length });
     let petalDivisor = maxPoints > 40 ? 2 : 1;
-    let l = 100 / (maxPoints / petalDivisor) * 5; // l: Multiplier constant for length.
 
     // Setup tooltip.
     let tooltipId = "tooltipId"
@@ -123,6 +122,18 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         .style("background-color", backgroundColor)
         .style("border-radius", "15px")
         .style("border", "1px solid #cdcdcd");
+
+    let petalChartBottomPadding = 140
+    let petalChartTopPadding = 80
+
+    let petalScaleMaxYOptions = [
+        (height - petalChartBottomPadding - petalChartTopPadding) / 2,
+        (width - 600) / keyList.length
+    ]
+
+    let petalScale = d3.scaleLinear()
+        .domain([0, maxPoints])
+        .range([0, Math.min(petalScaleMaxYOptions[0], petalScaleMaxYOptions[1])])
 
     // Draw flowers.
     keyList.forEach(function(d, i) {
@@ -159,9 +170,9 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         });
         console.log(flowerDataMap)
 
-        let length = n <= 5 ? l : n * l / 5;
+        let length = petalScale(data.length);
         let centeringOffset = (width - 4 * padding) / keyList.length / 2
-        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height / 2 - length + l };
+        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height - length - petalChartBottomPadding };
 
         svg.append('filter')
             .attr('id', 'Grey')
