@@ -110,6 +110,20 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     let petalDivisor = maxPoints > 40 ? 2 : 1;
     let l = 100 / (maxPoints / petalDivisor) * 5; // l: Multiplier constant for length.
 
+    // Setup tooltip.
+    let tooltipId = "tooltipId"
+    let tooltip = d3.select("body")
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd");
+
     // Draw flowers.
     keyList.forEach(function(d, i) {
         let data = getPersonDataByActivity(personData, d);
@@ -162,7 +176,28 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
             .attr('y', flowerCenter.y)
             .attr('width', length)
             .attr('height', length)
-            .style('filter', function() { return 'url(#Grey)'; });
+            .style('filter', function() { return 'url(#Grey)'; })
+            .on("mousemove", function() {
+                var tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].split("(")[0].toLowerCase() +
+                    "</br></br><b>FREQUENCY: </b>" + data.length;
+                tooltip.html(tooltipText)
+                    .style("font-family", "Courier new")
+                    .style("font-size", 12)
+                    .style("text-align", "left")
+                    .style("color", textColor)
+                    .style("visibility", "visible")
+                    .style("max-width", 250)
+                    .style("top", event.pageY + 20)
+                    .style("left", function() {
+                        if (d3.event.clientX < 750) {
+                            return event.pageX + 20 + "px";
+                        } else {
+                            return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                        }
+                    })
+            }).on("mouseout", function(d) {
+                tooltip.style("visibility", "hidden");
+            });;
 
         // Draw flower.
         drawFlower(svgClass, flowerCenter.x, flowerCenter.y, length, flowerDataMap, n);
@@ -192,11 +227,11 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
     drawMoodLegendData(moodLegend);
-    drawFlowerLegend(flowerLegend);
+    drawFlowerLegend(flowerLegend, petalDivisor);
     drawAttitudeLegendData(attitudeLegend);
 
     // Function for drawing flower legend.
-    function drawFlowerLegend(flowerLegend) {
+    function drawFlowerLegend(flowerLegend, petalDivisor) {
         let attitudes = ["I want to", "I have to", "I want to and have to", "of something else; I neither want to nor have to"];
 
         let flowerPadding = 12;
@@ -206,6 +241,8 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         let count = 0;
         let innerRadius = 0;
         let outerRadius = innerRadius + flowerPetalLength;
+
+        let text = petalDivisor == 1 ? ["all records", "for an activity"] : ["one petal represents", "two records for an activity"]
 
         // Setup scales.
         let radialScale = d3.scaleLinear()
@@ -220,7 +257,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
             .style("font-family", "Courier new")
             .style("fill", textColor)
             .style("font-size", 12)
-            .text("all records");
+            .text(text[0]);
 
         // Add petals.
         attitudes.forEach(attitude => {
@@ -244,7 +281,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
             .style("font-family", "Courier new")
             .style("fill", textColor)
             .style("font-size", 12)
-            .text("for an activity");
+            .text(text[1]);
     }
 
 }
