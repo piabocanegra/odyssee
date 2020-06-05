@@ -1,3 +1,10 @@
+let dashArrayForBursts = {
+    "I want to": "0.25 1",
+    "I have to": "3 3",
+    "I want to and have to": "0.25 2 3 2",
+    "of something else; I neither want to nor have to": "1000"
+};
+
 /**
 *   svgClass: tag for svg clas, must include the '.'
 *   data: list of data entries from excel 
@@ -6,16 +13,19 @@
 *   mood: mood that the burst represents, ie "Good" -- used for color of burst
 *   returns void, handles drawing of one burst 
 */
-function drawBurst(svgClass, data, centerX, centerY, mood) {
+function drawBurst(svgClass, data, centerX, centerY, mood, divisionFactor) {
     let svg = d3.select(svgClass);
-    let totalLines = getTotalFrequencyFromMap(data);
-    let innerRadius = totalLines < 7 ? 0 : Math.floor(totalLines / 4);
-    let outerRadius = innerRadius + 12;
+    let lengthOfTick = 17;
+    let totalTicks = getTotalFrequencyFromMap(data);
 
-    let offset = totalLines < 18 ? 1 : 3;
+    let offset = totalTicks < 10 ? 1 : divisionFactor;
+    let numVisibleTicks = Math.floor(totalTicks/offset);
+
+    let innerRadius = numVisibleTicks < 10 ? 0 : (numVisibleTicks*lengthOfTick/10);
+    let outerRadius = innerRadius + lengthOfTick;
 
     let radialScale = d3.scaleLinear()
-        .domain([0, Math.floor(totalLines / offset)])
+        .domain([0, Math.floor(totalTicks / offset)])
         .range([0, 2 * Math.PI]);
 
     let count = 0;
@@ -121,11 +131,19 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
                 return 'url(#' + moodList[Math.round(avgMap[keyList[i]])] + ')';
             });
 
+        //TODO:
+        // - calculate max number of ticks and division factor
+        // - 
+        let maxTicks = 0;
+        Object.keys(burstMap[activity]).forEach(function(mood) {
+            let tempNumTicks = getTotalFrequencyFromMap(burstMap[activity][mood]);
+            maxTicks = maxTicks < tempNumTicks ? tempNumTicks : maxTicks;
+        });
 
         //draw bursts
         Object.keys(burstMap[activity]).forEach(function(mood) {
             let burstData = burstMap[activity][mood];
-            drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), mood);
+            drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), mood, Math.ceil(maxTicks/30));
         });
     });
 
