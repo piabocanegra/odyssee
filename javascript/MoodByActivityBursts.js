@@ -1,7 +1,7 @@
 let dashArrayForBursts = {
-    "I want to": "0.25 1",
-    "I have to": "3 3",
-    "I want to and have to": "0.25 2 3 2",
+    "I want to": "0.25 4",
+    "I have to": "3 4",
+    "I want to and have to": "0.25 4 3 4",
     "of something else; I neither want to nor have to": "1000"
 };
 
@@ -119,6 +119,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
         });
 
 
+    let maxTicks = 0;
     keyList.forEach(function(activity, i) {
         // add icons
         svg.append('image')
@@ -130,11 +131,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
             .style('filter', function() {
                 return 'url(#' + moodList[Math.round(avgMap[keyList[i]])] + ')';
             });
-
-        //TODO:
-        // - calculate max number of ticks and division factor
-        // - 
-        let maxTicks = 0;
+        
         Object.keys(burstMap[activity]).forEach(function(mood) {
             let tempNumTicks = getTotalFrequencyFromMap(burstMap[activity][mood]);
             maxTicks = maxTicks < tempNumTicks ? tempNumTicks : maxTicks;
@@ -151,7 +148,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
     let yAxis = d3.select(svgClass)
         .append("g")
         .attr("class", "y_axis")
-        .attr("transform", "translate(" + (padding * 1.5) + ", 0)")
+        .attr("transform", "translate(" + (padding) + ", 0)")
         .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d) {
             return moodList[d];
         }));
@@ -166,4 +163,67 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
 
     // add title
     drawTitle(svg, title);
+
+    // add avg line + std legend
+    svg.append("line")
+        .attr("x1", width*0.8)
+        .attr("x2", width*0.8)
+        .attr("y1", height-padding*1.75)
+        .attr("y2", height-padding*0.1)
+        .attr("stroke", "#cdcdcd")
+        .attr("stroke-width", 2.5)
+        .style("opacity", 0.4)
+        .style("stroke-linecap", "round");
+    svg.append("circle")
+        .attr("cx", width*0.8)
+        .attr("cy", height-padding*1.15)
+        .attr("r", 6)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", width*0.78)
+        .attr("y", height-padding*1.15-15)
+        .text("average")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "end")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width*0.78)
+        .attr("y", height-padding*1.15)
+        .text("mood")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "end")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width*0.81)
+        .attr("y", height-padding*0.1-15)
+        .text("standard")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "start")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width*0.81)
+        .attr("y", height-padding*0.1)
+        .text("deviation")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "start")
+        .style("fill", textColor)
+        .style("font-size", 12);
+
+    // add attitude legend
+    svg.append("text")
+        .attr("x", padding*3 + width*0.22)
+        .attr("y", height-padding*1.75)
+        .text("one tick represents " + Math.ceil(maxTicks/30) + " ticks")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "middle")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    let attitudeLegend = svg.append("g")
+        .attr("class", "attitudeLegend")
+        .attr("width", width*0.44)
+        .attr("transform", "translate(" + padding*3 + "," + (height-padding*1.75) + ")");
+    drawAttitudeLegendData(attitudeLegend);
 }
