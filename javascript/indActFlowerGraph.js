@@ -1,3 +1,16 @@
+function compareMoods(a, b) {
+    let moodList = ["Awful", "Bad", "Ok", "Good", "Amazing"];
+    if (moodList.indexOf(a) == -1 || moodList.indexOf(b) == -1) {
+        console.error("compareMoods invalid inputs - " + a + ", " + b);
+        return 0;
+    }
+    return moodList.indexOf(b) - moodList.indexOf(a);
+}
+
+function compareKeyList(a, b, personData) {
+    return getPersonDataByActivity(personData, b).length - getPersonDataByActivity(personData, a).length;
+}
+
 /**
  *   svgClass: tag for svg class, must include the '.'
  *   categoryMap: map of short activity keys ("b5") to frequency 
@@ -21,6 +34,11 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     let keyList2Filtered = keyList2.filter(k => { return categoryFullMap.get(k) > 5 });
     keyList2 = keyList2Filtered.length != 0 && keyList2Filtered.length < keyList2.length ? keyList2Filtered : keyList2;
 
+
+    // Sort activities by greatest to least entries.
+    keyList.sort((a, b) => { return compareKeyList(a, b, personData) });
+    keyList2.sort((a, b) => { return compareKeyList(a, b, personData) });
+
     // Setup scales.
     let xScale = d3.scaleBand()
         .domain(keyList)
@@ -30,11 +48,11 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     drawTitle(svg, title);
 
     // Function for drawing flower.
-    function drawFlower(svgClass, data, centerX, centerY, length) {
+    function drawFlower(svgClass, centerX, centerY, length, flowerMap, n) {
         let svg = d3.select(svgClass);
 
         // n: Number of petals.
-        let n = data.length;
+        // let n = data.length;
 
         let innerRadius = 0;
         let outerRadius = innerRadius + length;
@@ -46,33 +64,115 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
 
         let count = 0;
 
-        // drawing lines for single burst
-        data.forEach(d => {
-            let mood = d['Feeling']
-            svg.append("line")
-                .attr("x1", centerX + innerRadius * Math.cos(radialScale(count)))
-                .attr("x2", centerX + outerRadius * Math.cos(radialScale(count)))
-                .attr("y1", centerY + innerRadius * Math.sin(radialScale(count)))
-                .attr("y2", centerY + outerRadius * Math.sin(radialScale(count)))
-                .attr("stroke", colorHexArray[mood])
-                .attr("stroke-width", 2.5)
-                .style("stroke-linecap", "round")
-                .style("stroke-dasharray", dashArray[d['Reason']])
-            count += 1;
+        let attitudeShorttoLong = {
+            "want to": "I want to",
+            "have to": "I have to",
+            "both": "I want to and have to",
+            "neither": "of something else; I neither want to nor have to"
+        };
+
+        moodList.sort(compareMoods).forEach(mood => {
+            attitudeList.forEach(attitude => {
+                console.log("mood, attitude: " + mood + ", " + attitude)
+                console.log(flowerMap[mood][attitude])
+                let numPetals = flowerMap[mood][attitude];
+                while (numPetals > 0) {
+                    svg.append("line")
+                        .attr("x1", centerX + innerRadius * Math.cos(radialScale(count)))
+                        .attr("x2", centerX + outerRadius * Math.cos(radialScale(count)))
+                        .attr("y1", centerY + innerRadius * Math.sin(radialScale(count)))
+                        .attr("y2", centerY + outerRadius * Math.sin(radialScale(count)))
+                        .attr("stroke", colorHexArray[mood])
+                        .attr("stroke-width", 2.5)
+                        .style("stroke-linecap", "round")
+                        .style("stroke-dasharray", dashArray[attitudeShorttoLong[attitude]])
+                    count += 1;
+                    numPetals -= 1;
+                }
+            })
         });
     }
 
+    function emptyFlowerMap() {
+        let flowerMap = {}
+        moodList.forEach(mood => {
+            flowerMap[mood] = {};
+            attitudeList.forEach(attitude => {
+                flowerMap[mood][attitude] = 0;
+            })
+        });
+        return flowerMap;
+    }
+
+
+    // Check if there are more than 40 entries.
+    let maxPoints = d3.max(keyList, d => { return getPersonDataByActivity(personData, d).length });
+    let petalDivisor = maxPoints > 40 ? 2 : 1;
+
+    // Setup tooltip.
+    let tooltipId = "tooltipId"
+    let tooltip = d3.select("body")
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd");
+
+    let petalChartBottomPadding = 140
+    let petalChartTopPadding = 80
+
+    let petalScaleMaxYOptions = [
+        (height - petalChartBottomPadding - petalChartTopPadding) / 2,
+        (width - 600) / keyList.length
+    ]
+
+    let petalScale = d3.scaleLinear()
+        .domain([0, maxPoints])
+        .range([0, Math.min(petalScaleMaxYOptions[0], petalScaleMaxYOptions[1])])
+
     // Draw flowers.
-    // TODO: Account for activity with greater than 40 entries.
     keyList.forEach(function(d, i) {
         let data = getPersonDataByActivity(personData, d);
+        console.log(data)
 
-        let n = data.length; // n: Number of petals.
-        let l = 27; // l: Multiplier constant for length.
+        // Initialize rounding offset.
+        let roundingOffset = Math.round(Math.random());
 
-        let length = data.length <= 5 ? l : n * l / 5;
+        // Set up data map for flower petals.
+        let flowerDataMap = emptyFlowerMap();
+        data.forEach(d => {
+            console.log(d.Feeling + ", " + d.Reason + ": " + flowerDataMap[d.Feeling][attitudeLongtoShort[d.Reason]])
+            flowerDataMap[d.Feeling][attitudeLongtoShort[d.Reason]] += 1;
+        });
+
+        let n = 0; // n: Number of petals.
+
+        // Update flowerDataMap if more than 40 entries.
+        // Update n to reflect number of petals.
+        moodList.forEach(mood => {
+            attitudeList.forEach(attitude => {
+                let num = flowerDataMap[mood][attitude];
+                if (petalDivisor == 1 || num % 2 == 0) {
+                    num = num / petalDivisor;
+                } else {
+                    // Alternate between rounding up and rounding down.
+                    num = Math.floor(num / petalDivisor) + roundingOffset;
+                    roundingOffset = roundingOffset == 0 ? 1 : 0;
+                }
+                flowerDataMap[mood][attitude] = num;
+                n += num;
+            })
+        });
+        console.log(flowerDataMap)
+
+        let length = petalScale(data.length);
         let centeringOffset = (width - 4 * padding) / keyList.length / 2
-        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height / 2 };
+        let flowerCenter = { x: xScale(keyList[i]) + centeringOffset, y: height - length - petalChartBottomPadding };
 
         svg.append('filter')
             .attr('id', 'Grey')
@@ -87,10 +187,31 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
             .attr('y', flowerCenter.y)
             .attr('width', length)
             .attr('height', length)
-            .style('filter', function() { return 'url(#Grey)'; });
+            .style('filter', function() { return 'url(#Grey)'; })
+            .on("mousemove", function() {
+                var tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].split("(")[0].toLowerCase() +
+                    "</br></br><b>FREQUENCY: </b>" + data.length;
+                tooltip.html(tooltipText)
+                    .style("font-family", "Courier new")
+                    .style("font-size", 12)
+                    .style("text-align", "left")
+                    .style("color", textColor)
+                    .style("visibility", "visible")
+                    .style("max-width", 250)
+                    .style("top", event.pageY + 20)
+                    .style("left", function() {
+                        if (d3.event.clientX < 750) {
+                            return event.pageX + 20 + "px";
+                        } else {
+                            return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                        }
+                    })
+            }).on("mouseout", function(d) {
+                tooltip.style("visibility", "hidden");
+            });;
 
         // Draw flower.
-        drawFlower(svgClass, data, flowerCenter.x, flowerCenter.y, length);
+        drawFlower(svgClass, flowerCenter.x, flowerCenter.y, length, flowerDataMap, n);
     });
 
     // Add legends.
@@ -117,11 +238,11 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
     drawMoodLegendData(moodLegend);
-    drawFlowerLegend(flowerLegend);
+    drawFlowerLegend(flowerLegend, petalDivisor);
     drawAttitudeLegendData(attitudeLegend);
 
     // Function for drawing flower legend.
-    function drawFlowerLegend(flowerLegend) {
+    function drawFlowerLegend(flowerLegend, petalDivisor) {
         let attitudes = ["I want to", "I have to", "I want to and have to", "of something else; I neither want to nor have to"];
 
         let flowerPadding = 12;
@@ -131,6 +252,8 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         let count = 0;
         let innerRadius = 0;
         let outerRadius = innerRadius + flowerPetalLength;
+
+        let text = petalDivisor == 1 ? ["all records", "for an activity"] : ["one petal represents", "two records for an activity"]
 
         // Setup scales.
         let radialScale = d3.scaleLinear()
@@ -145,7 +268,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
             .style("font-family", "Courier new")
             .style("fill", textColor)
             .style("font-size", 12)
-            .text("all records");
+            .text(text[0]);
 
         // Add petals.
         attitudes.forEach(attitude => {
@@ -169,7 +292,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
             .style("font-family", "Courier new")
             .style("fill", textColor)
             .style("font-size", 12)
-            .text("for an activity");
+            .text(text[1]);
     }
 
 }
