@@ -92,6 +92,40 @@ function getFrequencyByThreeKeys(str1, str2, str3, keyList, data) {
     return map;
 }
 
+function createMapFromPersonality(data, key) {
+    let finalMap = {};
+
+    for (var i = 0; i < data.length; i++) {
+        let email = data[i]["Email"];
+        let value = data[i][key];
+
+        finalMap[email] = value;
+    }
+
+    return finalMap;
+}
+
+function getFrequencyFromPersonalityMap(personData, personalityMap, key, index = 0) {
+    let map = {};
+
+    for (var i = 0; i < personData.length; i++) {
+        let email = personData[i]["Email"];
+        if (email in personalityMap) {
+            let key1 = personalityMap[email];
+            let key2 = personData[i][key].split(":")[index];
+
+            if (!(key1 in map)) {
+                map[key1] = {};
+                map[key1][key2] = 1
+            } else {
+                map[key1][key2] = !(key2 in map[key1]) ? 1 : (map[key1][key2] + 1);
+            }
+        }
+    }
+
+    return map;
+}
+
 /**
  *   keyList: list of keys, usually top 5/6 keys
  *   map: map of (all) keys to list of frequencies, ie "b5: {"Good": 3, "Ok": 5}"
