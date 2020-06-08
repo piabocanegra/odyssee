@@ -13,6 +13,7 @@
     <script type="text/javascript" src="javascript/indActFlowerGraph.js"></script>
     <script type="text/javascript" src="javascript/MoodByActivityVis.js"></script>
     <script type="text/javascript" src="javascript/MoodByActivityBursts.js"></script>
+    <script type="text/javascript" src="javascript/stressorRadialGraph.js"></script>
 </head>
 <ul>
     <li style="float:right;vertical-align:top"><a href="about.html">About</a></li>
@@ -85,6 +86,8 @@
             var personData2 = await d3.json("fakeIndActFlowerData.json");
             drawIndActivityFlower(".indActFlower2", categoryMap, categoryFullMap, "Activity", personData2);
 
+            var personalityData = await d3.csv("personality.csv");
+            console.log(personalityData);
         }
 
         function main() {

@@ -126,9 +126,11 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     let petalChartBottomPadding = 140
     let petalChartTopPadding = 80
 
+    let interFlowerPadding = 16
+    let flowerGraphWidth = width - padding * 4
     let petalScaleMaxYOptions = [
         (height - petalChartBottomPadding - petalChartTopPadding) / 2,
-        (width - 600) / keyList.length
+        (flowerGraphWidth - interFlowerPadding * (keyList.length - 1)) / keyList.length / 2
     ]
 
     let petalScale = d3.scaleLinear()
