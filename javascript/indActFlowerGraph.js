@@ -135,7 +135,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
 
     let petalScale = d3.scaleLinear()
         .domain([0, maxPoints])
-        .range([0, Math.min(petalScaleMaxYOptions[0], petalScaleMaxYOptions[1])])
+        .range([8, Math.min(petalScaleMaxYOptions[0], petalScaleMaxYOptions[1])])
 
     // Draw flowers.
     keyList.forEach(function(d, i) {
