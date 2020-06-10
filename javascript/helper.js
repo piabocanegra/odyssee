@@ -220,3 +220,18 @@ function getTotalFrequencyFromMap(data) {
 
     return count;
 }
+
+function getKeyWithHighestValue(map) {
+    let max = 0;
+    let maxKey = "";
+    let keyList = Object.keys(map);
+
+    keyList.forEach(function(d) {
+        if (map[d] > max) {
+            max = map[d];
+            maxKey = d;
+        }
+    });
+
+    return maxKey;
+}
