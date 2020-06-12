@@ -73,8 +73,8 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
 
         moodList.sort(compareMoods).forEach(mood => {
             attitudeList.forEach(attitude => {
-                console.log("mood, attitude: " + mood + ", " + attitude)
-                console.log(flowerMap[mood][attitude])
+                // console.log("mood, attitude: " + mood + ", " + attitude)
+                // console.log(flowerMap[mood][attitude])
                 let numPetals = flowerMap[mood][attitude];
                 while (numPetals > 0) {
                     svg.append("line")
@@ -140,7 +140,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     // Draw flowers.
     keyList.forEach(function(d, i) {
         let data = getPersonDataByActivity(personData, d);
-        console.log(data)
+        // console.log(data)
 
         // Initialize rounding offset.
         let roundingOffset = Math.round(Math.random());
@@ -148,7 +148,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         // Set up data map for flower petals.
         let flowerDataMap = emptyFlowerMap();
         data.forEach(d => {
-            console.log(d.Feeling + ", " + d.Reason + ": " + flowerDataMap[d.Feeling][attitudeLongtoShort[d.Reason]])
+            // console.log(d.Feeling + ", " + d.Reason + ": " + flowerDataMap[d.Feeling][attitudeLongtoShort[d.Reason]])
             flowerDataMap[d.Feeling][attitudeLongtoShort[d.Reason]] += 1;
         });
 
@@ -170,7 +170,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
                 n += num;
             })
         });
-        console.log(flowerDataMap)
+        // console.log(flowerDataMap)
 
         let length = petalScale(data.length);
         let centeringOffset = (width - 4 * padding) / keyList.length / 2
