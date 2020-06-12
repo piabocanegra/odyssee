@@ -5,6 +5,8 @@ let dashArrayForBursts = {
     "of something else; I neither want to nor have to": "1000"
 };
 
+var tooltip;
+
 /**
 *   svgClass: tag for svg clas, must include the '.'
 *   data: list of data entries from excel 
@@ -13,7 +15,7 @@ let dashArrayForBursts = {
 *   mood: mood that the burst represents, ie "Good" -- used for color of burst
 *   returns void, handles drawing of one burst 
 */
-function drawBurst(svgClass, data, centerX, centerY, mood, divisionFactor) {
+function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, divisionFactor) {
     let svg = d3.select(svgClass);
     let lengthOfTick = 17;
     let totalTicks = getTotalFrequencyFromMap(data);
@@ -21,11 +23,11 @@ function drawBurst(svgClass, data, centerX, centerY, mood, divisionFactor) {
     let offset = totalTicks < 10 ? 1 : divisionFactor;
     let numVisibleTicks = Math.floor(totalTicks/offset);
 
-    let innerRadius = numVisibleTicks < 10 ? 0 : (numVisibleTicks*lengthOfTick/10);
+    let innerRadius = numVisibleTicks < 10 ? 0 : (numVisibleTicks*lengthOfTick/10)-10;
     let outerRadius = innerRadius + lengthOfTick;
 
     let radialScale = d3.scaleLinear()
-        .domain([0, Math.floor(totalTicks / offset)])
+        .domain([0,numVisibleTicks])
         .range([0, 2 * Math.PI]);
 
     let count = 0;
@@ -48,26 +50,53 @@ function drawBurst(svgClass, data, centerX, centerY, mood, divisionFactor) {
         }
     }
 
+    svg.append('circle')
+        .attr('cx', centerX)
+        .attr('cy', centerY)
+        .attr('r', outerRadius)
+        .style('opacity', 0)
+        .on('mousemove', function() {
+            let tooltipText = "<b>ACTIVITY:</b> " + activity + "</br></br><b>FREQUENCY: </b>" + totalTicks + "</br></br><b>MOOD: </b>" + mood.toLowerCase() + 
+                " (<b>AVERAGE: </b> "+ avgMood + ")" + "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[getKeyWithHighestValue(data)];
+            tooltip
+                .html(tooltipText)
+                .style("font-family", "Courier new")
+                .style("font-size", 12)
+                .style("text-align", "left")
+                .style("color", textColor)
+                .style("visibility", "visible")
+                .style("max-width", 250)
+                .style("top", event.pageY + 20)
+                .style("left", function() {
+                    if (d3.event.clientX < 750) {
+                        return event.pageX + 20 + "px";
+                    } else {
+                        return event.pageX - 250 + "px";
+                    }
+                });
+        }).on("mouseout", function(d) {
+            tooltip.style("visibility", "hidden");
+        });
+
 }
 
 /**
 *   svgClass: tag for svg clas, must include the '.'
 *   categoryMap: map of short activity keys ("b5") to frequency
+*   categoryFullMap: map of long formed activity keys ("eating and drinking") to frequency
 *   title: title of graph
 *   personData: list of data entries
 *   returns void, handles drawing of entire vis 
 */
-function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
+function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, personData, title) {
     let svg = d3.select(svgClass);
 
     let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
-    // console.log(keyList);
-    // console.log(personData);
+    let keyList2 = Array.from(categoryFullMap.keys()).slice(0, numIcons);
 
     let reasonByActivity = getFrequencyByKeys("Activity", "Reason", personData);
     let feelingByActivity = getFrequencyByKeys("Activity", "Feeling", personData);
     let burstMap = getFrequencyByThreeKeys("Activity", "Feeling", "Reason", keyList, personData);
-    // console.log(burstMap);
 
     let avgMap = findAvgMood(keyList, feelingByActivity, false);
     let stdDevMap = findStdDevMood(keyList, feelingByActivity, avgMap);
@@ -79,6 +108,18 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
     let yScale = d3.scaleLinear()
         .domain([0, 4])
         .range([height - padding * 5, padding * 2]);
+
+    // add tooltip
+    tooltip = d3.select("body")
+        .append("div")
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd");
 
     // draw std dev lines per activity
     svg.selectAll(".stdDevLines")
@@ -140,7 +181,8 @@ function drawMoodByActivityBursts(svgClass, categoryMap, personData, title) {
         //draw bursts
         Object.keys(burstMap[activity]).forEach(function(mood) {
             let burstData = burstMap[activity][mood];
-            drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), mood, Math.ceil(maxTicks/30));
+            drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), keyList2[i].split("(")[0].toLowerCase(), 
+                mood, moodList[Math.round(avgMap[activity])].toLowerCase(), Math.ceil(maxTicks/30));
         });
     });
 
