@@ -64,13 +64,6 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
 
         let count = 0;
 
-        let attitudeShorttoLong = {
-            "want to": "I want to",
-            "have to": "I have to",
-            "both": "I want to and have to",
-            "neither": "of something else; I neither want to nor have to"
-        };
-
         moodList.sort(compareMoods).forEach(mood => {
             attitudeList.forEach(attitude => {
                 // console.log("mood, attitude: " + mood + ", " + attitude)
