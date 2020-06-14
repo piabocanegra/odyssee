@@ -57,7 +57,6 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
         .style("font-family", "Courier new")
         .style("fill", textColor)
         .style("font-size", 12);
-
 }
 
 /**
@@ -72,27 +71,16 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    console.log(personalityData);
-    console.log(everyoneData);
+    // console.log(personalityData);
+    // console.log(everyoneData);
 
     let circleRadius = 180;
     let circleRadiusIncrement = 120;
 
-    let categories = ["relationships", "health", "work", "logistical"]
-
-    let categoryShortToLongMap = {
-        "work": "Work/School",
-        "health": "Health & well-being",
-        "relationships": "Relationships",
-        "logistical": "Logistical"
-    }
-
-    let negativeMoods = ["Awful", "Bad"]
-
-    let personalityDataEmailKey = "What's your email?";
-    let everyoneDataEmailKey = "Email";
-    let dailyStressorKey = "Which of the following daily stressors is most significant for you?";
-    let longTermStressorKey = "Which of the following long-term stressors is most significant for you?";
+    let center = {
+        x: width / 2,
+        y: height / 2
+    };
 
     // Setup scales.
     let radialScale = d3.scaleBand()
@@ -107,54 +95,14 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         .domain([0, 1])
         .range([0, circleRadiusIncrement]);
 
-    let center = {
-        x: width / 2,
-        y: height / 2
-    }
-
     drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusIncrement);
 
     // For each category stressor tagged by user in personalityData, look through the activity with highest 
     // percentage of bad and awful records. These will be the activities that fall into the group.
-    let categoryActivityCountMap = {}
-    let categoryActivityMap = {}
-    let categoryReasonMap = {}
-    let categoryMoodMap = {}
-
-    function getEmailListForCategory(category, personalityDataKey) {
-        return personalityData.filter(p => {
-            return p[personalityDataKey].includes(categoryShortToLongMap[category]);
-        }).map(p => {
-            return p[personalityDataEmailKey];
-        })
-    }
-
-    function updateCategorySubMapCount(map, type, key) {
-        let count = map[type][key];
-        map[type][key] = count == null ? 1 : count + 1;
-    }
-
-    function initializeCountMaps(countMaps) {
-        countMaps.forEach(map => {
-            map["long"] = {};
-            map["short"] = {};
-        });
-    }
-
-    function updateCountMapFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap) {
-        records.forEach(record => {
-            // Only update category maps if record has Bad or Awful for Feeling.
-            if (negativeMoods.includes(record["Feeling"])) {
-                let activity = record["Activity"].substring(0, 2);
-                let reason = record["Reason"];
-                let mood = record["Feeling"];
-
-                updateCategorySubMapCount(activityCountMap, type, activity);
-                updateCategorySubMapCount(reasonCountMap, type, reason);
-                updateCategorySubMapCount(moodCountMap, type, mood);
-            }
-        });
-    }
+    let categoryActivityCountMap = {};
+    let categoryActivityMap = {};
+    let categoryReasonMap = {};
+    let categoryMoodMap = {};
 
     // Setup categoryActivityCountMap.
     // Structure - { category: { short: { activity: negative mood count }, long: { ... }} }
@@ -165,10 +113,10 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         let countMaps = [activityCountMap, reasonCountMap, moodCountMap];
         initializeCountMaps(countMaps);
 
-        let longTermEmailList = getEmailListForCategory(category, longTermStressorKey);
-        let shortTermEmailList = getEmailListForCategory(category, dailyStressorKey);
-        let longTermRecords = everyoneData.filter(record => { return longTermEmailList.includes(record[everyoneDataEmailKey]) });
-        let shortTermRecords = everyoneData.filter(record => { return shortTermEmailList.includes(record[everyoneDataEmailKey]) });
+        let longTermEmailList = getEmailListForCategory(personalityData, category, keys.personality.longTermStressor);
+        let shortTermEmailList = getEmailListForCategory(personalityData, category, keys.personality.shortTermStressor);
+        let longTermRecords = everyoneData.filter(record => { return longTermEmailList.includes(record[keys.everyone.email]) });
+        let shortTermRecords = everyoneData.filter(record => { return shortTermEmailList.includes(record[keys.everyone.email]) });
 
         updateCountMapFromRecords(longTermRecords, "long", activityCountMap, reasonCountMap, moodCountMap);
         updateCountMapFromRecords(shortTermRecords, "short", activityCountMap, reasonCountMap, moodCountMap);
@@ -218,13 +166,13 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         updateCategoryNominalValues(category, "short");
     })
 
-    console.log("Activity Maps: ");
-    console.log(categoryActivityCountMap);
-    console.log(categoryActivityMap);
-    console.log("Reason Map: ");
-    console.log(categoryReasonMap);
-    console.log("Mood Map: ");
-    console.log(categoryMoodMap);
+    // console.log("Activity Maps: ");
+    // console.log(categoryActivityCountMap);
+    // console.log(categoryActivityMap);
+    // console.log("Reason Map: ");
+    // console.log(categoryReasonMap);
+    // console.log("Mood Map: ");
+    // console.log(categoryMoodMap);
 
     // Adjust percentages amongst all categories so that the category with max negative activity percentage is 1.
     let longTermMaxPercent = d3.max(categories, category => { return categoryPercentMap[category]["long"]; });

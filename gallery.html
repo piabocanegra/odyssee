@@ -44,9 +44,11 @@
         let backgroundColor = "#fff8eb";
         let iconWidth = 70;
 
-        let moodList = ["Awful", "Bad", "Ok", "Good", "Amazing"];
         let attitudeList = ["want to", "have to", "both", "neither"];
+        let categories = ["relationships", "health", "work", "logistical"];
         let dashArray2 = ["0.25 7", "5 7", "0.25 7 5 7", "1000"];
+        let moodList = ["Awful", "Bad", "Ok", "Good", "Amazing"];
+
         let dashArray = {
             "I want to": "0.25 5",
             "I have to": "5 5",
@@ -72,6 +74,23 @@
             "Good": "#f2d878",
             "Amazing": "#ffc500"
         };
+        let categoryShortToLongMap = {
+            "work": "Work/School",
+            "health": "Health & well-being",
+            "relationships": "Relationships",
+            "logistical": "Logistical"
+        };
+
+        let keys = {
+            personality: {
+                shortTermStressor: "Which of the following daily stressors is most significant for you?",
+                longTermStressor: "Which of the following long-term stressors is most significant for you?",
+                email: "What's your email?"
+            },
+            everyone: {
+                email: "Email"
+            }
+        }
 
         const getData = async() => {
             // TODO for Jamal: replace next two lines with json list

@@ -236,6 +236,52 @@ function getKeyWithHighestValue(map) {
     return maxKey;
 }
 
+// Return users whose answer for [personalityDataKey] matches [category], in the form of their emails.
+// Example usage: return users whose daily stressor is work.
+function getEmailListForCategory(personalityData, category, personalityDataKey) {
+    return personalityData.filter(p => {
+        return p[personalityDataKey].includes(categoryShortToLongMap[category]);
+    }).map(p => {
+        return p[keys.personality.email];
+    })
+}
+
+// Initialize count map for long-term versus short-term personalityData records.
+// Example map structure: {long: {}, short: {}}
+function initializeCountMaps(countMaps) {
+    countMaps.forEach(map => {
+        map["long"] = {};
+        map["short"] = {};
+    });
+}
+
+// Increments count of map[type][key].
+// Example map structure: {long: {act1: 9, act2: 17}, short: {act1: 12, act2: 14}}
+function incrementCategorySubMapCount(map, type, key) {
+    let count = map[type][key];
+    map[type][key] = count == null ? 1 : count + 1;
+}
+
+// Update counts of activities/attitudes/moods from [records] for [type].
+// Example usage: updateCountMapFromRecords(longTermRecords, "long", activityCountMap, reasonCountMap, moodCountMap)
+// Example structure for moodCountMap: {long: {mood1: 9, mood2: 17}, short: {mood1: 12, mood2: 14}}
+function updateCountMapFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap) {
+    records.forEach(record => {
+        let negativeMoods = ["Awful", "Bad"];
+
+        // Only update category maps if record has Bad or Awful for Feeling.
+        if (negativeMoods.includes(record["Feeling"])) {
+            let activity = record["Activity"].substring(0, 2);
+            let reason = record["Reason"];
+            let mood = record["Feeling"];
+
+            incrementCategorySubMapCount(activityCountMap, type, activity);
+            incrementCategorySubMapCount(reasonCountMap, type, reason);
+            incrementCategorySubMapCount(moodCountMap, type, mood);
+        }
+    });
+}
+
 // Compare functions.
 
 // Compare moods by amazing to awful.
