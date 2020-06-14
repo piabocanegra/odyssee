@@ -1,16 +1,3 @@
-function compareMoods(a, b) {
-    let moodList = ["Awful", "Bad", "Ok", "Good", "Amazing"];
-    if (moodList.indexOf(a) == -1 || moodList.indexOf(b) == -1) {
-        console.error("compareMoods invalid inputs - " + a + ", " + b);
-        return 0;
-    }
-    return moodList.indexOf(b) - moodList.indexOf(a);
-}
-
-function compareKeyList(a, b, personData) {
-    return getPersonDataByActivity(personData, b).length - getPersonDataByActivity(personData, a).length;
-}
-
 /**
  *   svgClass: tag for svg class, must include the '.'
  *   categoryMap: map of short activity keys ("b5") to frequency 

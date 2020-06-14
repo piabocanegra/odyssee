@@ -317,10 +317,14 @@ function drawStressorRadialGraphBar(constants, type) {
     };
 
     let angle = Math.atan((lineAttr.y2 - lineAttr.y1) / (lineAttr.x2 - lineAttr.x1)) * 180 / Math.PI - 90;
+    if (category == "health" || category == "logistical") {
+        angle += 180;
+    }
     let transform = 'rotate(' + angle + ' ' + (imageAttr.x) + ' ' + (imageAttr.y) + ')';
 
     svg.append('image')
         .attr('xlink:href', 'images/' + categoryActivityMap[category][type] + '.svg')
+        // .attr('xlink:href', 'images/' + 'b1' + '.svg')
         .attr('x', imageAttr.x - iconSize / 2)
         .attr('y', imageAttr.y - iconSize / 2)
         .attr('width', iconSize)
