@@ -1,11 +1,11 @@
 /**
-*   svgClass: tag for svg clas, must include the '.'
-*   categoryMap: map of short activity keys ("b5") to frequency 
-*   categoryFullMap: map of full activity keys ("Intellectual") to frequency
-*   title: title of graph
-*   personData: list of data entries
-*   returns void, draws data vis for line bar chart
-*/
+ *   svgClass: tag for svg clas, must include the '.'
+ *   categoryMap: map of short activity keys ("b5") to frequency 
+ *   categoryFullMap: map of full activity keys ("Intellectual") to frequency
+ *   title: title of graph
+ *   personData: list of data entries
+ *   returns void, draws data vis for line bar chart
+ */
 function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, personData) {
     let svg = d3.select(svgClass);
 
@@ -123,6 +123,6 @@ function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, perso
         .style("font-size", 12);
 
     // Add legends.
-    drawMoodLegend(svgClass);
-    drawAttitudeLegend(svgClass);
+    drawMoodHalfLegend(svgClass);
+    drawAttitudeHalfLegend(svgClass);
 }

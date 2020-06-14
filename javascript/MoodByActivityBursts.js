@@ -8,26 +8,26 @@ let dashArrayForBursts = {
 var tooltip;
 
 /**
-*   svgClass: tag for svg clas, must include the '.'
-*   data: list of data entries from excel 
-*   centerX: x location for center of burst
-*   centerY: y location for center of burst
-*   mood: mood that the burst represents, ie "Good" -- used for color of burst
-*   returns void, handles drawing of one burst 
-*/
+ *   svgClass: tag for svg clas, must include the '.'
+ *   data: list of data entries from excel 
+ *   centerX: x location for center of burst
+ *   centerY: y location for center of burst
+ *   mood: mood that the burst represents, ie "Good" -- used for color of burst
+ *   returns void, handles drawing of one burst 
+ */
 function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, divisionFactor) {
     let svg = d3.select(svgClass);
     let lengthOfTick = 17;
     let totalTicks = getTotalFrequencyFromMap(data);
 
     let offset = totalTicks < 10 ? 1 : divisionFactor;
-    let numVisibleTicks = Math.floor(totalTicks/offset);
+    let numVisibleTicks = Math.floor(totalTicks / offset);
 
-    let innerRadius = numVisibleTicks < 10 ? 0 : (numVisibleTicks*lengthOfTick/10)-10;
+    let innerRadius = numVisibleTicks < 10 ? 0 : (numVisibleTicks * lengthOfTick / 10) - 10;
     let outerRadius = innerRadius + lengthOfTick;
 
     let radialScale = d3.scaleLinear()
-        .domain([0,numVisibleTicks])
+        .domain([0, numVisibleTicks])
         .range([0, 2 * Math.PI]);
 
     let count = 0;
@@ -56,8 +56,8 @@ function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, di
         .attr('r', outerRadius)
         .style('opacity', 0)
         .on('mousemove', function() {
-            let tooltipText = "<b>ACTIVITY:</b> " + activity + "</br></br><b>FREQUENCY: </b>" + totalTicks + "</br></br><b>MOOD: </b>" + mood.toLowerCase() + 
-                " (<b>AVERAGE: </b> "+ avgMood + ")" + "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[getKeyWithHighestValue(data)];
+            let tooltipText = "<b>ACTIVITY:</b> " + activity + "</br></br><b>FREQUENCY: </b>" + totalTicks + "</br></br><b>MOOD: </b>" + mood.toLowerCase() +
+                " (<b>AVERAGE: </b> " + avgMood + ")" + "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[getKeyWithHighestValue(data)];
             tooltip
                 .html(tooltipText)
                 .style("font-family", "Courier new")
@@ -81,13 +81,13 @@ function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, di
 }
 
 /**
-*   svgClass: tag for svg clas, must include the '.'
-*   categoryMap: map of short activity keys ("b5") to frequency
-*   categoryFullMap: map of long formed activity keys ("eating and drinking") to frequency
-*   title: title of graph
-*   personData: list of data entries
-*   returns void, handles drawing of entire vis 
-*/
+ *   svgClass: tag for svg clas, must include the '.'
+ *   categoryMap: map of short activity keys ("b5") to frequency
+ *   categoryFullMap: map of long formed activity keys ("eating and drinking") to frequency
+ *   title: title of graph
+ *   personData: list of data entries
+ *   returns void, handles drawing of entire vis 
+ */
 function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, personData, title) {
     let svg = d3.select(svgClass);
 
@@ -172,7 +172,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
             .style('filter', function() {
                 return 'url(#' + moodList[Math.round(avgMap[keyList[i]])] + ')';
             });
-        
+
         Object.keys(burstMap[activity]).forEach(function(mood) {
             let tempNumTicks = getTotalFrequencyFromMap(burstMap[activity][mood]);
             maxTicks = maxTicks < tempNumTicks ? tempNumTicks : maxTicks;
@@ -181,8 +181,8 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
         //draw bursts
         Object.keys(burstMap[activity]).forEach(function(mood) {
             let burstData = burstMap[activity][mood];
-            drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), keyList2[i].split("(")[0].toLowerCase(), 
-                mood, moodList[Math.round(avgMap[activity])].toLowerCase(), Math.ceil(maxTicks/30));
+            drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), keyList2[i].split("(")[0].toLowerCase(),
+                mood, moodList[Math.round(avgMap[activity])].toLowerCase(), Math.ceil(maxTicks / 30));
         });
     });
 
@@ -208,46 +208,46 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
 
     // add avg line + std legend
     svg.append("line")
-        .attr("x1", width*0.8)
-        .attr("x2", width*0.8)
-        .attr("y1", height-padding*1.75)
-        .attr("y2", height-padding*0.1)
+        .attr("x1", width * 0.8)
+        .attr("x2", width * 0.8)
+        .attr("y1", height - padding * 1.75)
+        .attr("y2", height - padding * 0.1)
         .attr("stroke", "#cdcdcd")
         .attr("stroke-width", 2.5)
         .style("opacity", 0.4)
         .style("stroke-linecap", "round");
     svg.append("circle")
-        .attr("cx", width*0.8)
-        .attr("cy", height-padding*1.15)
+        .attr("cx", width * 0.8)
+        .attr("cy", height - padding * 1.15)
         .attr("r", 6)
         .style("fill", textColor);
     svg.append("text")
-        .attr("x", width*0.78)
-        .attr("y", height-padding*1.15-15)
+        .attr("x", width * 0.78)
+        .attr("y", height - padding * 1.15 - 15)
         .text("average")
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
         .style("fill", textColor)
         .style("font-size", 12);
     svg.append("text")
-        .attr("x", width*0.78)
-        .attr("y", height-padding*1.15)
+        .attr("x", width * 0.78)
+        .attr("y", height - padding * 1.15)
         .text("mood")
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
         .style("fill", textColor)
         .style("font-size", 12);
     svg.append("text")
-        .attr("x", width*0.81)
-        .attr("y", height-padding*0.1-15)
+        .attr("x", width * 0.81)
+        .attr("y", height - padding * 0.1 - 15)
         .text("standard")
         .style("font-family", "Courier new")
         .style("text-anchor", "start")
         .style("fill", textColor)
         .style("font-size", 12);
     svg.append("text")
-        .attr("x", width*0.81)
-        .attr("y", height-padding*0.1)
+        .attr("x", width * 0.81)
+        .attr("y", height - padding * 0.1)
         .text("deviation")
         .style("font-family", "Courier new")
         .style("text-anchor", "start")
@@ -256,16 +256,16 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
 
     // add attitude legend
     svg.append("text")
-        .attr("x", padding*3 + width*0.22)
-        .attr("y", height-padding*1.75)
-        .text("one tick represents " + Math.ceil(maxTicks/30) + " ticks")
+        .attr("x", padding * 3 + width * 0.22)
+        .attr("y", height - padding * 1.75)
+        .text("one tick represents " + Math.ceil(maxTicks / 30) + " ticks")
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
         .style("fill", textColor)
         .style("font-size", 12);
     let attitudeLegend = svg.append("g")
         .attr("class", "attitudeLegend")
-        .attr("width", width*0.44)
-        .attr("transform", "translate(" + padding*3 + "," + (height-padding*1.75) + ")");
-    drawAttitudeLegendData(attitudeLegend);
+        .attr("width", width * 0.44)
+        .attr("transform", "translate(" + padding * 3 + "," + (height - padding * 1.75) + ")");
+    drawAttitudeLegendData(attitudeLegend, attitudeList);
 }

@@ -19,7 +19,7 @@ function drawTitle(svg, title) {
         .style("text-anchor", titleAttr.textAnchor);
 }
 
-function drawMoodLegendData(moodLegend) {
+function drawMoodLegendData(moodLegend, moodList) {
     let width = moodLegend.attr("width");
     if (width == null) {
         console.error("drawMoodLegendData: must specify width for moodLegend.")
@@ -49,7 +49,24 @@ function drawMoodLegendData(moodLegend) {
         .style("font-size", 12);
 }
 
-function drawMoodLegend(svgClass) {
+function drawMoodLegend(moodLegend, title, moodList) {
+    let width = moodLegend.attr("width");
+    if (width == null) {
+        console.error("drawMoodLegend: must specify width for moodLegend.")
+    }
+    moodLegend.append("text")
+        .attr("x", width / 2)
+        .attr("y", 15)
+        .text(title)
+        .style("text-anchor", "middle")
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+
+    drawMoodLegendData(moodLegend, moodList);
+}
+
+function drawMoodHalfLegend(svgClass) {
     let svg = d3.select(svgClass)
     let height = svg.attr('height')
 
@@ -63,19 +80,10 @@ function drawMoodLegend(svgClass) {
         .attr("width", moodLegendAttr.width)
         .attr("transform", "translate(" + moodLegendAttr.x + "," + moodLegendAttr.y + ")");
 
-    moodLegend.append("text")
-        .attr("x", moodLegendAttr.width / 2)
-        .attr("y", 15)
-        .text("Average mood")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
-
-    drawMoodLegendData(moodLegend);
+    drawMoodLegend(moodLegend, "Average mood", moodList);
 }
 
-function drawAttitudeLegendData(attitudeLegend) {
+function drawAttitudeLegendData(attitudeLegend, attitudeList) {
     let width = attitudeLegend.attr("width");
     if (width == null) {
         console.error("drawAttitudeLegendData: must specify width for attitudeLegend.")
@@ -109,7 +117,24 @@ function drawAttitudeLegendData(attitudeLegend) {
         .style("stroke-dasharray", function(d, i) { return dashArray2[i]; });
 }
 
-function drawAttitudeLegend(svgClass) {
+function drawAttitudeLegend(attitudeLegend, title, attitudeList) {
+    let width = attitudeLegend.attr("width");
+    if (width == null) {
+        console.error("drawAttitudeLegend: must specify width for attitudeLegend.")
+    }
+    attitudeLegend.append("text")
+        .attr("x", width / 2)
+        .attr("y", 15)
+        .text(title)
+        .style("text-anchor", "middle")
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+
+    drawAttitudeLegendData(attitudeLegend, attitudeList);
+}
+
+function drawAttitudeHalfLegend(svgClass) {
     let svg = d3.select(svgClass)
     let height = svg.attr('height')
     let width = svg.attr('width')
@@ -124,16 +149,7 @@ function drawAttitudeLegend(svgClass) {
         .attr("width", attitudeLegendAttr.width)
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
-    attitudeLegend.append("text")
-        .attr("x", attitudeLegendAttr.width / 2)
-        .attr("y", 15)
-        .text("Most frequent attitude")
-        .style("font-family", "Courier new")
-        .style("text-anchor", "middle")
-        .style("fill", textColor)
-        .style("font-size", 12);
-
-    drawAttitudeLegendData(attitudeLegend);
+    drawAttitudeLegend(attitudeLegend, "Most frequent attitude", attitudeList);
 }
 
 // add color filters to website, must call this per svg 

@@ -219,9 +219,9 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
         .attr("width", attitudeLegendAttr.width)
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
-    drawMoodLegendData(moodLegend);
+    drawMoodLegendData(moodLegend, moodList);
     drawFlowerLegend(flowerLegend, petalDivisor);
-    drawAttitudeLegendData(attitudeLegend);
+    drawAttitudeLegendData(attitudeLegend, attitudeList);
 
     // Function for drawing flower legend.
     function drawFlowerLegend(flowerLegend, petalDivisor) {

@@ -74,12 +74,12 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     // console.log(personalityData);
     // console.log(everyoneData);
 
-    let circleRadius = 180;
-    let circleRadiusIncrement = 120;
+    let circleRadius = 160;
+    let circleRadiusIncrement = 100;
 
     let center = {
         x: width / 2,
-        y: height / 2
+        y: (height - padding * 2.5) / 2
     };
 
     // Setup scales.
@@ -202,7 +202,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
 
         let angle = radialScale(category) * 180 / Math.PI - 225;
         angle = angle < -45 ? angle + 180 : angle;
-        let transform = 'rotate(' + angle + ' ' + (textAttr.x) + ' ' + (textAttr.y) + ')';
+        let transform = "rotate(" + angle + " " + (textAttr.x) + " " + (textAttr.y) + ")";
 
         svg.append("text")
             .attr("x", textAttr.x)
@@ -213,7 +213,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             .style("text-anchor", textAttr.textAnchor)
             .style("alignment-baseline", textAttr.alignment)
             .text(category)
-            .attr('transform', transform)
+            .attr("transform", transform)
 
         let constants = {
             svg: svg,
@@ -231,6 +231,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         drawStressorRadialGraphBar(constants, "long");
         drawStressorRadialGraphBar(constants, "short");
     });
+
+    drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercentMap);
 }
 
 function drawStressorRadialGraphBar(constants, type) {
@@ -268,17 +270,17 @@ function drawStressorRadialGraphBar(constants, type) {
     if (category == "health" || category == "logistical") {
         angle += 180;
     }
-    let transform = 'rotate(' + angle + ' ' + (imageAttr.x) + ' ' + (imageAttr.y) + ')';
+    let transform = "rotate(" + angle + " " + (imageAttr.x) + " " + (imageAttr.y) + ")";
 
-    svg.append('image')
-        .attr('xlink:href', 'images/' + categoryActivityMap[category][type] + '.svg')
-        // .attr('xlink:href', 'images/' + 'b1' + '.svg')
-        .attr('x', imageAttr.x - iconSize / 2)
-        .attr('y', imageAttr.y - iconSize / 2)
-        .attr('width', iconSize)
-        .attr('height', iconSize)
-        .style('filter', function() { return 'url(#' + categoryMoodMap[category][type] + ')'; })
-        .attr('transform', transform);
+    svg.append("image")
+        .attr("xlink:href", "images/" + categoryActivityMap[category][type] + ".svg")
+        // .attr("xlink:href", "images/" + "b1" + ".svg")
+        .attr("x", imageAttr.x - iconSize / 2)
+        .attr("y", imageAttr.y - iconSize / 2)
+        .attr("width", iconSize)
+        .attr("height", iconSize)
+        .style("filter", function() { return "url(#" + categoryMoodMap[category][type] + ")"; })
+        .attr("transform", transform);
 
     svg.append("line")
         .attr("x1", lineAttr.x1)
@@ -289,4 +291,157 @@ function drawStressorRadialGraphBar(constants, type) {
         .attr("stroke-width", 2.5)
         .style("stroke-linecap", "round")
         .style("stroke-dasharray", dashArray[categoryReasonMap[category][type]]);
+}
+
+function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercentMap) {
+    let height = svg.attr("height");
+    let width = svg.attr("width");
+    let interLegendPadding = 24;
+
+    // Draw most negative activity.
+    let mostNegAttr = {
+        x: padding,
+        y: height - padding * 2.5,
+        width: width / 3 / 2 - interLegendPadding,
+    };
+    let mostNegLegend = svg.append("g")
+        .attr("width", mostNegAttr.width)
+        .attr("transform", "translate(" + mostNegAttr.x + "," + mostNegAttr.y + ")");
+
+    // Add text.
+    mostNegLegend.append("text")
+        .text("Most negative activity")
+        .attr("x", mostNegAttr.width / 2)
+        .attr("y", 15)
+        .attr("text-anchor", "middle")
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+
+    // Setup icon size and filter.
+    let iconSize = 36;
+    svg.append('filter')
+        .attr('id', 'Text')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 1 0");
+
+    // Calculate most negative activity (long-term).
+    let longTermMaxPercent = d3.max(categories, category => { return categoryPercentMap[category]["long"]; });
+
+    categories.forEach(category => {
+        if (categoryPercentMap[category]["long"] == longTermMaxPercent) {
+            // Add icon.
+            mostNegLegend.append("image")
+                .attr("xlink:href", "images/" + categoryActivityMap[category]["long"] + ".svg")
+                .attr("x", mostNegAttr.width / 2 - iconSize / 2)
+                .attr("y", (padding * 2.5) / 2 - iconSize / 2 - 12)
+                .attr("width", iconSize)
+                .attr("height", iconSize)
+                .style("filter", function() { return "url(#Text)"; });
+        }
+    });
+
+    // Draw mood legend.
+    let moodLegendAttr = {
+        x: width / 3 / 2 + interLegendPadding + padding,
+        y: height - padding * 2.5,
+        width: width / 3 / 2 - interLegendPadding - padding,
+    };
+    let moodLegend = svg.append("g")
+        .attr("class", "moodLegend")
+        .attr("width", moodLegendAttr.width)
+        .attr("transform", "translate(" + moodLegendAttr.x + "," + moodLegendAttr.y + ")");
+
+    drawMoodLegend(moodLegend, "Most frequent mood", negativeMoods);
+
+    // Draw line legend.
+    let lineLegendAttr = {
+        x: width / 3 + padding + interLegendPadding / 2,
+        y: height - padding * 2.5,
+        width: width / 3 - interLegendPadding,
+        textStart: 48
+    }
+
+    let lineLegend = svg.append("g")
+        .attr("width", lineLegendAttr.width)
+        .attr("transform", "translate(" + lineLegendAttr.x + "," + lineLegendAttr.y + ")");
+
+    // Setup curve data.
+    let lineGenerator = d3.line()
+        .curve(d3.curveCardinal);
+    let lineLegendPoints = [
+        [0, 0],
+        [10, -3.75],
+        [20, -5],
+        [30, -3.75],
+        [40, 0]
+    ];
+    let lineLegendCurve = lineGenerator(lineLegendPoints);
+
+    // Add lines.
+    lineLegend.append("path")
+        .attr("d", lineLegendCurve)
+        .attr("fill", "none")
+        .attr("stroke", "lightgrey")
+        .attr("stroke-width", 2.5)
+        .attr("transform", "translate(" + 0 + "," + 15 + ")");
+
+    lineLegend.append("line")
+        .attr("x1", (lineLegendAttr.textStart - 8) / 2)
+        .attr("x2", (lineLegendAttr.textStart - 8) / 2)
+        .attr("y1", 15 + 35)
+        .attr("y2", 15 + 35 + 16 * 2)
+        .attr("stroke", textColor)
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", "round")
+        .style("stroke-dasharray", dashArray["I have to"]);
+
+    // Add text.
+    lineLegend.append("text")
+        .text("border represents ratio of 1")
+        .attr("x", lineLegendAttr.textStart)
+        .attr("y", 15)
+        .attr("width", width / 3)
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    lineLegend.append("text")
+        .text("length represents")
+        .attr("x", lineLegendAttr.textStart)
+        .attr("y", 15 + 35)
+        .attr("width", width / 3)
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    lineLegend.append("text")
+        .text("ratio of Bad/Awful records")
+        .attr("x", lineLegendAttr.textStart)
+        .attr("y", 15 + 35 + 16)
+        .attr("width", width / 3)
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    lineLegend.append("text")
+        .text("to total records")
+        .attr("x", lineLegendAttr.textStart)
+        .attr("y", 15 + 35 + 16 * 2)
+        .attr("width", width / 3)
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12);
+
+    // Draw attitude legend.
+    let attitudeLegendAttr = {
+        x: width / 3 * 2 + interLegendPadding / 2 + padding,
+        y: height - padding * 2.5,
+        width: width / 3 - interLegendPadding * 2 - padding,
+    };
+    let attitudeLegend = svg.append("g")
+        .attr("class", "attitudeLegend")
+        .attr("width", attitudeLegendAttr.width)
+        .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
+
+    drawAttitudeLegend(attitudeLegend, "Most frequent attitude", attitudeList);
 }

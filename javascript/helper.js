@@ -267,8 +267,6 @@ function incrementCategorySubMapCount(map, type, key) {
 // Example structure for moodCountMap: {long: {mood1: 9, mood2: 17}, short: {mood1: 12, mood2: 14}}
 function updateCountMapFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap) {
     records.forEach(record => {
-        let negativeMoods = ["Awful", "Bad"];
-
         // Only update category maps if record has Bad or Awful for Feeling.
         if (negativeMoods.includes(record["Feeling"])) {
             let activity = record["Activity"].substring(0, 2);
