@@ -190,3 +190,75 @@ function setUpFilters(svgClass) {
         .attr('color-interpolation-filters', 'sRGB')
         .attr('values', "0 0 0 0 0.6235294 0 0 0 0 0.1490196 0 0 0 0 0.3568627 0 0 0 1 0");
 }
+
+// Helper function for drawing imperfect circles and zigzag curves.
+function getImperfectArcPoints(center, radius, start, end, step, maxOffset) {
+    let points = [];
+    for (let i = start; i <= end; i += step) {
+        // Convert angle to radians.
+        let theta = i * Math.PI / 180;
+        // Calculate point on circle.
+        let x = center.x + radius * Math.cos(theta); // x = rcos(a)
+        let y = center.y + radius * Math.sin(theta); // y = rsin(a)
+        // Add random radius offset in range [-maxOffset, maxOffset] to create zig zag.
+        let rOffset = (2 * Math.random() - 1) * maxOffset;
+        x += rOffset * Math.cos(theta);
+        y += rOffset * Math.sin(theta);
+        // Add point to points array.
+        points.push([x, y]);
+    }
+    return points
+}
+
+function drawImperfectCircle(svg, center, radius, attr = {}) {
+    // Unwrap optional attributes, set defaults.
+    // Arc.
+    let step = attr.step == null ? 8 : attr.step; // Control point increment.
+    let maxOffset = attr.maxOffset == null ? Math.ceil(radius / 65) : attr.maxOffset; // Control radius max offset.
+    // Stroke.
+    let strokeWidth = attr.strokeWidth == null ? 2 : attr.strokeWidth; // Control thickness of line.
+    let stroke = attr.stroke == null ? "lightgrey" : attr.stroke; // Control color of line.
+
+    // Setup arc generator.
+    let circleArcGen = d3.line()
+        .curve(d3.curveCardinalClosed);
+
+    // Generate imperfect circle arc points.
+    let circlePoints = getImperfectArcPoints(center, radius, 0, 360 - step, step, maxOffset);
+
+    // Draw path.
+    let circleArc = circleArcGen(circlePoints);
+    svg.append("path")
+        .attr("d", circleArc)
+        .attr("fill", "none")
+        .attr("stroke", stroke)
+        .attr("stroke-width", strokeWidth);
+}
+
+function drawZigzagArc(svg, center, radius, attr = {}) {
+    // Unwrap optional attributes, set defaults.
+    // Zigzag.
+    let step = attr.step == null ? 2 : attr.step; // Control width spacing of zigzag.
+    let maxOffset = attr.maxOffset == null ? 8 : attr.maxOffset; // Control max height of zigzag.
+    // Angle.
+    let minAngle = attr.minAngle == null ? 0 : attr.minAngle; // Control arc angle start.
+    let maxAngle = attr.maxAngle == null ? 360 : attr.maxAngle; // Control arc angle end.
+    // Stroke.
+    let strokeWidth = attr.strokeWidth == null ? 2 : attr.strokeWidth; // Control thickness of line.
+    let stroke = attr.stroke == null ? "lightgrey" : attr.stroke; // Control color of line.
+
+    // Setup arc generator.
+    let zigzagArcGen = d3.line()
+        .curve(d3.curveLinear);
+
+    // Generate zigzag arc points.
+    let zigzagArcPoints = getImperfectArcPoints(center, radius, minAngle, maxAngle, step, maxOffset);
+
+    // Add zigzag arc path.
+    let zigzagArc = zigzagArcGen(zigzagArcPoints);
+    svg.append("path")
+        .attr("d", zigzagArc)
+        .attr("fill", "none")
+        .attr("stroke", stroke)
+        .attr("stroke-width", strokeWidth);
+}

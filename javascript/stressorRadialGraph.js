@@ -16,30 +16,6 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
         .style("text-anchor", titleAttr.textAnchor)
         .style("alignment-baseline", titleAttr.alignment);
 
-    svg.append("circle")
-        .attr("cx", center.x)
-        .attr("cy", center.y)
-        .attr("stroke", "lightgrey")
-        .attr("stroke-width", 1)
-        .attr("fill", "none")
-        .attr("r", circleRadius)
-
-    svg.append("circle")
-        .attr("cx", center.x)
-        .attr("cy", center.y)
-        .attr("stroke", "lightgrey")
-        .attr("stroke-width", 1)
-        .attr("fill", "none")
-        .attr("r", circleRadius + circleRadiusIncrement)
-
-    svg.append("circle")
-        .attr("cx", center.x)
-        .attr("cy", center.y)
-        .attr("stroke", "lightgrey")
-        .attr("stroke-width", 1)
-        .attr("fill", "none")
-        .attr("r", circleRadius + circleRadiusIncrement * 2)
-
     svg.append("text")
         .attr("x", center.x)
         .attr("y", center.y + circleRadius + circleRadiusIncrement - 12)
@@ -49,6 +25,8 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
         .style("fill", textColor)
         .style("font-size", 12);
 
+    drawImperfectCircle(svg, center, circleRadius + circleRadiusIncrement, { strokeWidth: 1.5 });
+
     svg.append("text")
         .attr("x", center.x)
         .attr("y", center.y + circleRadius + circleRadiusIncrement * 2 - 12)
@@ -57,6 +35,8 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
         .style("font-family", "Courier new")
         .style("fill", textColor)
         .style("font-size", 12);
+
+    drawImperfectCircle(svg, center, circleRadius + circleRadiusIncrement * 2, { strokeWidth: 1.5 });
 }
 
 /**
@@ -189,8 +169,26 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             long: circleRadius + longTermScale(adjustedPercent.long),
             short: circleRadius + shortTermScale(adjustedPercent.short)
         };
+
         let iconSize = 48;
 
+        // Calculate angle in degrees.
+        let angle = radialScale(category) * 180 / Math.PI - 225;
+
+        // Add zigzag arc.
+        let zigzagPadding = 14;
+        let zigzagRadius = circleRadius - iconSize / 2; // Center arc with respect to icons.
+        let zigzagAttr = {
+            strokeWidth: 1.5,
+            stroke: colorHexArray["Awful"],
+            maxOffset: 8,
+            minAngle: angle + zigzagPadding,
+            maxAngle: angle + 90 - zigzagPadding,
+        }
+
+        drawZigzagArc(svg, center, zigzagRadius, zigzagAttr);
+
+        // Add text.
         let textAttr = {
             fontSize: 12,
             fontFamily: "Courier new",
@@ -200,7 +198,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             y: center.y + (innerRadius - 12 - iconSize) * Math.sin(radialScale(category) + Math.PI / 4)
         };
 
-        let angle = radialScale(category) * 180 / Math.PI - 225;
+        // Fix angle so that text is oriented upright.
         angle = angle < -45 ? angle + 180 : angle;
         let transform = "rotate(" + angle + " " + (textAttr.x) + " " + (textAttr.y) + ")";
 
@@ -228,10 +226,12 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             iconSize: iconSize
         }
 
+        // Add icons and radial lines.
         drawStressorRadialGraphBar(constants, "long");
         drawStressorRadialGraphBar(constants, "short");
     });
 
+    // Add legend.
     drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercentMap);
 }
 
