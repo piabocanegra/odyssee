@@ -108,10 +108,12 @@
             drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap2, "Everyone's last 2 weeks", everyoneData);
             drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap2, everyoneData, "Mood by Activity");
 
-            drawIndActivityFlower(".indActFlower", categoryMap, categoryFullMap, "Activity", personData);
+            drawIndActivityFlower(".indActFlower", categoryMap, categoryFullMap, "Activity", personData3);
 
             var personData2 = await d3.json("fakeIndActFlowerData.json");
-            drawIndActivityFlower(".indActFlower2", categoryMap, categoryFullMap, "Activity", personData2);
+            var categoryMap2 = getFrequencyByKey("Activity", personData2);
+            var categoryFullMap2 = getFrequencyByKey("Activity", personData2, 1);
+            drawIndActivityFlower(".indActFlower2", categoryMap2, categoryFullMap2, "Activity", personData2);
 
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData);

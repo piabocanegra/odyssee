@@ -51,8 +51,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    // console.log(personalityData);
-    // console.log(everyoneData);
+    console.log(personalityData);
+    console.log(everyoneData);
 
     let circleRadius = 160;
     let circleRadiusIncrement = 100;
@@ -146,13 +146,13 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         updateCategoryNominalValues(category, "short");
     })
 
-    // console.log("Activity Maps: ");
-    // console.log(categoryActivityCountMap);
-    // console.log(categoryActivityMap);
-    // console.log("Reason Map: ");
-    // console.log(categoryReasonMap);
-    // console.log("Mood Map: ");
-    // console.log(categoryMoodMap);
+    console.log("Activity Maps: ");
+    console.log(categoryActivityCountMap);
+    console.log(categoryActivityMap);
+    console.log("Reason Map: ");
+    console.log(categoryReasonMap);
+    console.log("Mood Map: ");
+    console.log(categoryMoodMap);
 
     // Adjust percentages amongst all categories so that the category with max negative activity percentage is 1.
     let longTermMaxPercent = d3.max(categories, category => { return categoryPercentMap[category]["long"]; });
@@ -163,6 +163,9 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             long: categoryPercentMap[category]["long"] / longTermMaxPercent,
             short: categoryPercentMap[category]["short"] / shortTermMaxPercent
         };
+        console.log(category + ": ")
+        console.log(categoryPercentMap[category])
+        console.log(adjustedPercent)
 
         let innerRadius = circleRadius;
         let outerRadius = {
