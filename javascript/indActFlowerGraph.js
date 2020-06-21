@@ -90,7 +90,7 @@ function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, pe
     let petalDivisor = maxPoints > 40 ? 2 : 1;
 
     // Setup tooltip.
-    let tooltipId = "tooltipId"
+    let tooltipId = "indActFlowerGraphTooltipId"
     let tooltip = d3.select("body")
         .append("div")
         .attr("id", tooltipId)
