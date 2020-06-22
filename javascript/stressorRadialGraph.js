@@ -98,13 +98,24 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         categoryActivityMap[category] = {};
     });
 
+    // console.log("Activity Maps: ");
+    // console.log(categoryActivityCountMap);
+    // console.log(categoryActivityMap);
+    // console.log("Reason Map: ");
+    // console.log(categoryReasonMap);
+    // console.log("Mood Map: ");
+    // console.log(categoryMoodMap);
+
     function updateCategoryMaxValue(category, type, countMap, updateMap = countMap) {
         let map = countMap[category][type];
         let maxNegativeCount = d3.max(Object.keys(map), key => { return map[key]; });
-        let maxNegativeValue = Object.keys(map).find(key => {
+        // console.log(category + ": " + maxNegativeCount)
+        updateMap[category][type] = Object.keys(map).find(key => {
+            // if (map[key] == maxNegativeCount) {
+            //     console.log(key)
+            // }
             return map[key] == maxNegativeCount;
         });
-        updateMap[category][type] = maxNegativeValue;
     }
 
     function updateCategoryNominalValues(category, type) {

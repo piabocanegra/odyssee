@@ -280,20 +280,12 @@ function updateCountMapFromRecords(records, type, activityCountMap, reasonCountM
     });
 }
 
-// Divide count of Bad/Awful feelings by total records for each activity/reason/feeling.
 function getCountMapNegativePercentageFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap) {
     updateCountMapFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap);
+    // Divide count of Bad/Awful feelings by total records for each activity.
     Object.keys(activityCountMap[type]).forEach(a => {
         let totalRecordCountForActivity = records.filter(record => { return record["Activity"].substring(0, 2) == a }).length
         activityCountMap[type][a] = activityCountMap[type][a] / totalRecordCountForActivity
-    })
-    Object.keys(reasonCountMap[type]).forEach(r => {
-        let totalRecordCountForReason = records.filter(record => { return record["Reason"] == r }).length
-        reasonCountMap[type][r] = reasonCountMap[type][r] / totalRecordCountForReason
-    })
-    Object.keys(moodCountMap[type]).forEach(m => {
-        let totalRecordCountForMood = records.filter(record => { return record["Feeling"] == m }).length
-        moodCountMap[type][m] = moodCountMap[type][m] / totalRecordCountForMood
     })
 }
 
