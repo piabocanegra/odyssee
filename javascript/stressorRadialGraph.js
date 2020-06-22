@@ -189,7 +189,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         let angle = radialScale(category) * 180 / Math.PI - 225;
 
         // Add zigzag arc.
-        let zigzagPadding = 14;
+        let zigzagPadding = 16;
         let zigzagRadius = circleRadius - iconSize / 2; // Center arc with respect to icons.
         let zigzagAttr = {
             strokeWidth: 1.5,
@@ -265,7 +265,7 @@ function drawStressorRadialGraphBar(constants, type) {
     let iconSize = constants.iconSize;
     let angle = constants.angle;
 
-    let angleOffset = 6 * Math.PI / 180;
+    let angleOffset = 8 * Math.PI / 180;
     angleOffset = type == "long" ? -angleOffset : angleOffset;
 
     // Add icons.

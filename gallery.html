@@ -102,7 +102,7 @@
 
             everyoneData.forEach(e => {
                 let activity = e["Activity"];
-                activityShortToLong[activity.split(":")[0]] = (activity.split(":")[1]).substring(1)
+                activityShortToLong[activity.split(":")[0]] = (activity.split(":")[1]).substring(1).split("(")[0]
             });
 
             var categoryMap = getFrequencyByKey("Activity", personData3);
