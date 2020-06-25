@@ -92,14 +92,17 @@ function getFrequencyByThreeKeys(str1, str2, str3, keyList, data) {
     return map;
 }
 
-function createMapFromPersonality(data, key) {
+function createMapFromPersonality(data, key, convertLongToShortMap = null) {
     let finalMap = {};
 
     for (var i = 0; i < data.length; i++) {
-        let email = data[i]["Email"];
+        let email = data[i]["What's your email?"];
         let value = data[i][key];
-
-        finalMap[email] = value;
+        if (convertLongToShortMap != null) {
+            finalMap[email] = convertLongToShortMap[value];
+        } else {
+            finalMap[email] = value;
+        }
     }
 
     return finalMap;
@@ -107,7 +110,6 @@ function createMapFromPersonality(data, key) {
 
 function getFrequencyFromPersonalityMap(personData, personalityMap, key, index = 0) {
     let map = {};
-
     for (var i = 0; i < personData.length; i++) {
         let email = personData[i]["Email"];
         if (email in personalityMap) {
@@ -159,8 +161,6 @@ function findMode(keyList, map) {
  */
 function findAvgMood(keyList, map, isRounded = true) {
     let finalMap = {};
-    let overallMax = 0;
-    let overallMin = 1000000;
 
     keyList.forEach(function(id) {
         let keys = Object.keys(map[id]);
@@ -172,17 +172,21 @@ function findAvgMood(keyList, map, isRounded = true) {
             count = count + map[id][mood];
         });
 
-        if (value / count > overallMax) {
-            overallMax = value / count;
-        }
-        if (value / count < overallMin) {
-            overallMin = value / count;
-        }
-
         finalMap[id] = isRounded ? Math.round(value / count) : value / count;
     });
 
     return finalMap;
+}
+
+function findAvgMoodByKey(personData, key, value, isRounded=true) {
+    let filteredData = personData.filter(d => d[key] == value);
+    var value = 0;
+
+    for (var d of filteredData) {
+        value += moodList.indexOf(d.Feeling);
+    }
+    
+    return Math.round(value/filteredData.length);
 }
 
 /**
@@ -208,6 +212,18 @@ function findStdDevMood(keyList, map, avgMap) {
     });
 
     return finalMap;
+}
+
+function findStdDevWithAvg(personData, key, value, avg) {
+    let filteredData = personData.filter(d => d[key] == value);
+    var value = 0;
+
+    for (var item of filteredData) {
+        value += item.Feeling * Math.pow(moodList.indexOf(item.Feeling) - avg, 2);
+    }
+
+    return Math.sqrt(value / filteredData.length);
+
 }
 
 function getTotalFrequencyFromMap(data) {
@@ -278,6 +294,30 @@ function updateCountMapFromRecords(records, type, activityCountMap, reasonCountM
             incrementCategorySubMapCount(moodCountMap, type, mood);
         }
     });
+}
+
+// Given a map, create a new map using the values as keys
+function groupMapByValue(data) {
+    let finalMap = {};
+    let keys = Object.keys(data);
+
+    for (var i = 0; i < keys.length; i++) {
+        if (!(data[keys[i]] in finalMap)) {
+            finalMap[data[keys[i]]] = [keys[i]];
+        } else {
+            finalMap[data[keys[i]]].push(keys[i])
+        }
+    }
+    return finalMap;
+}
+
+function calculatePercentageByKey(data, key) {
+    let total = 0; 
+    for (var k of Array.from(data.keys())) {
+        total += data.get(k); 
+    }
+
+    return data.get(key)/total;
 }
 
 // Compare functions.
