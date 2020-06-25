@@ -58,6 +58,7 @@
             "I want to and have to": "0.25 5 5 5",
             "of something else; I neither want to nor have to": "1000"
         };
+        let activityShortToLong = {}; // Configured later using everyoneData.
         let attitudeLongtoShort = {
             "I want to": "want to",
             "I have to": "have to",
@@ -104,6 +105,11 @@
             // TODO for Jamal: replace next two lines with json list
             var everyoneData = await d3.csv("odyssee_data.csv");
             var personData3 = getPersonData(everyoneData, email);
+
+            everyoneData.forEach(e => {
+                let activity = e["Activity"];
+                activityShortToLong[activity.split(":")[0]] = (activity.split(":")[1]).substring(1).split("(")[0]
+            });
 
             var categoryMap = getFrequencyByKey("Activity", personData3);
             var categoryFullMap = getFrequencyByKey("Activity", personData3, 1);

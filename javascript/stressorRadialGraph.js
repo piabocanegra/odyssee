@@ -1,4 +1,4 @@
-function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusIncrement) {
+function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusIncrement, outerText, innerText) {
     let titleAttr = {
         fontSize: 25,
         fontFamily: "Courier new",
@@ -19,7 +19,7 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
     svg.append("text")
         .attr("x", center.x)
         .attr("y", center.y + circleRadius + circleRadiusIncrement - 12)
-        .text("short-term")
+        .text(innerText)
         .style("text-anchor", "middle")
         .style("font-family", "Courier new")
         .style("fill", textColor)
@@ -30,7 +30,7 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
     svg.append("text")
         .attr("x", center.x)
         .attr("y", center.y + circleRadius + circleRadiusIncrement * 2 - 12)
-        .text("long-term")
+        .text(outerText)
         .style("text-anchor", "middle")
         .style("font-family", "Courier new")
         .style("fill", textColor)
@@ -51,8 +51,9 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    console.log(personalityData);
-    console.log(everyoneData);
+
+    // console.log(personalityData);
+    // console.log(everyoneData);
 
     let circleRadius = 160;
     let circleRadiusIncrement = 100;
@@ -66,16 +67,6 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     let radialScale = d3.scaleBand()
         .domain(categories)
         .range([0, Math.PI * 2]);
-
-    let longTermScale = d3.scaleLinear()
-        .domain([0, 1])
-        .range([0, circleRadiusIncrement * 2]);
-
-    let shortTermScale = d3.scaleLinear()
-        .domain([0, 1])
-        .range([0, circleRadiusIncrement]);
-
-    drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusIncrement);
 
     // For each category stressor tagged by user in personalityData, look through the activity with highest 
     // percentage of bad and awful records. These will be the activities that fall into the group.
@@ -98,8 +89,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         let longTermRecords = everyoneData.filter(record => { return longTermEmailList.includes(record[keys.everyone.email]) });
         let shortTermRecords = everyoneData.filter(record => { return shortTermEmailList.includes(record[keys.everyone.email]) });
 
-        updateCountMapFromRecords(longTermRecords, "long", activityCountMap, reasonCountMap, moodCountMap);
-        updateCountMapFromRecords(shortTermRecords, "short", activityCountMap, reasonCountMap, moodCountMap);
+        getCountMapNegativePercentageFromRecords(longTermRecords, "long", activityCountMap, reasonCountMap, moodCountMap);
+        getCountMapNegativePercentageFromRecords(shortTermRecords, "short", activityCountMap, reasonCountMap, moodCountMap);
 
         categoryActivityCountMap[category] = activityCountMap;
         categoryReasonMap[category] = reasonCountMap;
@@ -107,31 +98,24 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         categoryActivityMap[category] = {};
     });
 
-    function updateActivityCountPercentage(category, type, categoryPercentMap) {
-        let activityCountMap = categoryActivityCountMap[category][type];
-        let totalCount = Object.keys(activityCountMap).reduce((acc, key) => {
-            return acc + activityCountMap[key];
-        }, 0);
-        let maxNegativeActivityCount = d3.max(Object.keys(activityCountMap), key => { return activityCountMap[key]; });
-        let negativePercentage = maxNegativeActivityCount / totalCount;
-        categoryPercentMap[category][type] = negativePercentage;
-    }
-
-    // Calculate bad/awful activity percentage of category.
-    let categoryPercentMap = {};
-    categories.forEach(category => {
-        categoryPercentMap[category] = {};
-        updateActivityCountPercentage(category, "long", categoryPercentMap);
-        updateActivityCountPercentage(category, "short", categoryPercentMap);
-    });
+    // console.log("Activity Maps: ");
+    // console.log(categoryActivityCountMap);
+    // console.log(categoryActivityMap);
+    // console.log("Reason Map: ");
+    // console.log(categoryReasonMap);
+    // console.log("Mood Map: ");
+    // console.log(categoryMoodMap);
 
     function updateCategoryMaxValue(category, type, countMap, updateMap = countMap) {
         let map = countMap[category][type];
         let maxNegativeCount = d3.max(Object.keys(map), key => { return map[key]; });
-        let maxNegativeValue = Object.keys(map).find(key => {
+        // console.log(category + ": " + maxNegativeCount)
+        updateMap[category][type] = Object.keys(map).find(key => {
+            // if (map[key] == maxNegativeCount) {
+            //     console.log(key)
+            // }
             return map[key] == maxNegativeCount;
         });
-        updateMap[category][type] = maxNegativeValue;
     }
 
     function updateCategoryNominalValues(category, type) {
@@ -146,31 +130,57 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         updateCategoryNominalValues(category, "short");
     })
 
-    console.log("Activity Maps: ");
-    console.log(categoryActivityCountMap);
-    console.log(categoryActivityMap);
-    console.log("Reason Map: ");
-    console.log(categoryReasonMap);
-    console.log("Mood Map: ");
-    console.log(categoryMoodMap);
+    // console.log("Activity Maps: ");
+    // console.log(categoryActivityCountMap);
+    // console.log(categoryActivityMap);
+    // console.log("Reason Map: ");
+    // console.log(categoryReasonMap);
+    // console.log("Mood Map: ");
+    // console.log(categoryMoodMap);
 
-    // Adjust percentages amongst all categories so that the category with max negative activity percentage is 1.
-    let longTermMaxPercent = d3.max(categories, category => { return categoryPercentMap[category]["long"]; });
-    let shortTermMaxPercent = d3.max(categories, category => { return categoryPercentMap[category]["short"]; });
+    function getMaxActivityCountPercentForType(type, categoryActivityMap, categoryActivityCountMap) {
+        return d3.max(Object.keys(categoryActivityCountMap), category => {
+            let maxNegActivity = categoryActivityMap[category][type]
+            return categoryActivityCountMap[category][type][maxNegActivity]
+        })
+    }
+
+    let maxNegativePercentageCounts = [
+        getMaxActivityCountPercentForType("long", categoryActivityMap, categoryActivityCountMap),
+        getMaxActivityCountPercentForType("short", categoryActivityMap, categoryActivityCountMap)
+    ]
+
+    let maxNegPercent = d3.max(maxNegativePercentageCounts);
+
+    let lengthScale = d3.scaleLinear()
+        .domain([0, maxNegPercent])
+        .range([0, circleRadiusIncrement * 2]);
+
+    function decToPercentString(dec) {
+        return Math.round(dec * 100) + "%";
+    }
+
+    drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusIncrement, decToPercentString(maxNegPercent), decToPercentString(maxNegPercent / 2));
+
+    let tooltipId = "stressorRadialGraphTooltipId"
+    let tooltip = d3.select("body")
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd");
 
     categories.forEach(category => {
-        let adjustedPercent = {
-            long: categoryPercentMap[category]["long"] / longTermMaxPercent,
-            short: categoryPercentMap[category]["short"] / shortTermMaxPercent
-        };
-        console.log(category + ": ")
-        console.log(categoryPercentMap[category])
-        console.log(adjustedPercent)
-
+        let maxNegActivity = categoryActivityMap[category]
         let innerRadius = circleRadius;
         let outerRadius = {
-            long: circleRadius + longTermScale(adjustedPercent.long),
-            short: circleRadius + shortTermScale(adjustedPercent.short)
+            long: circleRadius + lengthScale(categoryActivityCountMap[category]["long"][maxNegActivity.long]),
+            short: circleRadius + lengthScale(categoryActivityCountMap[category]["short"][maxNegActivity.short])
         };
 
         let iconSize = 48;
@@ -179,7 +189,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         let angle = radialScale(category) * 180 / Math.PI - 225;
 
         // Add zigzag arc.
-        let zigzagPadding = 14;
+        let zigzagPadding = 16;
         let zigzagRadius = circleRadius - iconSize / 2; // Center arc with respect to icons.
         let zigzagAttr = {
             strokeWidth: 1.5,
@@ -226,7 +236,10 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             categoryMoodMap: categoryMoodMap,
             categoryReasonMap: categoryReasonMap,
             categoryActivityMap: categoryActivityMap,
-            iconSize: iconSize
+            iconSize: iconSize,
+            angle: radialScale(category) * 180 / Math.PI - 225,
+            tooltip: tooltip,
+            tooltipId: tooltipId
         }
 
         // Add icons and radial lines.
@@ -235,7 +248,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     });
 
     // Add legend.
-    drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercentMap);
+    drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivityMap);
 }
 
 function drawStressorRadialGraphBar(constants, type) {
@@ -250,8 +263,9 @@ function drawStressorRadialGraphBar(constants, type) {
     let categoryReasonMap = constants.categoryReasonMap;
     let categoryActivityMap = constants.categoryActivityMap;
     let iconSize = constants.iconSize;
+    let angle = constants.angle;
 
-    let angleOffset = 6 * Math.PI / 180;
+    let angleOffset = 8 * Math.PI / 180;
     angleOffset = type == "long" ? -angleOffset : angleOffset;
 
     // Add icons.
@@ -269,7 +283,22 @@ function drawStressorRadialGraphBar(constants, type) {
         y2: center.y + outerRadius[type] * Math.sin(radialScale(category) + Math.PI / 4 + angleOffset)
     };
 
-    let angle = Math.atan((lineAttr.y2 - lineAttr.y1) / (lineAttr.x2 - lineAttr.x1)) * 180 / Math.PI - 90;
+    let termAttr = {
+        size: type == "long" ? constants.iconSize * 0.8 : constants.iconSize * 0.5,
+        x: center.x + (outerRadius[type] + 12) * Math.cos(radialScale(category) + Math.PI / 4 + angleOffset),
+        y: center.y + (outerRadius[type] + 12) * Math.sin(radialScale(category) + Math.PI / 4 + angleOffset)
+    }
+    termAttr.transform = "rotate(" + (angle) + " " + (termAttr.x) + " " + (termAttr.y) + ")"
+    svg.append("image")
+        .attr("xlink:href", "images/" + type + "-term.svg")
+        .attr("x", termAttr.x - termAttr.size / 2)
+        .attr("y", termAttr.y - termAttr.size / 2)
+        .attr("width", termAttr.size)
+        .attr("height", termAttr.size)
+        .style("filter", function() { return "url(#" + categoryMoodMap[category][type] + ")"; })
+        .attr("transform", termAttr.transform);
+
+    angle = Math.atan((lineAttr.y2 - lineAttr.y1) / (lineAttr.x2 - lineAttr.x1)) * 180 / Math.PI - 90;
     if (category == "health" || category == "logistical") {
         angle += 180;
     }
@@ -277,13 +306,35 @@ function drawStressorRadialGraphBar(constants, type) {
 
     svg.append("image")
         .attr("xlink:href", "images/" + categoryActivityMap[category][type] + ".svg")
-        // .attr("xlink:href", "images/" + "b1" + ".svg")
         .attr("x", imageAttr.x - iconSize / 2)
         .attr("y", imageAttr.y - iconSize / 2)
         .attr("width", iconSize)
         .attr("height", iconSize)
         .style("filter", function() { return "url(#" + categoryMoodMap[category][type] + ")"; })
-        .attr("transform", transform);
+        .attr("transform", transform)
+        .on("mousemove", function() {
+            var tooltipText = "<b>STRESSOR:</b> " + type + "-term" + " - " + category +
+                "</br></br><b>ACTIVITY: </b>" + activityShortToLong[categoryActivityMap[category][type]].toLowerCase() +
+                "</br></br><b>MOST FREQUENT MOOD: </b>" + categoryMoodMap[category][type].toLowerCase() +
+                "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[categoryReasonMap[category][type]].toLowerCase();
+            constants.tooltip.html(tooltipText)
+                .style("font-family", "Courier new")
+                .style("font-size", 12)
+                .style("text-align", "left")
+                .style("color", textColor)
+                .style("visibility", "visible")
+                .style("max-width", 250)
+                .style("top", event.pageY + 20)
+                .style("left", function() {
+                    if (d3.event.clientX < 750) {
+                        return event.pageX + 20 + "px";
+                    } else {
+                        return event.pageX - document.getElementById(constants.tooltipId).clientWidth - 20 + "px";
+                    }
+                })
+        }).on("mouseout", function(d) {
+            constants.tooltip.style("visibility", "hidden");
+        });;;
 
     svg.append("line")
         .attr("x1", lineAttr.x1)
@@ -296,7 +347,7 @@ function drawStressorRadialGraphBar(constants, type) {
         .style("stroke-dasharray", dashArray[categoryReasonMap[category][type]]);
 }
 
-function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercentMap) {
+function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivityMap) {
     let height = svg.attr("height");
     let width = svg.attr("width");
     let interLegendPadding = 24;
@@ -331,10 +382,10 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercent
         .attr('values', "0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 1 0");
 
     // Calculate most negative activity (long-term).
-    let longTermMaxPercent = d3.max(categories, category => { return categoryPercentMap[category]["long"]; });
+    let longTermMaxPercent = d3.max(categories, category => { return categoryActivityMap[category]["long"]; });
 
     categories.forEach(category => {
-        if (categoryPercentMap[category]["long"] == longTermMaxPercent) {
+        if (categoryActivityMap[category]["long"] == longTermMaxPercent) {
             // Add icon.
             mostNegLegend.append("image")
                 .attr("xlink:href", "images/" + categoryActivityMap[category]["long"] + ".svg")
@@ -361,79 +412,97 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryPercent
 
     // Draw line legend.
     let lineLegendAttr = {
-        x: width / 3 + padding + interLegendPadding / 2,
+        x: width / 3 + padding / 2 + interLegendPadding / 2,
         y: height - padding * 2.5,
         width: width / 3 - interLegendPadding,
-        textStart: 48
+        iconSize: {
+            long: 32,
+            short: 22
+        }
     }
 
     let lineLegend = svg.append("g")
         .attr("width", lineLegendAttr.width)
         .attr("transform", "translate(" + lineLegendAttr.x + "," + lineLegendAttr.y + ")");
 
-    // Setup curve data.
-    let lineGenerator = d3.line()
-        .curve(d3.curveCardinal);
-    let lineLegendPoints = [
-        [0, 0],
-        [10, -3.75],
-        [20, -5],
-        [30, -3.75],
-        [40, 0]
-    ];
-    let lineLegendCurve = lineGenerator(lineLegendPoints);
-
-    // Add lines.
-    lineLegend.append("path")
-        .attr("d", lineLegendCurve)
-        .attr("fill", "none")
-        .attr("stroke", "lightgrey")
-        .attr("stroke-width", 2.5)
-        .attr("transform", "translate(" + 0 + "," + 15 + ")");
-
-    lineLegend.append("line")
-        .attr("x1", (lineLegendAttr.textStart - 8) / 2)
-        .attr("x2", (lineLegendAttr.textStart - 8) / 2)
-        .attr("y1", 15 + 35)
-        .attr("y2", 15 + 35 + 16 * 2)
-        .attr("stroke", textColor)
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round")
-        .style("stroke-dasharray", dashArray["I have to"]);
-
     // Add text.
     lineLegend.append("text")
-        .text("border represents ratio of 1")
-        .attr("x", lineLegendAttr.textStart)
+        .text("long-term")
+        .attr("x", lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8 - 12)
+        .attr("y", 15)
+        .attr("width", width / 3)
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12)
+        .style("text-anchor", "end");
+    lineLegend.append("text")
+        .text("stressor")
+        .attr("x", lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8 - 12)
+        .attr("y", 15 + 16)
+        .attr("width", width / 3)
+        .style("font-family", "Courier new")
+        .style("fill", textColor)
+        .style("font-size", 12)
+        .style("text-anchor", "end");
+    lineLegend.append("image")
+        .attr("xlink:href", "images/long-term.svg")
+        .attr("x", lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8)
+        .attr("y", 16 - lineLegendAttr.iconSize.long / 2)
+        .attr("width", lineLegendAttr.iconSize.long)
+        .attr("height", lineLegendAttr.iconSize.long)
+
+    lineLegend.append("image")
+        .attr("xlink:href", "images/short-term.svg")
+        .attr("x", lineLegendAttr.width / 2 + 8)
+        .attr("y", 16 - lineLegendAttr.iconSize.short / 2)
+        .attr("width", lineLegendAttr.iconSize.short)
+        .attr("height", lineLegendAttr.iconSize.short)
+    lineLegend.append("text")
+        .text("short-term")
+        .attr("x", lineLegendAttr.width / 2 + 8 + lineLegendAttr.iconSize.short + 12)
         .attr("y", 15)
         .attr("width", width / 3)
         .style("font-family", "Courier new")
         .style("fill", textColor)
         .style("font-size", 12);
     lineLegend.append("text")
-        .text("length represents")
-        .attr("x", lineLegendAttr.textStart)
-        .attr("y", 15 + 35)
+        .text("stressor")
+        .attr("x", lineLegendAttr.width / 2 + 8 + lineLegendAttr.iconSize.short + 12)
+        .attr("y", 15 + 16)
         .attr("width", width / 3)
         .style("font-family", "Courier new")
         .style("fill", textColor)
         .style("font-size", 12);
+
+    lineLegend.append("line")
+        .attr("x1", lineLegendAttr.width / 2)
+        .attr("x2", lineLegendAttr.width / 2)
+        .attr("y1", 15 + 20)
+        .attr("y2", 15 + 20 + 24)
+        .attr("stroke", textColor)
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", "round")
+        .style("stroke-dasharray", dashArray["I have to"]);
     lineLegend.append("text")
-        .text("ratio of Bad/Awful records")
-        .attr("x", lineLegendAttr.textStart)
-        .attr("y", 15 + 35 + 16)
+        .text("length represents ratio of")
+        .attr("x", lineLegendAttr.width / 2)
+        .attr("y", 15 + 20 + 24 + 12)
         .attr("width", width / 3)
         .style("font-family", "Courier new")
         .style("fill", textColor)
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("text-anchor", "middle")
+        .style("alignment-baseline", "hanging");
     lineLegend.append("text")
-        .text("to total records")
-        .attr("x", lineLegendAttr.textStart)
-        .attr("y", 15 + 35 + 16 * 2)
+        .text("Bad/Awful records to total records")
+        .attr("x", lineLegendAttr.width / 2)
+        .attr("y", 15 + 20 + 24 + 16 + 12)
         .attr("width", width / 3)
         .style("font-family", "Courier new")
         .style("fill", textColor)
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("text-anchor", "middle")
+        .style("alignment-baseline", "hanging");
 
     // Draw attitude legend.
     let attitudeLegendAttr = {
