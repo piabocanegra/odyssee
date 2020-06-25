@@ -319,6 +319,7 @@ function calculatePercentageByKey(data, key) {
     }
 
     return data.get(key)/total;
+}
 
 function getCountMapNegativePercentageFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap) {
     updateCountMapFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap);
