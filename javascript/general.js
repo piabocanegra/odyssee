@@ -66,7 +66,7 @@ function drawMoodLegend(moodLegend, title, moodList) {
     drawMoodLegendData(moodLegend, moodList);
 }
 
-function drawMoodHalfLegend(svgClass) {
+function drawMoodHalfLegend(svgClass, title="Average mood") {
     let svg = d3.select(svgClass)
     let height = svg.attr('height')
 
@@ -80,7 +80,7 @@ function drawMoodHalfLegend(svgClass) {
         .attr("width", moodLegendAttr.width)
         .attr("transform", "translate(" + moodLegendAttr.x + "," + moodLegendAttr.y + ")");
 
-    drawMoodLegend(moodLegend, "Average mood", moodList);
+    drawMoodLegend(moodLegend, title, moodList);
 }
 
 function drawAttitudeLegendData(attitudeLegend, attitudeList) {
@@ -134,7 +134,7 @@ function drawAttitudeLegend(attitudeLegend, title, attitudeList) {
     drawAttitudeLegendData(attitudeLegend, attitudeList);
 }
 
-function drawAttitudeHalfLegend(svgClass) {
+function drawAttitudeHalfLegend(svgClass, attList = attitudeList) {
     let svg = d3.select(svgClass)
     let height = svg.attr('height')
     let width = svg.attr('width')
@@ -149,7 +149,7 @@ function drawAttitudeHalfLegend(svgClass) {
         .attr("width", attitudeLegendAttr.width)
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
-    drawAttitudeLegend(attitudeLegend, "Most frequent attitude", attitudeList);
+    drawAttitudeLegend(attitudeLegend, "Most frequent attitude", attList);
 }
 
 // add color filters to website, must call this per svg 
