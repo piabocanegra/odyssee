@@ -214,6 +214,15 @@ function findStdDevMood(keyList, map, avgMap) {
     return finalMap;
 }
 
+function calcualateStdDev(list, avg) {
+    var total = 0;
+
+    for (var n of list) {
+        total += Math.pow(n-avg, 2);
+    }
+    return Math.sqrt(total/list.length);
+}
+
 function findStdDevWithAvg(personData, key, value, avg) {
     let filteredData = personData.filter(d => d[key] == value);
     var value = 0;

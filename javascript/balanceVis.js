@@ -13,6 +13,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 		var totalWantToAvg = 0;
 		var haveToList = [];
 		var wantToList = [];
+		var count = 0;
 
 		for (var i = 0; i < balanceData[key].length; i++) {
 			var email = balanceData[key][i];
@@ -46,28 +47,22 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 				dataForGraph.push({"x": (key+":want to"), "y": wantToPercent, "avg": wantToAvg});
 			}			
 		}
-
 		avgStdDataForGraph.push({
 			"x": (key+":have to"), 
-			"y": (totalHaveToPercent/balanceData[key].length), 
-			"avg": (totalHaveToAvg/balanceData[key].length),
-			"std": Math.sqrt(
-					(haveToList.map(a => Math.pow(a - (totalHaveToPercent/balanceData[key].length), 2))
-						.reduce((a, b) => a + b, 0))
-					/balanceData[key].length)
+			"y": (totalHaveToPercent/haveToList.length), 
+			"avg": (totalHaveToAvg/haveToList.length),
+			"std": calcualateStdDev(haveToList, (totalHaveToPercent/haveToList.length))
 		});
 
 		avgStdDataForGraph.push({
 			"x": (key+":want to"), 
-			"y": (totalWantToPercent/balanceData[key].length), 
-			"avg": (totalWantToAvg/balanceData[key].length),
-			"std": Math.sqrt(
-					(haveToList.map(a => Math.pow(a - (totalWantToPercent/balanceData[key].length), 2))
-						.reduce((a, b) => a + b, 0))
-					/balanceData[key].length)
+			"y": (totalWantToPercent/wantToList.length), 
+			"avg": (totalWantToAvg/wantToList.length),
+			"std": calcualateStdDev(wantToList, (totalWantToPercent/wantToList.length))
 		});
 
 	}
+	console.log(avgStdDataForGraph)
 
 	let xScale = d3.scaleBand()
         .domain(balanceKeys)
@@ -104,7 +99,6 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 	        	return colorHexArray[moodList[Math.round(d.avg)]];
 	        })
 	        .attr("stroke-width", 2.5)
-	        .style("opacity", 0.4)
 	        .style("stroke-linecap", "round")
 	        .style("stroke-dasharray", function(d) {
 	        	return dashArray[attitudeShorttoLong[(d.x).split(":")[1]]];
@@ -174,7 +168,6 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .attr("y2", height - padding * 0.6)
         .attr("stroke", "#cdcdcd")
         .attr("stroke-width", 2.5)
-        .style("opacity", 0.4)
         .style("stroke-linecap", "round");
     svg.append("circle")
         .attr("cx", width * 0.85)
