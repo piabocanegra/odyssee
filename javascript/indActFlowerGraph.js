@@ -1,15 +1,16 @@
 /**
  *   svgClass: tag for svg class, must include the '.'
- *   categoryMap: map of short activity keys ("b5") to frequency 
- *   categoryFullMap: map of full activity keys ("Intellectual") to frequency
  *   title: title of graph
  *   personData: list of data entries
- *   returns void, draws data vis for line bar chart
+ *   returns void, draws data vis for individual activity flowers
  */
-function drawIndActivityFlower(svgClass, categoryMap, categoryFullMap, title, personData) {
+function drawIndActivityFlower(svgClass, title, personData) {
     let svg = d3.select(svgClass);
     let height = svg.attr('height');
     let width = svg.attr('width');
+
+    let categoryMap = getFrequencyByKey("Activity", personData);
+    let categoryFullMap = getFrequencyByKey("Activity", personData, 1);
 
     // Show top 7 activities or activities with more than 5 records, whichever is fewer.
     let numIcons = 7;

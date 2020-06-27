@@ -33,6 +33,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="balance"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="happinessDotPlot"></svg>
     </div>
 
     <script>
@@ -95,10 +96,13 @@
             personality: {
                 shortTermStressor: "Which of the following daily stressors is most significant for you?",
                 longTermStressor: "Which of the following long-term stressors is most significant for you?",
-                email: "What's your email?"
+                email: "What's your email?",
+                happiness: "I am generally happy with my life. ",
             },
             everyone: {
-                email: "Email"
+                email: "Email",
+                mood: "Feeling",
+                attitude: "Reason"
             }
         }
 
@@ -121,16 +125,17 @@
             drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap3, "Everyone's last 2 weeks", everyoneData);
             drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Mood by Activity");
 
-            drawIndActivityFlower(".indActFlower", categoryMap, categoryFullMap, "Activity", personData3);
+            drawIndActivityFlower(".indActFlower", "Activity", personData3);
 
             var personData2 = await d3.json("fakeIndActFlowerData.json");
-            var categoryMap2 = getFrequencyByKey("Activity", personData2);
-            var categoryFullMap2 = getFrequencyByKey("Activity", personData2, 1);
-            drawIndActivityFlower(".indActFlower2", categoryMap2, categoryFullMap2, "Activity", personData2);
+            drawIndActivityFlower(".indActFlower2", "Activity", personData2);
 
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData);
+
             drawBalanceGraph(".balance", everyoneData, personalityData);
+
+            drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData);
         }
 
         function main() {

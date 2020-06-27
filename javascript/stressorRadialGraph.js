@@ -41,11 +41,8 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
 
 /**
  *   svgClass: tag for svg class, must include the "."
- *   categoryMap: map of short activity keys ("b5") to frequency 
- *   categoryFullMap: map of full activity keys ("Intellectual") to frequency
- *   title: title of graph
- *   personData: list of data entries
- *   returns void, draws data vis for line bar chart
+ *   everyoneData: record data for everyone
+ *   personalityData: personality data for everyone
  */
 function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     let svg = d3.select(svgClass);
@@ -334,7 +331,7 @@ function drawStressorRadialGraphBar(constants, type) {
                 })
         }).on("mouseout", function(d) {
             constants.tooltip.style("visibility", "hidden");
-        });;;
+        });
 
     svg.append("line")
         .attr("x1", lineAttr.x1)

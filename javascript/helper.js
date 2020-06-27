@@ -178,15 +178,15 @@ function findAvgMood(keyList, map, isRounded = true) {
     return finalMap;
 }
 
-function findAvgMoodByKey(personData, key, value, isRounded=true) {
+function findAvgMoodByKey(personData, key, value, isRounded = true) {
     let filteredData = personData.filter(d => d[key] == value);
     var value = 0;
 
     for (var d of filteredData) {
         value += moodList.indexOf(d.Feeling);
     }
-    
-    return Math.round(value/filteredData.length);
+
+    return Math.round(value / filteredData.length);
 }
 
 /**
@@ -214,13 +214,13 @@ function findStdDevMood(keyList, map, avgMap) {
     return finalMap;
 }
 
-function calcualateStdDev(list, avg) {
+function calculateStdDev(list, avg) {
     var total = 0;
 
     for (var n of list) {
-        total += Math.pow(n-avg, 2);
+        total += Math.pow(n - avg, 2);
     }
-    return Math.sqrt(total/list.length);
+    return Math.sqrt(total / list.length);
 }
 
 function findStdDevWithAvg(personData, key, value, avg) {
@@ -322,12 +322,12 @@ function groupMapByValue(data) {
 }
 
 function calculatePercentageByKey(data, key) {
-    let total = 0; 
+    let total = 0;
     for (var k of Array.from(data.keys())) {
-        total += data.get(k); 
+        total += data.get(k);
     }
 
-    return data.get(key)/total;
+    return data.get(key) / total;
 }
 
 function getCountMapNegativePercentageFromRecords(records, type, activityCountMap, reasonCountMap, moodCountMap) {
