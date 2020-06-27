@@ -51,14 +51,14 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
             "x": (key + ":have to"),
             "y": (totalHaveToPercent / haveToList.length),
             "avg": (totalHaveToAvg / haveToList.length),
-            "std": calcualateStdDev(haveToList, (totalHaveToPercent / haveToList.length))
+            "std": calculateStdDev(haveToList, (totalHaveToPercent / haveToList.length))
         });
 
         avgStdDataForGraph.push({
             "x": (key + ":want to"),
             "y": (totalWantToPercent / wantToList.length),
             "avg": (totalWantToAvg / wantToList.length),
-            "std": calcualateStdDev(wantToList, (totalWantToPercent / wantToList.length))
+            "std": calculateStdDev(wantToList, (totalWantToPercent / wantToList.length))
         });
 
     }
