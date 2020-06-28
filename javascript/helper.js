@@ -178,6 +178,10 @@ function findAvgMood(keyList, map, isRounded = true) {
     return finalMap;
 }
 
+function getAverage(list) {
+    return list.reduce((a, b) => a + b, 0) / list.length
+}
+
 function findAvgMoodByKey(personData, key, value, isRounded = true) {
     let filteredData = personData.filter(d => d[key] == value);
     var value = 0;

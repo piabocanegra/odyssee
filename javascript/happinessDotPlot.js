@@ -1,7 +1,3 @@
-function getAverage(list) {
-    return list.reduce((a, b) => a + b, 0) / list.length
-}
-
 /**
  *   svgClass: tag for svg class, must include the '.'
  *   personalityData: list of personality data for everyone
@@ -17,21 +13,6 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
 
     // Add title.
     drawTitle(svg, "Remembered vs. Experienced Happiness");
-
-    let moodToScore = {
-        "Awful": 1,
-        "Bad": 2,
-        "Ok": 3,
-        "Good": 4,
-        "Amazing": 5
-    };
-    let scoreToMood = {
-        1: "Awful",
-        2: "Bad",
-        3: "Ok",
-        4: "Good",
-        5: "Amazing"
-    };
 
     // Setup happinessData.
     let happinessData = {};
@@ -82,7 +63,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
     // Setup scales.
     let rememberedScale = d3.scaleLinear()
         .domain([0, 5])
-        .range([height - 3 * padding, 120]);
+        .range([height - 6 * padding, 120]);
 
     let experiencedScale = d3.scaleLinear()
         .domain([0, 5])
@@ -98,7 +79,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
     for (let i = 1; i <= 5; i++) {
         drawText(svg, i, { x: experiencedScale(i), y: rememberedScale(0) + graphPadding });
     }
-    drawText(svg, '"' + keys.personality.happiness.trim() + '"', {
+    drawText(svg, '"I am generally happy with my life."', {
         x: experiencedScale(0) - graphPadding - graphLabelInterTextPadding,
         y: rememberedScale(2.5),
         transform: 'rotate(270 ' + (experiencedScale(0) - graphPadding - graphLabelInterTextPadding) + ' ' + rememberedScale(2.5) + ')'
@@ -254,35 +235,18 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         tooltip.style("visibility", "hidden");
         rect.attr('opacity', 0);
     }
-}
 
-function drawText(svg, text, attr) {
-    let x = attr.x == null ? 0 : attr.x;
-    let y = attr.y == null ? 0 : attr.y;
-    let textAnchor = attr.textAnchor == null ? 'middle' : attr.textAnchor;
-    let alignmentBaseline = attr.alignmentBaseline == null ? 'middle' : attr.alignmentBaseline;
-    let fontSize = attr.fontSize == null ? 12 : attr.fontSize;
-    let transform = attr.transform == null ? '' : attr.transform;
-    svg.append('text')
-        .attr('x', x)
-        .attr('y', y)
-        .attr('text-anchor', textAnchor)
-        .attr('font-family', 'Courier new')
-        .attr('fill', textColor)
-        .attr('font-size', fontSize)
-        .attr('alignment-baseline', alignmentBaseline)
-        .attr('transform', transform)
-        .text(text);
-}
+    // Draw mood legend.
+    let moodLegendAttr = {
+        x: 2 * padding,
+        y: height - padding * 2.5,
+        width: (width - 4 * padding) * 2 / 3,
+    };
+    let moodLegend = svg.append("g")
+        .attr("class", "moodLegend")
+        .attr("width", moodLegendAttr.width)
+        .attr("transform", "translate(" + moodLegendAttr.x + "," + moodLegendAttr.y + ")");
 
-function drawTab(svg, x, y, orientation) {
-    let tabHeight = 16
-    svg.append('line')
-        .attr('x1', orientation == 'horizontal' ? x - tabHeight / 2 : x)
-        .attr('x2', orientation == 'horizontal' ? x + tabHeight / 2 : x)
-        .attr('y1', orientation == 'vertical' ? y - tabHeight / 2 : y)
-        .attr('y2', orientation == 'vertical' ? y + tabHeight / 2 : y)
-        .attr('stroke', 'lightgrey')
-        .attr('stroke-width', 2)
-        .style("stroke-linecap", "round");
+    drawMoodLegend(moodLegend, "Most frequent mood", moodList);
+    drawStdDevAvgLegend(svg);
 }

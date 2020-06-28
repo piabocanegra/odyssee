@@ -19,6 +19,93 @@ function drawTitle(svg, title) {
         .style("text-anchor", titleAttr.textAnchor);
 }
 
+function drawText(svg, text, attr) {
+    let x = attr.x == null ? 0 : attr.x;
+    let y = attr.y == null ? 0 : attr.y;
+    let textAnchor = attr.textAnchor == null ? 'middle' : attr.textAnchor;
+    let alignmentBaseline = attr.alignmentBaseline == null ? 'middle' : attr.alignmentBaseline;
+    let fontSize = attr.fontSize == null ? 12 : attr.fontSize;
+    let transform = attr.transform == null ? '' : attr.transform;
+    svg.append('text')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('text-anchor', textAnchor)
+        .attr('font-family', 'Courier new')
+        .attr('fill', textColor)
+        .attr('font-size', fontSize)
+        .attr('alignment-baseline', alignmentBaseline)
+        .attr('transform', transform)
+        .text(text);
+}
+
+function drawTab(svg, x, y, orientation) {
+    let tabHeight = 16
+    svg.append('line')
+        .attr('x1', orientation == 'horizontal' ? x - tabHeight / 2 : x)
+        .attr('x2', orientation == 'horizontal' ? x + tabHeight / 2 : x)
+        .attr('y1', orientation == 'vertical' ? y - tabHeight / 2 : y)
+        .attr('y2', orientation == 'vertical' ? y + tabHeight / 2 : y)
+        .attr('stroke', 'lightgrey')
+        .attr('stroke-width', 2)
+        .style("stroke-linecap", "round");
+}
+
+function drawStdDevAvgLegend(svg) {
+    // Add avg line + std legend.
+    let height = svg.attr("height");
+    let width = svg.attr("width");
+    svg.append("line")
+        .attr("x1", width * 0.85)
+        .attr("x2", width * 0.85)
+        .attr("y1", height - padding * 2.25)
+        .attr("y2", height - padding * 0.6)
+        .attr("stroke", "#cdcdcd")
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", "round");
+    svg.append("circle")
+        .attr("cx", width * 0.85)
+        .attr("cy", height - padding * 1.4)
+        .attr("r", 5)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", width * 0.83)
+        .attr("y", height - padding * 1.4)
+        .text("group average")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "end")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    svg.append("circle")
+        .attr("cx", width * 0.85)
+        .attr("cy", height - padding * 1)
+        .attr("r", 4)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", width * 0.83)
+        .attr("y", height - padding * 1)
+        .text("a user")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "end")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width * 0.87)
+        .attr("y", height - padding * 2.15 - 15)
+        .text("standard")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "start")
+        .style("fill", textColor)
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width * 0.87)
+        .attr("y", height - padding * 2.15)
+        .text("deviation")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "start")
+        .style("fill", textColor)
+        .style("font-size", 12);
+}
+
 function drawMoodLegendData(moodLegend, moodList) {
     let width = moodLegend.attr("width");
     if (width == null) {
@@ -66,7 +153,7 @@ function drawMoodLegend(moodLegend, title, moodList) {
     drawMoodLegendData(moodLegend, moodList);
 }
 
-function drawMoodHalfLegend(svgClass, title="Average mood") {
+function drawMoodHalfLegend(svgClass, title = "Average mood") {
     let svg = d3.select(svgClass)
     let height = svg.attr('height')
 
