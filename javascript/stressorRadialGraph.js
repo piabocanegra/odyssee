@@ -16,25 +16,17 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
         .style("text-anchor", titleAttr.textAnchor)
         .style("alignment-baseline", titleAttr.alignment);
 
-    svg.append("text")
-        .attr("x", center.x)
-        .attr("y", center.y + circleRadius + circleRadiusIncrement - 12)
-        .text(innerText)
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
+    drawText(svg, innerText, {
+        x: center.x,
+        y: center.y + circleRadius + circleRadiusIncrement - 12
+    });
 
     drawImperfectCircle(svg, center, circleRadius + circleRadiusIncrement, { strokeWidth: 1.5 });
 
-    svg.append("text")
-        .attr("x", center.x)
-        .attr("y", center.y + circleRadius + circleRadiusIncrement * 2 - 12)
-        .text(outerText)
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
+    drawText(svg, outerText, {
+        x: center.x,
+        y: center.y + circleRadius + circleRadiusIncrement * 2 - 12
+    });
 
     drawImperfectCircle(svg, center, circleRadius + circleRadiusIncrement * 2, { strokeWidth: 1.5 });
 }
@@ -198,7 +190,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
 
         drawZigzagArc(svg, center, zigzagRadius, zigzagAttr);
 
-        // Add text.
+        // Add category text.
         let textAttr = {
             fontSize: 12,
             fontFamily: "Courier new",
@@ -207,21 +199,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             x: center.x + (innerRadius - 12 - iconSize) * Math.cos(radialScale(category) + Math.PI / 4),
             y: center.y + (innerRadius - 12 - iconSize) * Math.sin(radialScale(category) + Math.PI / 4)
         };
-
-        // Fix angle so that text is oriented upright.
-        angle = angle < -45 ? angle + 180 : angle;
-        let transform = "rotate(" + angle + " " + (textAttr.x) + " " + (textAttr.y) + ")";
-
-        svg.append("text")
-            .attr("x", textAttr.x)
-            .attr("y", textAttr.y)
-            .style("font-family", textAttr.fontFamily)
-            .style("font-size", textAttr.fontSize)
-            .style("fill", textColor)
-            .style("text-anchor", textAttr.textAnchor)
-            .style("alignment-baseline", textAttr.alignment)
-            .text(category)
-            .attr("transform", transform)
+        textAttr.transform = "rotate(" + (angle < -45 ? angle + 180 : angle) + " " + (textAttr.x) + " " + (textAttr.y) + ")";
+        drawText(svg, category, textAttr);
 
         let constants = {
             svg: svg,
@@ -234,7 +213,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
             categoryReasonMap: categoryReasonMap,
             categoryActivityMap: categoryActivityMap,
             iconSize: iconSize,
-            angle: radialScale(category) * 180 / Math.PI - 225,
+            angle: angle,
             tooltip: tooltip,
             tooltipId: tooltipId
         }
@@ -423,53 +402,50 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
         .attr("transform", "translate(" + lineLegendAttr.x + "," + lineLegendAttr.y + ")");
 
     // Add text.
-    lineLegend.append("text")
-        .text("long-term")
-        .attr("x", lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8 - 12)
-        .attr("y", 15)
-        .attr("width", width / 3)
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12)
-        .style("text-anchor", "end");
-    lineLegend.append("text")
-        .text("stressor")
-        .attr("x", lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8 - 12)
-        .attr("y", 15 + 16)
-        .attr("width", width / 3)
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12)
-        .style("text-anchor", "end");
+    let textLineYPos = [15, 15 + 16, 15 + 20 + 24 + 12, 15 + 20 + 24 + 16 + 12]
+
+    let longStressorTextAttr = {
+        x: lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8 - 12,
+        textAnchor: "end"
+    }
+    drawText(lineLegend, "long-term", {
+        x: longStressorTextAttr.x,
+        y: textLineYPos[0],
+        textAnchor: longStressorTextAttr.textAnchor
+    });
+    drawText(lineLegend, "stressor", {
+        x: longStressorTextAttr.x,
+        y: textLineYPos[1],
+        textAnchor: longStressorTextAttr.textAnchor
+    });
+
     lineLegend.append("image")
         .attr("xlink:href", "images/long-term.svg")
         .attr("x", lineLegendAttr.width / 2 - lineLegendAttr.iconSize.long - 8)
         .attr("y", 16 - lineLegendAttr.iconSize.long / 2)
         .attr("width", lineLegendAttr.iconSize.long)
         .attr("height", lineLegendAttr.iconSize.long)
-
     lineLegend.append("image")
         .attr("xlink:href", "images/short-term.svg")
         .attr("x", lineLegendAttr.width / 2 + 8)
         .attr("y", 16 - lineLegendAttr.iconSize.short / 2)
         .attr("width", lineLegendAttr.iconSize.short)
         .attr("height", lineLegendAttr.iconSize.short)
-    lineLegend.append("text")
-        .text("short-term")
-        .attr("x", lineLegendAttr.width / 2 + 8 + lineLegendAttr.iconSize.short + 12)
-        .attr("y", 15)
-        .attr("width", width / 3)
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
-    lineLegend.append("text")
-        .text("stressor")
-        .attr("x", lineLegendAttr.width / 2 + 8 + lineLegendAttr.iconSize.short + 12)
-        .attr("y", 15 + 16)
-        .attr("width", width / 3)
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
+
+    let shortStressorTextAttr = {
+        x: lineLegendAttr.width / 2 + 8 + lineLegendAttr.iconSize.short + 12,
+        textAnchor: "start"
+    }
+    drawText(lineLegend, "short-term", {
+        x: shortStressorTextAttr.x,
+        y: textLineYPos[0],
+        textAnchor: shortStressorTextAttr.textAnchor
+    });
+    drawText(lineLegend, "stressor", {
+        x: shortStressorTextAttr.x,
+        y: textLineYPos[1],
+        textAnchor: shortStressorTextAttr.textAnchor
+    });
 
     lineLegend.append("line")
         .attr("x1", lineLegendAttr.width / 2)
@@ -480,26 +456,21 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
         .attr("stroke-width", 2.5)
         .style("stroke-linecap", "round")
         .style("stroke-dasharray", dashArray["I have to"]);
-    lineLegend.append("text")
-        .text("length represents ratio of")
-        .attr("x", lineLegendAttr.width / 2)
-        .attr("y", 15 + 20 + 24 + 12)
-        .attr("width", width / 3)
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12)
-        .style("text-anchor", "middle")
-        .style("alignment-baseline", "hanging");
-    lineLegend.append("text")
-        .text("Bad/Awful records to total records")
-        .attr("x", lineLegendAttr.width / 2)
-        .attr("y", 15 + 20 + 24 + 16 + 12)
-        .attr("width", width / 3)
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12)
-        .style("text-anchor", "middle")
-        .style("alignment-baseline", "hanging");
+
+    let lengthTextAttr = {
+        x: lineLegendAttr.width / 2,
+        alignmentBaseline: "hanging"
+    }
+    drawText(lineLegend, "length represents ratio of", {
+        x: lengthTextAttr.x,
+        y: textLineYPos[2],
+        alignmentBaseline: "hanging"
+    });
+    drawText(lineLegend, "Bad/Awful records to total records", {
+        x: lengthTextAttr.x,
+        y: textLineYPos[3],
+        alignmentBaseline: lengthTextAttr.alignmentBaseline
+    });
 
     // Draw attitude legend.
     let attitudeLegendAttr = {

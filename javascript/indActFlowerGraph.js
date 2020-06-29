@@ -8,6 +8,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
     let svg = d3.select(svgClass);
     let height = svg.attr('height');
     let width = svg.attr('width');
+    let newMoodList = Array.from(moodList);
 
     let categoryMap = getFrequencyByKey("Activity", personData);
     let categoryFullMap = getFrequencyByKey("Activity", personData, 1);
@@ -52,7 +53,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
 
         let count = 0;
 
-        moodList.sort(compareMoods).forEach(mood => {
+        newMoodList.sort(compareMoods).forEach(mood => {
             attitudeList.forEach(attitude => {
                 // console.log("mood, attitude: " + mood + ", " + attitude)
                 // console.log(flowerMap[mood][attitude])
@@ -76,7 +77,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
 
     function emptyFlowerMap() {
         let flowerMap = {}
-        moodList.forEach(mood => {
+        newMoodList.forEach(mood => {
             flowerMap[mood] = {};
             attitudeList.forEach(attitude => {
                 flowerMap[mood][attitude] = 0;
@@ -137,7 +138,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
 
         // Update flowerDataMap if more than 40 entries.
         // Update n to reflect number of petals.
-        moodList.forEach(mood => {
+        newMoodList.forEach(mood => {
             attitudeList.forEach(attitude => {
                 let num = flowerDataMap[mood][attitude];
                 if (petalDivisor == 1 || num % 2 == 0) {
@@ -220,7 +221,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
         .attr("width", attitudeLegendAttr.width)
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
-    drawMoodLegendData(moodLegend, moodList);
+    drawMoodLegendData(moodLegend, newMoodList);
     drawFlowerLegend(flowerLegend, petalDivisor);
     drawAttitudeLegendData(attitudeLegend, attitudeList);
 

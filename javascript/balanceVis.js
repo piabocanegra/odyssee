@@ -62,8 +62,6 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         });
 
     }
-    console.log(avgStdDataForGraph)
-
     let xScale = d3.scaleBand()
         .domain(balanceKeys)
         .range([padding * 2.5, width]);
@@ -160,105 +158,22 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .style("text-anchor", "end")
         .style("font-size", 11);
 
-    // add avg line + std legend
-    svg.append("line")
-        .attr("x1", width * 0.85)
-        .attr("x2", width * 0.85)
-        .attr("y1", height - padding * 2.25)
-        .attr("y2", height - padding * 0.6)
-        .attr("stroke", "#cdcdcd")
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round");
-    svg.append("circle")
-        .attr("cx", width * 0.85)
-        .attr("cy", height - padding * 1.4)
-        .attr("r", 5)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", width * 0.83)
-        .attr("y", height - padding * 1.4)
-        .text("group average")
-        .style("font-family", "Courier new")
-        .style("text-anchor", "end")
-        .style("fill", textColor)
-        .style("font-size", 12);
-    svg.append("circle")
-        .attr("cx", width * 0.85)
-        .attr("cy", height - padding * 1)
-        .attr("r", 4)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", width * 0.83)
-        .attr("y", height - padding * 1)
-        .text("a user")
-        .style("font-family", "Courier new")
-        .style("text-anchor", "end")
-        .style("fill", textColor)
-        .style("font-size", 12);
-    svg.append("text")
-        .attr("x", width * 0.87)
-        .attr("y", height - padding * 2.15 - 15)
-        .text("standard")
-        .style("font-family", "Courier new")
-        .style("text-anchor", "start")
-        .style("fill", textColor)
-        .style("font-size", 12);
-    svg.append("text")
-        .attr("x", width * 0.87)
-        .attr("y", height - padding * 2.15)
-        .text("deviation")
-        .style("font-family", "Courier new")
-        .style("text-anchor", "start")
-        .style("fill", textColor)
-        .style("font-size", 12);
+    drawStdDevAvgLegend(svg);
 
-    //add attitude legend
-    svg.append("text")
-        .attr("x", width * 0.6)
-        .attr("y", height - padding * 2.5 + 15)
-        .text("Attitude")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
-    svg.append("line")
-        .attr("x1", width * 0.55)
-        .attr("x2", width * 0.55)
-        .attr("y1", height - padding * 2.5 + padding * 1.2)
-        .attr("y2", height - padding * 2.5 + 35)
-        .attr("stroke", textColor)
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round")
-        .style("stroke-dasharray", function(d, i) { return dashArray["I want to"]; });
-    svg.append("line")
-        .attr("x1", width * 0.65)
-        .attr("x2", width * 0.65)
-        .attr("y1", height - padding * 2.5 + padding * 1.2)
-        .attr("y2", height - padding * 2.5 + 35)
-        .attr("stroke", textColor)
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round")
-        .style("stroke-dasharray", function(d, i) { return dashArray["I have to"]; });
-    svg.append("text")
-        .attr("x", width * 0.55)
-        .attr("y", height - padding * 2.5 + padding * 1.65)
-        .text("want to")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
-    svg.append("text")
-        .attr("x", width * 0.65)
-        .attr("y", height - padding * 2.5 + padding * 1.65)
-        .text("have to")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
+    let attitudeLegendAttr = {
+        x: width * 0.55,
+        y: height - padding * 2.5,
+        width: width * 0.1,
+    };
+
+    let attitudeLegend = svg.append("g")
+        .attr("class", "attitudeLegend")
+        .attr("width", attitudeLegendAttr.width)
+        .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
+
+    drawAttitudeLegend(attitudeLegend, "Attitude", ["want to", "have to"]);
+    drawMoodHalfLegend(svgClass, "Most frequent mood");
 
     // add title
     drawTitle(svg, "Balanced vs. Unbalanced");
-    drawMoodHalfLegend(svgClass, "Most frequent mood");
-
-
 }
