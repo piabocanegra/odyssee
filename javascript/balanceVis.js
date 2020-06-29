@@ -62,8 +62,6 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         });
 
     }
-    console.log(avgStdDataForGraph)
-
     let xScale = d3.scaleBand()
         .domain(balanceKeys)
         .range([padding * 2.5, width]);
