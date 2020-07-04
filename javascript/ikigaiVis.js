@@ -243,12 +243,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
                 .attr('opacity', 0)
                 .on("mousemove", function() {
                     tooltip.html(tooltipText)
-                        .style("font-family", "Courier new")
-                        .style("font-size", 12)
-                        .style("text-align", "left")
-                        .style("color", textColor)
                         .style("visibility", "visible")
-                        .style("max-width", 250)
                         .style("top", event.pageY + 20)
                         .style("left", function() {
                             if (d3.event.clientX < 750) {
