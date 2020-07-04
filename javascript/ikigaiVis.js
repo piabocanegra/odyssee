@@ -113,107 +113,95 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         .range([0, gIkigaiAttr.height]);
 
     // Setup bar graphs.
-    let gCitizen = svg.append('g')
-        .attr('transform', 'translate(' +
-            (imageAttr.centerX + imageAttr.width / 2 - ikigaiGraphPadding) + ', ' +
-            (imageAttr.centerY - imageAttr.height * 0.31 - gIkigaiAttr.height) + ')');
+    let gCitizen = svg.append('g');
+    let gZenMaster = svg.append('g');
+    let gProfiteer = svg.append('g');
+    let gBohemian = svg.append('g');
 
-    svg.append('line')
-        .attr('x1', imageAttr.centerX + imageAttr.width * 0.28)
-        .attr('x2', width - padding)
-        .attr('y1', imageAttr.centerY - imageAttr.height * 0.31)
-        .attr('y2', imageAttr.centerY - imageAttr.height * 0.31)
-        .attr('stroke', ikigaiColorHexArray['worker'])
-        .attr('stroke-width', 2)
-        .style('stroke-linecap', 'round');
+    let ikigaiGraphMap = {
+        'worker': {
+            x1: imageAttr.centerX + imageAttr.width * 0.28,
+            x2: width - padding,
+            x: imageAttr.centerX + imageAttr.width / 2 - ikigaiGraphPadding,
+            y: imageAttr.centerY - imageAttr.height * 0.31,
+            textAnchor: 'end',
+            graph: gCitizen
+        },
+        'zen master': {
+            x1: imageAttr.centerX + imageAttr.width * 0.11,
+            x2: width - 16,
+            x: imageAttr.centerX + imageAttr.width / 2 + 14,
+            y: imageAttr.centerY - imageAttr.height * 0.02,
+            textAnchor: 'end',
+            graph: gZenMaster
+        },
+        'profiteer': {
+            x1: padding,
+            x2: imageAttr.centerX - imageAttr.width * 0.11,
+            x: padding + 20,
+            y: imageAttr.centerY + imageAttr.height * 0.45,
+            textAnchor: 'start',
+            graph: gProfiteer
+        },
+        'bohemian': {
+            x1: 16,
+            x2: imageAttr.centerX - imageAttr.width * 0.32,
+            x: width * 0.02,
+            y: imageAttr.centerY - imageAttr.height * 0.28,
+            textAnchor: 'start',
+            graph: gBohemian
+        }
+    }
 
-    drawText(svg, 'score', {
-        x: width - padding + 12,
-        y: imageAttr.centerY - imageAttr.height * 0.31 - gIkigaiAttr.height - 12,
-        textAnchor: 'end',
-        fontSize: 9
+    Object.keys(ikigaiGraphMap).forEach(category => {
+        ikigaiGraphMap[category]['graph'].attr('transform', 'translate(' +
+            (ikigaiGraphMap[category]['x']) + ', ' +
+            (ikigaiGraphMap[category]['y'] - gIkigaiAttr.height) + ')');
+
+        svg.append('line')
+            .attr('x1', ikigaiGraphMap[category]['x1'])
+            .attr('x2', ikigaiGraphMap[category]['x2'])
+            .attr('y1', ikigaiGraphMap[category]['y'])
+            .attr('y2', ikigaiGraphMap[category]['y'])
+            .attr('stroke', ikigaiColorHexArray[category])
+            .attr('stroke-width', 2)
+            .style('stroke-linecap', 'round');
+
+        drawText(svg, 'score', {
+            x: ikigaiGraphMap[category]['textAnchor'] == 'start' ?
+                ikigaiGraphMap[category]['x1'] - 12 : ikigaiGraphMap[category]['x2'] + 12,
+            y: ikigaiGraphMap[category]['y'] - gIkigaiAttr.height - 12,
+            textAnchor: ikigaiGraphMap[category]['textAnchor'],
+            fontSize: 9
+        });
     });
 
-    let gZenMaster = svg.append('g')
-        .attr('transform', 'translate(' +
-            (imageAttr.centerX + imageAttr.width / 2 + 14) + ', ' +
-            (imageAttr.centerY - imageAttr.height * 0.02 - gIkigaiAttr.height) + ')');
+    // Add tooltip.
+    let tooltipId = "ikigaiVisTooltipId"
+    let tooltip = d3.select("body")
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd")
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("text-align", "left")
+        .style("color", textColor)
+        .style("max-width", 250);
 
-    svg.append('line')
-        .attr('x1', imageAttr.centerX + imageAttr.width * 0.11)
-        .attr('x2', width - 16)
-        .attr('y1', imageAttr.centerY - imageAttr.height * 0.02)
-        .attr('y2', imageAttr.centerY - imageAttr.height * 0.02)
-        .attr('stroke', ikigaiColorHexArray['zen master'])
-        .attr('stroke-width', 2)
-        .style('stroke-linecap', 'round');
-
-    drawText(svg, 'score', {
-        x: width - 16 + 12,
-        y: imageAttr.centerY - imageAttr.height * 0.02 - gIkigaiAttr.height - 12,
-        textAnchor: 'end',
-        fontSize: 9
-    });
-
-    let gProfiteer = svg.append('g')
-        .attr('transform', 'translate(' +
-            (padding + 20) + ', ' +
-            (imageAttr.centerY + imageAttr.height * 0.45 - gIkigaiAttr.height) + ')');
-
-    svg.append('line')
-        .attr('x1', imageAttr.centerX - imageAttr.width * 0.11)
-        .attr('x2', padding)
-        .attr('y1', imageAttr.centerY + imageAttr.height * 0.45)
-        .attr('y2', imageAttr.centerY + imageAttr.height * 0.45)
-        .attr('stroke', ikigaiColorHexArray['profiteer'])
-        .attr('stroke-width', 2)
-        .style('stroke-linecap', 'round');
-
-    drawText(svg, 'score', {
-        x: padding - 12,
-        y: imageAttr.centerY + imageAttr.height * 0.45 - gIkigaiAttr.height - 12,
-        textAnchor: 'start',
-        fontSize: 9
-    });
-
-    let gBohemian = svg.append('g')
-        .attr('transform', 'translate(' +
-            (width * 0.02) + ', ' +
-            (imageAttr.centerY - imageAttr.height * 0.28 - gIkigaiAttr.height) + ')');
-
-    svg.append('line')
-        .attr('x1', 16)
-        .attr('x2', imageAttr.centerX - imageAttr.width * 0.32)
-        .attr('y1', imageAttr.centerY - imageAttr.height * 0.28)
-        .attr('y2', imageAttr.centerY - imageAttr.height * 0.28)
-        .attr('stroke', ikigaiColorHexArray['bohemian'])
-        .attr('stroke-width', 2)
-        .style('stroke-linecap', 'round');
-
-    drawText(svg, 'score', {
-        x: 16 - 12,
-        y: imageAttr.centerY - imageAttr.height * 0.28 - gIkigaiAttr.height - 12,
-        textAnchor: 'start',
-        fontSize: 9
-    });
-
-    let ikigaiCatToGraph = {
-        'worker': gCitizen,
-        'bohemian': gBohemian,
-        'zen master': gZenMaster,
-        'profiteer': gProfiteer
-    };
-
+    // Add bar graphs.
     ikigaiList.forEach(category => {
-        let ikigaiGraph = ikigaiCatToGraph[category];
-
+        let ikigaiGraph = ikigaiGraphMap[category]['graph'];
         ikigaiScoreList.forEach(type => {
+            let interLinePadding = 14
             let typeAverage = ikigaiMap['total'][type];
             let categoryAverage = ikigaiMap[category][type];
-            // console.log(typeAverage)
-            // console.log(categoryAverage)
-
-            let interLinePadding = 14
 
             // Add line for all entries.
             ikigaiGraph.append('line')
@@ -241,6 +229,37 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
                 y: gIkigaiAttr.height + 12,
                 fontSize: 9
             });
+
+            let tooltipText = "<b>IKIGAI GROUP:</b> " + ikigaiKeyToLabel[category].toLowerCase() +
+                "</br></br><b>" + type.toUpperCase() + " SCORE: </b>" + Math.round(categoryAverage * 100) / 100 +
+                "</br></br><b>GROUP SCORE: </b>" + Math.round(typeAverage * 100) / 100;
+
+            // Add tooltip target.
+            ikigaiGraph.append('rect')
+                .attr('x', ikigaiXScale(type) - (gIkigaiAttr.width - ikigaiGraphPadding) / 10)
+                .attr('y', -8)
+                .attr('height', gIkigaiAttr.height + 24)
+                .attr('width', (gIkigaiAttr.width - ikigaiGraphPadding) / 5)
+                .attr('opacity', 0)
+                .on("mousemove", function() {
+                    tooltip.html(tooltipText)
+                        .style("font-family", "Courier new")
+                        .style("font-size", 12)
+                        .style("text-align", "left")
+                        .style("color", textColor)
+                        .style("visibility", "visible")
+                        .style("max-width", 250)
+                        .style("top", event.pageY + 20)
+                        .style("left", function() {
+                            if (d3.event.clientX < 750) {
+                                return event.pageX + 20 + "px";
+                            } else {
+                                return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                            }
+                        })
+                }).on("mouseout", function(d) {
+                    tooltip.style("visibility", "hidden");
+                });
         });
     });
 }
