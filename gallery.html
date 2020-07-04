@@ -16,6 +16,7 @@
     <script type="text/javascript" src="javascript/stressorRadialGraph.js"></script>
     <script type="text/javascript" src="javascript/happinessDotPlot.js"></script>
     <script type="text/javascript" src="javascript/balanceVis.js"></script>
+    <script type="text/javascript" src="javascript/ikigaiVis.js"></script>
 </head>
 <ul>
     <li style="float:right;vertical-align:top"><a href="about.html">About</a></li>
@@ -34,6 +35,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="balance"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="happinessDotPlot"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="ikigaiVis"></svg>
     </div>
 
     <script>
@@ -117,6 +119,15 @@
                 email: "Email",
                 mood: "Feeling",
                 attitude: "Reason"
+            },
+            ikigai: {
+                email: "Email",
+                contribution: "Contribution",
+                happiness: "Happiness",
+                category: "Ikigai ",
+                money: "Money",
+                passion: "Passion",
+                skill: "Skill"
             }
         }
 
@@ -150,6 +161,9 @@
             drawBalanceGraph(".balance", everyoneData, personalityData);
 
             drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData);
+
+            var ikigaiData = await d3.csv("ikigai.csv");
+            drawIkigaiVis(".ikigaiVis", everyoneData, ikigaiData);
         }
 
         function main() {
