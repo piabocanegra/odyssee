@@ -74,7 +74,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
     let yScale = d3.scaleLinear()
         .domain([0, 1])
-        .range([height - padding * 5, padding * 2]);
+        .range([height - padding * 5.25, padding * 0.5]);
 
     let tooltip = addTooltip("#balanceTooltip");
 
@@ -227,7 +227,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     //add y axis text
     svg.append("text")
         .attr("x", padding * 2)
-        .attr("y", yScale(1))
+        .attr("y", yScale(0.9))
         .text("% of time spent")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
