@@ -430,7 +430,7 @@ function drawImperfectVerticalLine(svg, yStart, yEnd, x, dashArr, color = "#cdcd
     points.push({"x": x, "y": yEnd});
 
     let lineGenerator = d3.line()
-        .x(function(d) { console.log(d); return d.x; })
+        .x(function(d) { return d.x; })
         .y(function(d) { return d.y; })
         .curve(d3.curveMonotoneX);
 

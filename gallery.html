@@ -96,6 +96,18 @@
             "Yes, I'm happy with that": "yes happy",
             "No, but I'm happy with that": "no happy"
         }
+        let balanceShortToLong1 = {
+            "yes unhappy": "Yes, but I'm trying" ,
+            "no unhappy": "No, but I'm trying",
+            "yes happy": "Yes, I'm happy",
+            "no happy": "No, but I'm "
+        }
+        let balanceShortToLong2 = {
+            "yes unhappy": "to be more focused" ,
+            "no unhappy": "to be more balanced",
+            "yes happy": "with it",
+            "no happy": "happy with it"
+        }
         let moodToScore = {
             "Awful": 1,
             "Bad": 2,
@@ -165,7 +177,7 @@
             drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData);
 
             drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData);
-            
+
             var ikigaiData = await d3.csv("ikigai.csv");
             drawIkigaiVis(".ikigaiVis", everyoneData, ikigaiData);
         }
