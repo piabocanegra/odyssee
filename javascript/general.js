@@ -1,6 +1,7 @@
 // General drawing functions.
 
 function drawTitle(svg, title) {
+    let width = svg.attr("width");
     let titleAttr = {
         x: width / 2,
         y: 35,
@@ -385,19 +386,19 @@ function setTooltipText(tooltip, text, leftOffset, rightOffset) {
 
 function drawImperfectHorizontalLine(svg, xStart, xEnd, y) {
     let points = [];
-    
+
     // generate points
-    for (var i = xStart; i <= xEnd; i+=50) {
-        let direction = Math.floor(Math.random()*2) == 0 ? -1 : 1;
-        let offset = Math.floor(Math.random()*3);
+    for (var i = xStart; i <= xEnd; i += 50) {
+        let direction = Math.floor(Math.random() * 2) == 0 ? -1 : 1;
+        let offset = Math.floor(Math.random() * 3);
 
         points.push({
-            "x": i, 
-            "y": y + offset*direction
+            "x": i,
+            "y": y + offset * direction
         });
     }
 
-    points.push({"x": xEnd, "y": y});
+    points.push({ "x": xEnd, "y": y });
 
     let lineGenerator = d3.line()
         .x(function(d) { return d.x; })
@@ -415,19 +416,19 @@ function drawImperfectHorizontalLine(svg, xStart, xEnd, y) {
 
 function drawImperfectVerticalLine(svg, yStart, yEnd, x, dashArr, color = "#cdcdcd") {
     let points = [];
-    
+
     // generate points
-    for (var i = yStart; i <= yEnd; i+=50) {
-        let direction = Math.floor(Math.random()*2) == 0 ? -1 : 1;
-        let offset = Math.floor(Math.random()*3);
+    for (var i = yStart; i <= yEnd; i += 50) {
+        let direction = Math.floor(Math.random() * 2) == 0 ? -1 : 1;
+        let offset = Math.floor(Math.random() * 3);
 
         points.push({
-            "x": x + offset*direction,
+            "x": x + offset * direction,
             "y": i
         });
     }
 
-    points.push({"x": x, "y": yEnd});
+    points.push({ "x": x, "y": yEnd });
 
     let lineGenerator = d3.line()
         .x(function(d) { return d.x; })

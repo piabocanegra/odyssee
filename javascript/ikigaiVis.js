@@ -16,8 +16,8 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
 
     // Add ikigai chart.
     let imageAttr = {
-        height: 400,
-        width: 400
+        height: 540,
+        width: 540
     };
 
     imageAttr.x = width / 2 - imageAttr.width / 2;
@@ -90,7 +90,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
 
     console.log(ikigaiMap);
 
-    let ikigaiGraphPadding = 16;
+    let ikigaiGraphPadding = 24;
     let ikigaiColorHexArray = {
         'profiteer': '#9f265b',
         'worker': '#ca614d',
@@ -165,7 +165,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
                 ikigaiGraphMap[category]['x1'] - 12 : ikigaiGraphMap[category]['x2'] + 12,
             y: ikigaiGraphMap[category]['y'] - gIkigaiAttr.height - 12,
             textAnchor: ikigaiGraphMap[category]['textAnchor'],
-            fontSize: 9
+            fontSize: 12
         });
     });
 
@@ -220,7 +220,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
             drawText(ikigaiGraph, type.toLowerCase(), {
                 x: ikigaiXScale(type),
                 y: gIkigaiAttr.height + 12,
-                fontSize: 9
+                fontSize: 12
             });
 
             let tooltipText = "<b>IKIGAI GROUP:</b> " + ikigaiKeyToLabel[category].toLowerCase() +
@@ -267,7 +267,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     drawText(colorLegend, 'Ikigai', {
         x: 0,
         y: 0,
-        fontSize: 9,
+        fontSize: 12,
         textAnchor: 'start'
     });
 
@@ -282,7 +282,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         drawText(colorLegend, d, {
             x: colorLegendAttr.horizontalPadding + colorLegendAttr.circleRadius * 2,
             y: ikigaiGroupY,
-            fontSize: 9,
+            fontSize: 12,
             textAnchor: 'start'
         });
     });
@@ -318,7 +318,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     drawText(lineLegend, 'ikigai group average', {
         x: lineLegendAttr.width / 2,
         y: lineLegendAttr.lineHeight + lineLegendAttr.verticalPadding,
-        fontSize: 9
+        fontSize: 12
     });
 
     lineLegend.append('line')
@@ -333,6 +333,6 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     drawText(lineLegend, 'entire group average', {
         x: lineLegendAttr.width / 2,
         y: lineLegendAttr.lineHeight + 3 * lineLegendAttr.verticalPadding + lineLegendAttr.lineHeight,
-        fontSize: 9
+        fontSize: 12
     });
 }
