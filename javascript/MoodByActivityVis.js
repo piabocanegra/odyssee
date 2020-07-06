@@ -45,30 +45,10 @@ function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, perso
         .style("border", "1px solid #cdcdcd");
 
     // create initial bars
-    svg.selectAll(".bars")
-        .data(keyList)
-        .enter()
-        .append("line")
-        .attr("x1", function(d) {
-            return xScale(d) + 10;
-        })
-        .attr("x2", function(d) {
-            return xScale(d) + 10;
-        })
-        .attr("y1", function(d) {
-            return yScale(0);
-        })
-        .attr("y2", function(d) {
-            return yScale(categoryMap.get(d))
-        })
-        .attr("stroke", function(d) {
-            return colorHexArray[moodList[avgMap[d]]];
-        })
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round")
-        .style("stroke-dasharray", function(d) {
-            return dashArray[reasonMap[d]];
-        });
+    for (var i of keyList) {
+        drawImperfectVerticalLine(svg, yScale(categoryMap.get(i)), yScale(0)+5, 
+            xScale(i)+10, dashArray[reasonMap[i]], colorHexArray[moodList[avgMap[i]]], );
+    }
 
     // add icons
     keyList.forEach(function(d, i) {

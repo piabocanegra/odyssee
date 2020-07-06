@@ -411,6 +411,37 @@ function drawImperfectHorizontalLine(svg, xStart, xEnd, y) {
         .style("stroke", "#cdcdcd")
         .attr("stroke-width", 2.5)
         .style("stroke-linecap", "round");
+}
 
-    console.log(points);
+function drawImperfectVerticalLine(svg, yStart, yEnd, x, dashArr, color = "#cdcdcd") {
+    let points = [];
+    
+    // generate points
+    for (var i = yStart; i <= yEnd; i+=50) {
+        let direction = Math.floor(Math.random()*2) == 0 ? -1 : 1;
+        let offset = Math.floor(Math.random()*3);
+
+        points.push({
+            "x": x + offset*direction,
+            "y": i
+        });
+    }
+
+    points.push({"x": x, "y": yEnd});
+
+    let lineGenerator = d3.line()
+        .x(function(d) { console.log(d); return d.x; })
+        .y(function(d) { return d.y; })
+        .curve(d3.curveMonotoneX);
+
+    svg.append("path")
+        .datum(points)
+        .attr("d", lineGenerator)
+        .style("fill", "none")
+        .style("stroke", color)
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", function() {
+            return (dashArr == dashArray[3]) ? null : "round";
+        })
+        .style("stroke-dasharray", dashArr);
 }
