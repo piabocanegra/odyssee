@@ -62,16 +62,10 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
 
 	let tooltip = addTooltip("#depthBreadthTooltip");
 
-    // draw "ground", TODO: make jagged
-    svg.append("line")
-    	.attr("x1", padding*2)
-    	.attr("x2", width - padding*2)
-    	.attr("y1", rootScale(0))
-    	.attr("y2", rootScale(0))
-    	.attr("stroke", "#cdcdcd")
-    	.attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round");
+	// draw ground
+    drawImperfectHorizontalLine(svg, padding*2, width-padding*2, rootScale(0));
 
+    // draw plants
     svg.append("image")
     	.attr('xlink:href', 'images/depth_plant.svg')
         .attr('x', width*0.55)

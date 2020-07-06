@@ -382,3 +382,35 @@ function setTooltipText(tooltip, text, leftOffset, rightOffset) {
             }
         });
 }
+
+function drawImperfectHorizontalLine(svg, xStart, xEnd, y) {
+    let points = [];
+    
+    // generate points
+    for (var i = xStart; i <= xEnd; i+=50) {
+        let direction = Math.floor(Math.random()*2) == 0 ? -1 : 1;
+        let offset = Math.floor(Math.random()*3);
+
+        points.push({
+            "x": i, 
+            "y": y + offset*direction
+        });
+    }
+
+    points.push({"x": xEnd, "y": y});
+
+    let lineGenerator = d3.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; })
+        .curve(d3.curveMonotoneX);
+
+    svg.append("path")
+        .datum(points)
+        .attr("d", lineGenerator)
+        .style("fill", "none")
+        .style("stroke", "#cdcdcd")
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", "round");
+
+    console.log(points);
+}
