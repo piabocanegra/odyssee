@@ -16,6 +16,7 @@
     <script type="text/javascript" src="javascript/stressorRadialGraph.js"></script>
     <script type="text/javascript" src="javascript/happinessDotPlot.js"></script>
     <script type="text/javascript" src="javascript/balanceVis.js"></script>
+    <script type="text/javascript" src="javascript/depthBreadthVis.js"></script>
     <script type="text/javascript" src="javascript/ikigaiVis.js"></script>
 </head>
 <ul>
@@ -35,6 +36,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="balance"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="happinessDotPlot"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="ikigaiVis"></svg>
     </div>
 
@@ -93,6 +95,18 @@
             "No, but I'm trying to be more balanced": "no unhappy",
             "Yes, I'm happy with that": "yes happy",
             "No, but I'm happy with that": "no happy"
+        }
+        let balanceShortToLong1 = {
+            "yes unhappy": "Yes, but I'm trying" ,
+            "no unhappy": "No, but I'm trying",
+            "yes happy": "Yes, I'm happy",
+            "no happy": "No, but I'm "
+        }
+        let balanceShortToLong2 = {
+            "yes unhappy": "to be more focused" ,
+            "no unhappy": "to be more balanced",
+            "yes happy": "with it",
+            "no happy": "happy with it"
         }
         let moodToScore = {
             "Awful": 1,
@@ -161,6 +175,8 @@
             drawBalanceGraph(".balance", everyoneData, personalityData);
 
             drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData);
+
+            drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData);
 
             var ikigaiData = await d3.csv("ikigai.csv");
             drawIkigaiVis(".ikigaiVis", everyoneData, ikigaiData);

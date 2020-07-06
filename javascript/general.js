@@ -349,3 +349,99 @@ function drawZigzagArc(svg, center, radius, attr = {}) {
         .attr("stroke", stroke)
         .attr("stroke-width", strokeWidth);
 }
+
+function addTooltip(tooltipId) {
+    return d3.select("body")
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd");
+}
+
+function setTooltipText(tooltip, text, leftOffset, rightOffset) {
+    tooltip
+        .html(text)
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("text-align", "left")
+        .style("color", textColor)
+        .style("visibility", "visible")
+        .style("max-width", 250)
+        .style("top", event.pageY + 20)
+        .style("left", function() {
+            if (d3.event.clientX < 750) {
+                return event.pageX + leftOffset + "px";
+            } else {
+                return event.pageX - rightOffset + "px";
+            }
+        });
+}
+
+function drawImperfectHorizontalLine(svg, xStart, xEnd, y) {
+    let points = [];
+    
+    // generate points
+    for (var i = xStart; i <= xEnd; i+=50) {
+        let direction = Math.floor(Math.random()*2) == 0 ? -1 : 1;
+        let offset = Math.floor(Math.random()*3);
+
+        points.push({
+            "x": i, 
+            "y": y + offset*direction
+        });
+    }
+
+    points.push({"x": xEnd, "y": y});
+
+    let lineGenerator = d3.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; })
+        .curve(d3.curveMonotoneX);
+
+    svg.append("path")
+        .datum(points)
+        .attr("d", lineGenerator)
+        .style("fill", "none")
+        .style("stroke", "#cdcdcd")
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", "round");
+}
+
+function drawImperfectVerticalLine(svg, yStart, yEnd, x, dashArr, color = "#cdcdcd") {
+    let points = [];
+    
+    // generate points
+    for (var i = yStart; i <= yEnd; i+=50) {
+        let direction = Math.floor(Math.random()*2) == 0 ? -1 : 1;
+        let offset = Math.floor(Math.random()*3);
+
+        points.push({
+            "x": x + offset*direction,
+            "y": i
+        });
+    }
+
+    points.push({"x": x, "y": yEnd});
+
+    let lineGenerator = d3.line()
+        .x(function(d) { return d.x; })
+        .y(function(d) { return d.y; })
+        .curve(d3.curveMonotoneX);
+
+    svg.append("path")
+        .datum(points)
+        .attr("d", lineGenerator)
+        .style("fill", "none")
+        .style("stroke", color)
+        .attr("stroke-width", 2.5)
+        .style("stroke-linecap", function() {
+            return (dashArr == dashArray[3]) ? null : "round";
+        })
+        .style("stroke-dasharray", dashArr);
+}
