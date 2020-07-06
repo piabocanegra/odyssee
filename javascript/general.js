@@ -349,3 +349,36 @@ function drawZigzagArc(svg, center, radius, attr = {}) {
         .attr("stroke", stroke)
         .attr("stroke-width", strokeWidth);
 }
+
+function addTooltip(tooltipId) {
+    return d3.select("body")
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd");
+}
+
+function setTooltipText(tooltip, text, leftOffset, rightOffset) {
+    tooltip
+        .html(text)
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("text-align", "left")
+        .style("color", textColor)
+        .style("visibility", "visible")
+        .style("max-width", 250)
+        .style("top", event.pageY + 20)
+        .style("left", function() {
+            if (d3.event.clientX < 750) {
+                return event.pageX + leftOffset + "px";
+            } else {
+                return event.pageX - rightOffset + "px";
+            }
+        });
+}

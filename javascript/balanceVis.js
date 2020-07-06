@@ -158,6 +158,8 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .style("text-anchor", "end")
         .style("font-size", 11);
 
+
+    // add legends
     drawStdDevAvgLegend(svg);
 
     let attitudeLegendAttr = {

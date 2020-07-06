@@ -9,7 +9,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
     let height = svg.attr('height');
     let width = svg.attr('width');
 
-    console.log(personalityData);
+    // console.log(personalityData);
 
     // Add title.
     drawTitle(svg, "Remembered vs. Experienced Happiness");
@@ -34,7 +34,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         }
     });
 
-    console.log(happinessData);
+    // console.log(happinessData);
 
     // Get group average and standard deviation.
     let experiencedData = Object.keys(happinessData).map(r => {
@@ -55,10 +55,10 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         remembered: calculateStdDev(rememberedData, groupAverage.remembered)
     };
 
-    console.log(experiencedData);
-    console.log(rememberedData);
-    console.log(groupAverage);
-    console.log(groupStdDev);
+    // console.log(experiencedData);
+    // console.log(rememberedData);
+    // console.log(groupAverage);
+    // console.log(groupStdDev);
 
     // Setup scales.
     let rememberedScale = d3.scaleLinear()

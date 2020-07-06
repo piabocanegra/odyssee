@@ -58,22 +58,7 @@ function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, di
         .on('mousemove', function() {
             let tooltipText = "<b>ACTIVITY:</b> " + activity + "</br></br><b>FREQUENCY: </b>" + totalTicks + "</br></br><b>MOOD: </b>" + mood.toLowerCase() +
                 " (<b>AVERAGE: </b> " + avgMood + ")" + "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[getKeyWithHighestValue(data)];
-            tooltip
-                .html(tooltipText)
-                .style("font-family", "Courier new")
-                .style("font-size", 12)
-                .style("text-align", "left")
-                .style("color", textColor)
-                .style("visibility", "visible")
-                .style("max-width", 250)
-                .style("top", event.pageY + 20)
-                .style("left", function() {
-                    if (d3.event.clientX < 750) {
-                        return event.pageX + 20 + "px";
-                    } else {
-                        return event.pageX - 250 + "px";
-                    }
-                });
+            setTooltipText(tooltip, tooltipText, 20, 250);
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
         });
@@ -109,17 +94,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
         .domain([0, 4])
         .range([height - padding * 5, padding * 2]);
 
-    // add tooltip
-    tooltip = d3.select("body")
-        .append("div")
-        .style("padding", 10)
-        .style("position", "absolute")
-        .style("z-index", "10")
-        .style("visibility", "hidden")
-        .attr("white-space", "pre-line")
-        .style("background-color", backgroundColor)
-        .style("border-radius", "15px")
-        .style("border", "1px solid #cdcdcd");
+    tooltip = addTooltip("#moodBurstTooltip");
 
     // draw std dev lines per activity
     svg.selectAll(".stdDevLines")

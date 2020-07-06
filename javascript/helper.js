@@ -343,6 +343,53 @@ function getCountMapNegativePercentageFromRecords(records, type, activityCountMa
     })
 }
 
+function getTopThreeActivities(activityMap, exclusionList) {
+    let keysIter = activityMap.keys();
+    let finalList = [];
+
+    while (finalList.length < 3) {
+        var key = keysIter.next().value; 
+        if (!exclusionList.includes(key+":")) {
+            finalList.push(key+":");
+        }
+    }
+
+    return finalList;
+}
+
+function getPercentageOfActivities(activityList, aggregateList) {
+    let count = 0
+    for (var activity of activityList) {
+        count += getPersonDataByActivity(aggregateList, activity.substring(0,2)).length;
+    }
+    
+    return count / aggregateList.length;
+}
+
+function getDistinctActivitiesAvg(dataList, everyoneData, exclusionList) {
+    let count = 0;
+
+    for (var email of dataList) {
+        var personData = getPersonData(everyoneData, email);
+        let tempList = personData.filter(d => {
+            return !exclusionList.includes(d.Activity.substring(0, 3));
+        });
+        count += getFrequencyByKey("Activity", tempList).size;
+    }
+
+    return count / dataList.length;
+}
+
+function getDistinctActivitiesWithExclusion(data, exclusionList) {
+    let finalSet = new Set();
+    for (var item of Array.from(data.keys())) {
+        if (!exclusionList.includes(item+":")) {
+            finalSet.add(item);
+        }
+    }
+    return finalSet;
+}
+
 // Compare functions.
 
 // Compare moods by amazing to awful.
