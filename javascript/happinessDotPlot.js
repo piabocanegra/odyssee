@@ -1,7 +1,7 @@
 /**
  *   svgClass: tag for svg class, must include the '.'
  *   personalityData: list of personality data for everyone
- *   title: title of graph
+ *   everyoneData: records for everyone
  *   returns void, draws data vis for happiness dot plot
  */
 function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {

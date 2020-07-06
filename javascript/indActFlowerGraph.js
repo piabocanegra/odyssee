@@ -192,7 +192,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
                     })
             }).on("mouseout", function(d) {
                 tooltip.style("visibility", "hidden");
-            });;
+            });
 
         // Draw flower.
         drawFlower(svgClass, flowerCenter.x, flowerCenter.y, length, flowerDataMap, n);
