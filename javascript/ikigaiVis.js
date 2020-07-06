@@ -12,7 +12,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     console.log(ikigaiData);
 
     // Add title.
-    drawTitle(svg, "Ikigai");
+    drawTitle(svg, 'Ikigai');
 
     // Add ikigai chart.
     let imageAttr = {
@@ -32,7 +32,8 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         .attr('width', imageAttr.width)
         .attr('height', imageAttr.height);
 
-    let ikigaiList = ['worker', 'bohemian', 'zen master', 'profiteer'];
+    // Order for legend: Zen Master, Bohemian, Citizen, Profiteer
+    let ikigaiList = ['zen master', 'bohemian', 'worker', 'profiteer'];
 
     // Order: Happiness, Money, Skill, Passion, Contribution
     let ikigaiScoreList = [
@@ -113,50 +114,42 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         .range([0, gIkigaiAttr.height]);
 
     // Setup bar graphs.
-    let gCitizen = svg.append('g');
-    let gZenMaster = svg.append('g');
-    let gProfiteer = svg.append('g');
-    let gBohemian = svg.append('g');
-
     let ikigaiGraphMap = {
         'worker': {
             x1: imageAttr.centerX + imageAttr.width * 0.28,
             x2: width - padding,
             x: imageAttr.centerX + imageAttr.width / 2 - ikigaiGraphPadding,
             y: imageAttr.centerY - imageAttr.height * 0.31,
-            textAnchor: 'end',
-            graph: gCitizen
+            textAnchor: 'end'
         },
         'zen master': {
             x1: imageAttr.centerX + imageAttr.width * 0.11,
             x2: width - 16,
             x: imageAttr.centerX + imageAttr.width / 2 + 14,
             y: imageAttr.centerY - imageAttr.height * 0.02,
-            textAnchor: 'end',
-            graph: gZenMaster
+            textAnchor: 'end'
         },
         'profiteer': {
             x1: padding,
             x2: imageAttr.centerX - imageAttr.width * 0.11,
             x: padding + 20,
             y: imageAttr.centerY + imageAttr.height * 0.45,
-            textAnchor: 'start',
-            graph: gProfiteer
+            textAnchor: 'start'
         },
         'bohemian': {
             x1: 16,
             x2: imageAttr.centerX - imageAttr.width * 0.32,
             x: width * 0.02,
             y: imageAttr.centerY - imageAttr.height * 0.28,
-            textAnchor: 'start',
-            graph: gBohemian
+            textAnchor: 'start'
         }
     }
 
     Object.keys(ikigaiGraphMap).forEach(category => {
-        ikigaiGraphMap[category]['graph'].attr('transform', 'translate(' +
-            (ikigaiGraphMap[category]['x']) + ', ' +
-            (ikigaiGraphMap[category]['y'] - gIkigaiAttr.height) + ')');
+        ikigaiGraphMap[category]['graph'] = svg.append('g')
+            .attr('transform', 'translate(' +
+                (ikigaiGraphMap[category]['x']) + ', ' +
+                (ikigaiGraphMap[category]['y'] - gIkigaiAttr.height) + ')');
 
         svg.append('line')
             .attr('x1', ikigaiGraphMap[category]['x1'])
@@ -177,23 +170,23 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     });
 
     // Add tooltip.
-    let tooltipId = "ikigaiVisTooltipId"
-    let tooltip = d3.select("body")
-        .append("div")
-        .attr("id", tooltipId)
-        .style("padding", 10)
-        .style("position", "absolute")
-        .style("z-index", "10")
-        .style("visibility", "hidden")
-        .attr("white-space", "pre-line")
-        .style("background-color", backgroundColor)
-        .style("border-radius", "15px")
-        .style("border", "1px solid #cdcdcd")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("text-align", "left")
-        .style("color", textColor)
-        .style("max-width", 250);
+    let tooltipId = 'ikigaiVisTooltipId'
+    let tooltip = d3.select('body')
+        .append('div')
+        .attr('id', tooltipId)
+        .style('padding', 10)
+        .style('position', 'absolute')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .attr('white-space', 'pre-line')
+        .style('background-color', backgroundColor)
+        .style('border-radius', '15px')
+        .style('border', '1px solid #cdcdcd')
+        .style('font-family', 'Courier new')
+        .style('font-size', 12)
+        .style('text-align', 'left')
+        .style('color', textColor)
+        .style('max-width', 250);
 
     // Add bar graphs.
     ikigaiList.forEach(category => {
@@ -256,5 +249,90 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
                     tooltip.style("visibility", "hidden");
                 });
         });
+    });
+
+    let colorLegendAttr = {
+        x: width - (width / 8) - 24,
+        y: height - padding * 2.5,
+        width: width / 8,
+        circleRadius: 4,
+        verticalPadding: 18,
+        horizontalPadding: 16
+    }
+
+    let colorLegend = svg.append('g')
+        .attr('width', colorLegendAttr.width)
+        .attr('transform', 'translate(' + colorLegendAttr.x + ',' + colorLegendAttr.y + ')');
+
+    drawText(colorLegend, 'Ikigai', {
+        x: 0,
+        y: 0,
+        fontSize: 9,
+        textAnchor: 'start'
+    });
+
+    ikigaiList.forEach((d, i) => {
+        let ikigaiGroupY = (i + 1) * colorLegendAttr.verticalPadding;
+        colorLegend.append('circle')
+            .attr('cx', colorLegendAttr.circleRadius)
+            .attr('cy', ikigaiGroupY)
+            .attr('r', colorLegendAttr.circleRadius)
+            .attr('fill', ikigaiColorHexArray[d]);
+
+        drawText(colorLegend, d, {
+            x: colorLegendAttr.horizontalPadding + colorLegendAttr.circleRadius * 2,
+            y: ikigaiGroupY,
+            fontSize: 9,
+            textAnchor: 'start'
+        });
+    });
+
+    let lineLegendAttr = {
+        x: colorLegendAttr.x - (width / 8) - 24,
+        y: height - padding * 2.5,
+        width: width / 8,
+        lineHeight: 24,
+        verticalPadding: 12,
+        horizontalPadding: 12,
+        strokeWidth: 2
+    }
+
+    let lineLegend = svg.append('g')
+        .attr('width', lineLegendAttr.width)
+        .attr('transform', 'translate(' + lineLegendAttr.x + ',' + lineLegendAttr.y + ')');
+
+    let ikigaiGroupAverageWidth = lineLegendAttr.horizontalPadding * (ikigaiList.length - 1);
+    ikigaiList.forEach((d, i) => {
+        let x = lineLegendAttr.width / 2 - ikigaiGroupAverageWidth / 2 +
+            i * lineLegendAttr.horizontalPadding - lineLegendAttr.strokeWidth / 2;
+        lineLegend.append('line')
+            .attr('x1', x)
+            .attr('x2', x)
+            .attr('y1', 0)
+            .attr('y2', lineLegendAttr.lineHeight)
+            .attr('stroke', ikigaiColorHexArray[d])
+            .attr('stroke-width', lineLegendAttr.strokeWidth)
+            .style('stroke-linecap', 'round');
+    });
+
+    drawText(lineLegend, 'ikigai group average', {
+        x: lineLegendAttr.width / 2,
+        y: lineLegendAttr.lineHeight + lineLegendAttr.verticalPadding,
+        fontSize: 9
+    });
+
+    lineLegend.append('line')
+        .attr('x1', lineLegendAttr.width / 2 - lineLegendAttr.strokeWidth / 2)
+        .attr('x2', lineLegendAttr.width / 2 - lineLegendAttr.strokeWidth / 2)
+        .attr('y1', lineLegendAttr.lineHeight + 2 * lineLegendAttr.verticalPadding)
+        .attr('y2', lineLegendAttr.lineHeight + 2 * lineLegendAttr.verticalPadding + lineLegendAttr.lineHeight)
+        .attr('stroke', 'lightgrey')
+        .attr('stroke-width', lineLegendAttr.strokeWidth)
+        .style('stroke-linecap', 'round');
+
+    drawText(lineLegend, 'entire group average', {
+        x: lineLegendAttr.width / 2,
+        y: lineLegendAttr.lineHeight + 3 * lineLegendAttr.verticalPadding + lineLegendAttr.lineHeight,
+        fontSize: 9
     });
 }
