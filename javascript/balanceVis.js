@@ -74,7 +74,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
     let yScale = d3.scaleLinear()
         .domain([0, 1])
-        .range([height - padding * 5.25, padding * 0.5]);
+        .range([height - padding * 5.75, 0]);
 
     let tooltip = addTooltip("#balanceTooltip");
 
@@ -92,8 +92,8 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
             var offset = key2 == "want to" ? 15 : -25;
             return xScale(key1) - offset;
         })
-        .attr('y', yScale(0.9))
-        .attr('height', yScale(0)-yScale(0.9))
+        .attr('y', yScale(0.82))
+        .attr('height', yScale(0)-yScale(0.82))
         .attr('width', 30)
         .attr('fill', '#c4c4c41a')
         .attr('opacity', 0)
@@ -208,26 +208,18 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
     //add x axis label
     svg.append("text")
-        .attr("x", width*0.99)
-        .attr("y", yScale(0)+15)
-        .text("Do you think your")
+        .attr("x", width*0.48)
+        .attr("y", yScale(0) + iconWidth + 50)
+        .text("Do you think your life is balanced?")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
-        .style("text-anchor", "end")
+        .style("text-anchor", "middle")
         .style("font-size", 12);
-    svg.append("text")
-        .attr("x", width*0.99)
-        .attr("y", yScale(0)+30)
-        .text("life is balanced?")
-        .style("font-family", "Courier new")
-        .style("font-weight", "bold")
-        .style("text-anchor", "end")
-        .style("font-size", 11);
 
     //add y axis text
     svg.append("text")
         .attr("x", padding * 2)
-        .attr("y", yScale(0.9))
+        .attr("y", yScale(0.85))
         .text("% of time spent")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
