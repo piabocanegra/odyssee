@@ -366,6 +366,20 @@ function getPercentageOfActivities(activityList, aggregateList) {
     return count / aggregateList.length;
 }
 
+function getPercentageOfActivitiesWithExclusion(activityList, aggregateList, exclusionList) {
+    let count = 0
+    let tempList = activityList.filter(d => {
+        return !exclusionList.includes(d+":");
+    });
+
+    for (var activity of tempList) {
+        console.log(activity)
+        count += getPersonDataByActivity(aggregateList, activity).length;
+    }
+    
+    return count / aggregateList.length;
+}
+
 function getDistinctActivitiesAvg(dataList, everyoneData, exclusionList) {
     let count = 0;
 

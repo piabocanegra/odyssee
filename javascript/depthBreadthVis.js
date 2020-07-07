@@ -32,7 +32,8 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
 
     let depthDistinctActivities = getDistinctActivitiesWithExclusion(depthActivityData, exclusionList.concat(depthTopThree));
     let breadthDistinctActivities = getDistinctActivitiesWithExclusion(breadthActivityData, exclusionList.concat(breadthTopThree));
-   
+    let depthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(depthActivityData.keys()), depthActivityList, exclusionList.concat(depthTopThree));
+    let breadthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(breadthActivityData.keys()), breadthActivityList, exclusionList.concat(breadthTopThree));
 
     let rootScale = d3.scaleLinear()
         .domain([0, 1])
@@ -68,13 +69,21 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     // draw plants
     svg.append("image")
     	.attr('xlink:href', 'images/depth_plant.svg')
+        .attr('id', 'depthPlant')
         .attr('x', width*0.55)
         .attr('y', height*0.1)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
-        	let text = "<b>% TIME SPENT:</b> " + Math.trunc(depthPercent*100) 
-        	+ "%</br></br><b># OF DISTINCT ACTIVITIES: </b>" + depthDistinctActivities.size
+            let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
+            let timeSpentText = "";
+            if (d3.event.clientY - svgPosY < rootScale(0)) {
+                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(depthPercent*100) + "% for 3 distinct activities";
+            } else {
+                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(depthDistinctPercent*100) + "% for " + depthDistinctActivities.size + " distinct activities"
+            }
+
+        	let text = timeSpentText
         	+ "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional" 
         	+ "</br></br><b>MOST FREQUENT MOOD: </b>" + depthMood.toLowerCase();
         	setTooltipText(tooltip, text, 20, 250);
@@ -88,9 +97,15 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
-        	let text = "<b>% TIME SPENT:</b> " + Math.trunc(breadthPercent*100) 
-        	+ "%</br></br><b># OF DISTINCT ACTIVITIES: </b>" + breadthDistinctActivities.size
-        	+ "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional" 
+            let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
+            let timeSpentText = "";
+            if (d3.event.clientY - svgPosY < rootScale(0)) {
+                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(breadthPercent*100) + "% for 3 distinct activities";
+            } else {
+                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(breadthDistinctPercent*100) + "% for " + breadthDistinctActivities.size + " distinct activities"
+            }
+
+        	let text = timeSpentText + "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional" 
         	+ "</br></br><b>MOST FREQUENT MOOD: </b>" + breadthMood.toLowerCase();
         	setTooltipText(tooltip, text, 20, 250);
         }).on("mouseout", function(d) {
