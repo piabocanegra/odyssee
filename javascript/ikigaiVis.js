@@ -9,7 +9,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     let height = svg.attr('height');
     let width = svg.attr('width');
 
-    console.log(ikigaiData);
+    // console.log(ikigaiData);
 
     // Add title.
     drawTitle(svg, 'Ikigai');
@@ -88,7 +88,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         });
     });
 
-    console.log(ikigaiMap);
+    // console.log(ikigaiMap);
 
     let ikigaiGraphPadding = 24;
     let ikigaiColorHexArray = {
