@@ -27,12 +27,14 @@ function drawText(svg, text, attr) {
     let alignmentBaseline = attr.alignmentBaseline == null ? 'middle' : attr.alignmentBaseline;
     let fontSize = attr.fontSize == null ? 12 : attr.fontSize;
     let transform = attr.transform == null ? '' : attr.transform;
+    let fill = attr.fill == null ? textColor : attr.fill;
+
     return svg.append('text')
         .attr('x', x)
         .attr('y', y)
         .attr('text-anchor', textAnchor)
         .attr('font-family', 'Courier new')
-        .attr('fill', textColor)
+        .attr('fill', fill)
         .attr('font-size', fontSize)
         .attr('alignment-baseline', alignmentBaseline)
         .attr('transform', transform)

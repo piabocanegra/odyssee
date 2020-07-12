@@ -75,10 +75,6 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         });
     });
 
-    function getAverageFromList(lst) {
-        return lst.reduce((a, b) => a + b, 0) / lst.length
-    }
-
     // Get averages.
     let ikigaiAverages = [];
     Object.keys(ikigaiMap).forEach(category => {

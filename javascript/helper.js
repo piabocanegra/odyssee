@@ -154,6 +154,10 @@ function findMode(keyList, map) {
     return finalMap;
 }
 
+function getAverageFromList(lst) {
+    return lst.reduce((a, b) => a + b, 0) / lst.length
+}
+
 /**
  *   keyList: list of keys, usually top 5/6 keys
  *   map: map of (all) keys to list of frequencies, ie "b5: {"Good": 3, "Ok": 5}"
@@ -348,9 +352,9 @@ function getTopThreeActivities(activityMap, exclusionList) {
     let finalList = [];
 
     while (finalList.length < 3) {
-        var key = keysIter.next().value; 
-        if (!exclusionList.includes(key+":")) {
-            finalList.push(key+":");
+        var key = keysIter.next().value;
+        if (!exclusionList.includes(key + ":")) {
+            finalList.push(key + ":");
         }
     }
 
@@ -360,23 +364,23 @@ function getTopThreeActivities(activityMap, exclusionList) {
 function getPercentageOfActivities(activityList, aggregateList) {
     let count = 0
     for (var activity of activityList) {
-        count += getPersonDataByActivity(aggregateList, activity.substring(0,2)).length;
+        count += getPersonDataByActivity(aggregateList, activity.substring(0, 2)).length;
     }
-    
+
     return count / aggregateList.length;
 }
 
 function getPercentageOfActivitiesWithExclusion(activityList, aggregateList, exclusionList) {
     let count = 0
     let tempList = activityList.filter(d => {
-        return !exclusionList.includes(d+":");
+        return !exclusionList.includes(d + ":");
     });
 
     for (var activity of tempList) {
-        console.log(activity)
+        // console.log(activity)
         count += getPersonDataByActivity(aggregateList, activity).length;
     }
-    
+
     return count / aggregateList.length;
 }
 
@@ -397,7 +401,7 @@ function getDistinctActivitiesAvg(dataList, everyoneData, exclusionList) {
 function getDistinctActivitiesWithExclusion(data, exclusionList) {
     let finalSet = new Set();
     for (var item of Array.from(data.keys())) {
-        if (!exclusionList.includes(item+":")) {
+        if (!exclusionList.includes(item + ":")) {
             finalSet.add(item);
         }
     }

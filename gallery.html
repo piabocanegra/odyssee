@@ -124,6 +124,7 @@
             4: "Good",
             5: "Amazing"
         };
+
         let keys = {
             personality: {
                 shortTermStressor: "Which of the following daily stressors is most significant for you?",
@@ -144,6 +145,12 @@
                 money: "Money",
                 passion: "Passion",
                 skill: "Skill"
+            },
+            time: {
+                dateTime: "Time of Record (Adjusted to Time Zone)",
+                mood: "How are you feeling?",
+                morningNight: "Morning/Evening Person",
+                attitude: "I was doing this activity because"
             }
         }
 
@@ -184,7 +191,7 @@
             drawIkigaiVis(".ikigaiVis", everyoneData, ikigaiData);
 
             let timeData = await d3.csv("time.csv");
-            drawMorningNightVis(".morningNightVis", everyoneData, timeData);
+            drawMorningNightVis(".morningNightVis", timeData);
         }
 
         function main() {
