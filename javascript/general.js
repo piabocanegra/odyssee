@@ -224,7 +224,7 @@ function drawAttitudeLegend(attitudeLegend, title, attitudeList) {
     drawAttitudeLegendData(attitudeLegend, attitudeList);
 }
 
-function drawAttitudeHalfLegend(svgClass, attList = attitudeList) {
+function drawAttitudeHalfLegend(svgClass, attList = attitudeList, title = "Most frequent attitude") {
     let svg = d3.select(svgClass)
     let height = svg.attr('height')
     let width = svg.attr('width')
@@ -239,7 +239,7 @@ function drawAttitudeHalfLegend(svgClass, attList = attitudeList) {
         .attr("width", attitudeLegendAttr.width)
         .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
 
-    drawAttitudeLegend(attitudeLegend, "Most frequent attitude", attList);
+    drawAttitudeLegend(attitudeLegend, title, attList);
 }
 
 // add color filters to website, must call this per svg 
