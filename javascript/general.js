@@ -355,16 +355,21 @@ function drawZigzagArc(svg, center, radius, attr = {}) {
 
 function addTooltip(tooltipId) {
     return d3.select("body")
-        .append("div")
-        .attr("id", tooltipId)
-        .style("padding", 10)
-        .style("position", "absolute")
-        .style("z-index", "10")
-        .style("visibility", "hidden")
-        .attr("white-space", "pre-line")
-        .style("background-color", backgroundColor)
-        .style("border-radius", "15px")
-        .style("border", "1px solid #cdcdcd");
+        .append('div')
+        .attr('id', tooltipId)
+        .style('padding', 10)
+        .style('position', 'absolute')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .attr('white-space', 'pre-line')
+        .style('background-color', backgroundColor)
+        .style('border-radius', '15px')
+        .style('border', '1px solid #cdcdcd')
+        .style('font-family', 'Courier new')
+        .style('font-size', 12)
+        .style('text-align', 'left')
+        .style('color', textColor)
+        .style('max-width', 250);
 }
 
 function setTooltipText(tooltip, text, leftOffset, rightOffset) {

@@ -24,10 +24,12 @@ function drawMorningNightVis(svgClass, timeData) {
 
     let dateTimeParser = d3.timeParse("%m/%d/%y %H:%M %p");
 
-    // Setup map.
+    // Setup maps.
     let timeMap = {};
+    let timeMoodAverageMap = {};
     for (let i = 0; i < 24; i++) {
         timeMap[i] = [];
+        timeMoodAverageMap[i] = {};
     }
     timeData.forEach(d => {
         let record = d;
@@ -47,6 +49,14 @@ function drawMorningNightVis(svgClass, timeData) {
     let timeXScale = d3.scaleTime()
         .domain([0, 24])
         .range([graphAttr.horizontalPadding, graphAttr.width - graphAttr.horizontalPadding]);
+
+    let reverseMoodScale = d3.scaleLinear()
+        .domain([graphAttr.height - 2 * graphAttr.verticalPadding, graphAttr.verticalPadding])
+        .range([moodToScore["Awful"], moodToScore["Amazing"]]);
+
+    let reverseTimeScale = d3.scaleTime()
+        .domain([graphAttr.horizontalPadding, graphAttr.width - graphAttr.horizontalPadding])
+        .range([0, 24]);
 
     // morning (5am - 11:59 am), afternoon (12:00pm - 4:59pm), evening (5:00pm - 8:59pm), night (9:00pm - 4:59am).
     let timeSegments = {
@@ -126,7 +136,7 @@ function drawMorningNightVis(svgClass, timeData) {
 
     // Draw curves.
     let lineGen = d3.line()
-        .curve(d3.curveBasis);
+        .curve(d3.curveMonotoneX);
 
     // Generate morning and night people points.
     let morningPoints = [];
@@ -139,18 +149,16 @@ function drawMorningNightVis(svgClass, timeData) {
             .map(d => { return moodToScore[d[keys.time.mood]] });
         let nightListForHour = timeList.filter(d => { return d[keys.time.morningNight] == "Evening" })
             .map(d => { return moodToScore[d[keys.time.mood]] });
-        if (morningListForHour.length > 0) {
-            let morningAverage = getAverageFromList(morningListForHour);
-            morningPoints.push([x, moodYScale(morningAverage)]);
-        } else {
-            morningPoints.push([x, moodYScale(moodToScore["Ok"])]);
-        }
-        if (nightListForHour.length > 0) {
-            let nightAverage = getAverageFromList(nightListForHour);
-            nightPoints.push([x, moodYScale(nightAverage)]);
-        } else {
-            nightPoints.push([x, moodYScale(moodToScore["Ok"])]);
-        }
+
+        let morningAverage = morningListForHour.length > 0 ? getAverageFromList(morningListForHour) : moodToScore["Ok"];
+        morningPoints.push([x, moodYScale(morningAverage)]);
+        let nightAverage = nightListForHour.length > 0 ? getAverageFromList(nightListForHour) : moodToScore["Ok"];
+        nightPoints.push([x, moodYScale(nightAverage)]);
+
+        timeMoodAverageMap[hourFromFive] = {
+            morning: morningAverage,
+            night: nightAverage
+        };
     });
 
     function sortTime(a, b) {
@@ -188,6 +196,86 @@ function drawMorningNightVis(svgClass, timeData) {
         .attr("y", nightPoints[nightPoints.length - 1][1] - iconSize / 2)
         .attr("width", iconSize)
         .attr("height", iconSize);
+
+    // Setup hover bar.
+    let hoverCircleRadius = 4;
+    let morningCircle = morningNightGraph.append("circle")
+        .attr("visibility", "hidden")
+        .attr("fill", "red")
+        .attr("stroke", "lightgrey")
+        .attr("r", hoverCircleRadius);
+    let nightCircle = morningNightGraph.append("circle")
+        .attr("visibility", "hidden")
+        .attr("fill", "blue")
+        .attr("stroke", "lightgrey")
+        .attr("r", hoverCircleRadius);
+    let hoverRect = morningNightGraph.append("rect")
+        .attr("visibility", "hidden")
+        .attr("fill", "#c4c4c41a")
+        .attr("stroke", "lightgrey")
+        .attr("rx", hoverCircleRadius + 2);
+
+    // Add tooltip.
+    let tooltipId = 'morningNightVisTooltipId';
+    let tooltip = addTooltip(tooltipId);
+
+    svg.append("rect")
+        .attr("x", graphAttr.x)
+        .attr("y", graphAttr.y)
+        .attr("width", graphAttr.width)
+        .attr("height", graphAttr.height)
+        .attr("opacity", 0)
+        .on("mousemove", function() {
+            let x = d3.event.clientX - graphAttr.x - graphAttr.horizontalPadding;
+            let hour = Math.round(reverseTimeScale(x));
+            let hourFromFive = hour - 5;
+            if (timeMoodAverageMap[hourFromFive] == null) {
+                return;
+            }
+            let morningAverage = timeMoodAverageMap[hourFromFive].morning;
+            let nightAverage = timeMoodAverageMap[hourFromFive].night;
+            let time = hour == 12 ? "12PM" :
+                hour == 24 ? "12AM" :
+                hour < 12 ? hour + "AM" :
+                hour > 24 ? (hour - 24) + "AM" : (hour - 12) + "PM";
+            let morningMoodAverage = scoreToMood[Math.round(morningAverage)];
+            let nightMoodAverage = scoreToMood[Math.round(nightAverage)];
+            let tooltipText = "<b>TIME OF DAY:</b> " + time +
+                "</br></br><b>MOOD AVERAGE (MORNING): </b>" +
+                Math.round(timeMoodAverageMap[hourFromFive].morning * 100) / 100 + " (" + morningMoodAverage + ")" +
+                "</br></br><b>MOOD AVERAGE (NIGHT): </b>" +
+                Math.round(timeMoodAverageMap[hourFromFive].night * 100) / 100 + " (" + nightMoodAverage + ")";
+            // Adjust and show hover bar.
+            morningCircle.attr("visibility", "visible")
+                .attr("cx", timeXScale(hourFromFive))
+                .attr("cy", moodYScale(morningAverage))
+                .attr("fill", colorHexArray[morningMoodAverage]);
+            nightCircle.attr("visibility", "visible")
+                .attr("cx", timeXScale(hourFromFive))
+                .attr("cy", moodYScale(nightAverage))
+                .attr("fill", colorHexArray[nightMoodAverage]);
+            hoverRect.attr("visibility", "visible")
+                .attr("x", timeXScale(hourFromFive) - (hoverCircleRadius + 2))
+                .attr("y", moodYScale(morningAverage > nightAverage ? morningAverage : nightAverage) - (hoverCircleRadius + 2))
+                .attr("height", Math.abs(moodYScale(morningAverage) - moodYScale(nightAverage)) + (hoverCircleRadius + 2) * 2)
+                .attr("width", (hoverCircleRadius + 2) * 2);
+            // Show tooltip.
+            tooltip.html(tooltipText)
+                .style("visibility", "visible")
+                .style("top", event.pageY + 20)
+                .style("left", function() {
+                    if (d3.event.clientX < 750) {
+                        return event.pageX + 20 + "px";
+                    } else {
+                        return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                    }
+                })
+        }).on("mouseout", function(d) {
+            morningCircle.attr("visibility", "hidden");
+            nightCircle.attr("visibility", "hidden");
+            hoverRect.attr("visibility", "hidden");
+            tooltip.style("visibility", "hidden");
+        });
 
     // Draw morning vs. night legend.
     let mnLegendAttr = {
