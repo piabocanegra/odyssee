@@ -13,7 +13,7 @@ function drawMorningNightVis(svgClass, timeData) {
         x: padding,
         y: 90,
         yIncrement: 56,
-        height: height - 7 * padding,
+        height: height - 5 * padding,
         width: width - 2 * padding,
         verticalPadding: 28,
         horizontalPadding: 56
@@ -48,14 +48,10 @@ function drawMorningNightVis(svgClass, timeData) {
 
     let timeXScale = d3.scaleTime()
         .domain([0, 24])
-        .range([graphAttr.horizontalPadding, graphAttr.width - graphAttr.horizontalPadding]);
-
-    let reverseMoodScale = d3.scaleLinear()
-        .domain([graphAttr.height - 2 * graphAttr.verticalPadding, graphAttr.verticalPadding])
-        .range([moodToScore["Awful"], moodToScore["Amazing"]]);
+        .range([graphAttr.horizontalPadding, graphAttr.width - 3.5 * graphAttr.horizontalPadding]);
 
     let reverseTimeScale = d3.scaleTime()
-        .domain([graphAttr.horizontalPadding, graphAttr.width - graphAttr.horizontalPadding])
+        .domain([graphAttr.horizontalPadding, graphAttr.width - 3.5 * graphAttr.horizontalPadding])
         .range([0, 24]);
 
     // morning (5am - 11:59 am), afternoon (12:00pm - 4:59pm), evening (5:00pm - 8:59pm), night (9:00pm - 4:59am).
@@ -66,7 +62,7 @@ function drawMorningNightVis(svgClass, timeData) {
         night: { title: "Night", start: 16, end: 23, image: "9pm" }
     };
 
-    console.log(timeData);
+    // console.log(timeData);
 
     // Draw bottom time labels.
     let iconSize = 32;
@@ -183,32 +179,61 @@ function drawMorningNightVis(svgClass, timeData) {
         .attr("stroke-width", 2)
         .style("stroke-linecap", "round");
 
-    // Draw sun and moon icons next to line.
+    // Draw morning vs. night legend.
+    let morningLegendAttr = {
+        x: morningPoints[morningPoints.length - 1][0] + 12,
+        y: morningPoints[morningPoints.length - 1][1] - iconSize / 2
+    }
+    let nightLegendAttr = {
+        x: nightPoints[nightPoints.length - 1][0] + 12,
+        y: nightPoints[nightPoints.length - 1][1] - iconSize / 2
+    }
     morningNightGraph.append("image")
         .attr("xlink:href", "images/morning.svg")
-        .attr("x", morningPoints[morningPoints.length - 1][0] + 12)
-        .attr("y", morningPoints[morningPoints.length - 1][1] - iconSize / 2)
+        .attr("x", morningLegendAttr.x)
+        .attr("y", morningLegendAttr.y)
         .attr("width", iconSize)
         .attr("height", iconSize);
     morningNightGraph.append("image")
         .attr("xlink:href", "images/night.svg")
-        .attr("x", nightPoints[nightPoints.length - 1][0] + 12)
-        .attr("y", nightPoints[nightPoints.length - 1][1] - iconSize / 2)
+        .attr("x", nightLegendAttr.x)
+        .attr("y", nightLegendAttr.y)
         .attr("width", iconSize)
         .attr("height", iconSize);
+    drawText(morningNightGraph, "Morning people", {
+        x: morningLegendAttr.x + iconSize + 12,
+        y: morningLegendAttr.y + iconSize / 2,
+        textAnchor: "start"
+    });
+    drawText(morningNightGraph, "Night people", {
+        x: nightLegendAttr.x + iconSize + 12,
+        y: nightLegendAttr.y + iconSize / 2,
+        textAnchor: "start"
+    });
+    drawText(morningNightGraph, "Are you a morning or night person?", {
+        x: nightLegendAttr.x,
+        y: Math.min(morningLegendAttr.y, nightLegendAttr.y) - 24,
+        textAnchor: "start"
+    });
 
     // Setup hover bar.
-    let hoverCircleRadius = 4;
+    let hoverCircleRadius = 5;
     let morningCircle = morningNightGraph.append("circle")
         .attr("visibility", "hidden")
-        .attr("fill", "red")
         .attr("stroke", "lightgrey")
         .attr("r", hoverCircleRadius);
+    let morningMoodCircle = morningNightGraph.append("circle")
+        .attr("visibility", "hidden")
+        .attr("fill", colorHexArray["Morning"])
+        .attr("r", hoverCircleRadius - 2);
     let nightCircle = morningNightGraph.append("circle")
         .attr("visibility", "hidden")
-        .attr("fill", "blue")
         .attr("stroke", "lightgrey")
         .attr("r", hoverCircleRadius);
+    let nightMoodCircle = morningNightGraph.append("circle")
+        .attr("visibility", "hidden")
+        .attr("fill", colorHexArray["Night"])
+        .attr("r", hoverCircleRadius - 2);
     let hoverRect = morningNightGraph.append("rect")
         .attr("visibility", "hidden")
         .attr("fill", "#c4c4c41a")
@@ -226,9 +251,9 @@ function drawMorningNightVis(svgClass, timeData) {
         .attr("height", graphAttr.height)
         .attr("opacity", 0)
         .on("mousemove", function() {
-            let x = d3.event.clientX - graphAttr.x - graphAttr.horizontalPadding;
-            let hour = Math.round(reverseTimeScale(x));
-            let hourFromFive = hour - 5;
+            let x = d3.event.clientX - event.target.getBoundingClientRect().left;
+            let hourFromFive = Math.round(reverseTimeScale(x));
+            let hour = hourFromFive + 5;
             if (timeMoodAverageMap[hourFromFive] == null) {
                 return;
             }
@@ -246,18 +271,26 @@ function drawMorningNightVis(svgClass, timeData) {
                 "</br></br><b>MOOD AVERAGE (NIGHT): </b>" +
                 Math.round(timeMoodAverageMap[hourFromFive].night * 100) / 100 + " (" + nightMoodAverage + ")";
             // Adjust and show hover bar.
+            let morningY = moodYScale(morningAverage);
+            let nightY = moodYScale(nightAverage);
             morningCircle.attr("visibility", "visible")
                 .attr("cx", timeXScale(hourFromFive))
-                .attr("cy", moodYScale(morningAverage))
+                .attr("cy", morningY)
                 .attr("fill", colorHexArray[morningMoodAverage]);
+            morningMoodCircle.attr("visibility", "visible")
+                .attr("cx", timeXScale(hourFromFive))
+                .attr("cy", morningY + (hoverCircleRadius + 2 + 8) * (morningY >= nightY ? 1 : -1));
             nightCircle.attr("visibility", "visible")
                 .attr("cx", timeXScale(hourFromFive))
-                .attr("cy", moodYScale(nightAverage))
+                .attr("cy", nightY)
                 .attr("fill", colorHexArray[nightMoodAverage]);
+            nightMoodCircle.attr("visibility", "visible")
+                .attr("cx", timeXScale(hourFromFive))
+                .attr("cy", nightY + (hoverCircleRadius + 2 + 8) * (nightY > morningY ? 1 : -1));
             hoverRect.attr("visibility", "visible")
                 .attr("x", timeXScale(hourFromFive) - (hoverCircleRadius + 2))
                 .attr("y", moodYScale(morningAverage > nightAverage ? morningAverage : nightAverage) - (hoverCircleRadius + 2))
-                .attr("height", Math.abs(moodYScale(morningAverage) - moodYScale(nightAverage)) + (hoverCircleRadius + 2) * 2)
+                .attr("height", Math.abs(morningY - nightY) + (hoverCircleRadius + 2) * 2)
                 .attr("width", (hoverCircleRadius + 2) * 2);
             // Show tooltip.
             tooltip.html(tooltipText)
@@ -272,44 +305,14 @@ function drawMorningNightVis(svgClass, timeData) {
                 })
         }).on("mouseout", function(d) {
             morningCircle.attr("visibility", "hidden");
+            morningMoodCircle.attr("visibility", "hidden");
             nightCircle.attr("visibility", "hidden");
+            nightMoodCircle.attr("visibility", "hidden");
             hoverRect.attr("visibility", "hidden");
             tooltip.style("visibility", "hidden");
         });
 
-    // Draw morning vs. night legend.
-    let mnLegendAttr = {
-        x: 2 * padding,
-        y: height - padding * 2.5 - iconSize - 24,
-        width: (width - 4 * padding) * 2 / 3,
-    };
-    let mnLegend = svg.append("g")
-        .attr("class", "moodLegend")
-        .attr("width", mnLegendAttr.width)
-        .attr("transform", "translate(" + mnLegendAttr.x + "," + mnLegendAttr.y + ")");
-    drawMorningNightLegend(mnLegend, { iconSize: iconSize });
-
     // Draw mood and attitude legend.
     drawMoodHalfLegend(svgClass, "Average mood for part of day for morning & night people");
     drawAttitudeHalfLegend(svgClass, attitudeList, "Most frequent attitude for morning & night people");
-}
-
-function drawMorningNightLegend(mnLegend, attr) {
-    let iconSize = attr.iconSize == null ? 32 : attr.iconSize;
-    let horizontalPadding = attr.horizontalPadding == null ? 8 : attr.horizontalPadding;
-
-    mnLegend.append("image")
-        .attr("xlink:href", "images/morning.svg")
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", iconSize)
-        .attr("height", iconSize);
-    drawText(mnLegend, "Morning people", { x: iconSize + horizontalPadding, y: iconSize / 2, textAnchor: "start" });
-    mnLegend.append("image")
-        .attr("xlink:href", "images/night.svg")
-        .attr("x", iconSize + horizontalPadding + 120)
-        .attr("y", 0)
-        .attr("width", iconSize)
-        .attr("height", iconSize);
-    drawText(mnLegend, "Night people", { x: 2 * (iconSize + horizontalPadding) + 120, y: iconSize / 2, textAnchor: "start" });
 }
