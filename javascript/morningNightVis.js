@@ -222,18 +222,20 @@ function drawMorningNightVis(svgClass, timeData) {
         .attr("visibility", "hidden")
         .attr("stroke", "lightgrey")
         .attr("r", hoverCircleRadius);
-    let morningMoodCircle = morningNightGraph.append("circle")
-        .attr("visibility", "hidden")
-        .attr("fill", colorHexArray["Morning"])
-        .attr("r", hoverCircleRadius - 2);
     let nightCircle = morningNightGraph.append("circle")
         .attr("visibility", "hidden")
         .attr("stroke", "lightgrey")
         .attr("r", hoverCircleRadius);
-    let nightMoodCircle = morningNightGraph.append("circle")
+    let hoverSunIcon = morningNightGraph.append("image")
+        .attr("xlink:href", "images/morning.svg")
         .attr("visibility", "hidden")
-        .attr("fill", colorHexArray["Night"])
-        .attr("r", hoverCircleRadius - 2);
+        .attr("width", hoverCircleRadius * 3)
+        .attr("height", hoverCircleRadius * 3);
+    let hoverMoonIcon = morningNightGraph.append("image")
+        .attr("xlink:href", "images/night.svg")
+        .attr("visibility", "hidden")
+        .attr("width", hoverCircleRadius * 2)
+        .attr("height", hoverCircleRadius * 2);
     let hoverRect = morningNightGraph.append("rect")
         .attr("visibility", "hidden")
         .attr("fill", "#c4c4c41a")
@@ -277,16 +279,16 @@ function drawMorningNightVis(svgClass, timeData) {
                 .attr("cx", timeXScale(hourFromFive))
                 .attr("cy", morningY)
                 .attr("fill", colorHexArray[morningMoodAverage]);
-            morningMoodCircle.attr("visibility", "visible")
-                .attr("cx", timeXScale(hourFromFive))
-                .attr("cy", morningY + (hoverCircleRadius + 2 + 8) * (morningY >= nightY ? 1 : -1));
+            hoverSunIcon.attr("visibility", "visible")
+                .attr("x", timeXScale(hourFromFive) - hoverCircleRadius * 3 / 2)
+                .attr("y", morningY + (hoverCircleRadius + 2 + 10) * (morningY >= nightY ? 1 : -1) - hoverCircleRadius * 3 / 2);
             nightCircle.attr("visibility", "visible")
                 .attr("cx", timeXScale(hourFromFive))
                 .attr("cy", nightY)
                 .attr("fill", colorHexArray[nightMoodAverage]);
-            nightMoodCircle.attr("visibility", "visible")
-                .attr("cx", timeXScale(hourFromFive))
-                .attr("cy", nightY + (hoverCircleRadius + 2 + 8) * (nightY > morningY ? 1 : -1));
+            hoverMoonIcon.attr("visibility", "visible")
+                .attr("x", timeXScale(hourFromFive) - hoverCircleRadius)
+                .attr("y", nightY + (hoverCircleRadius + 2 + 8) * (nightY > morningY ? 1 : -1) - hoverCircleRadius);
             hoverRect.attr("visibility", "visible")
                 .attr("x", timeXScale(hourFromFive) - (hoverCircleRadius + 2))
                 .attr("y", moodYScale(morningAverage > nightAverage ? morningAverage : nightAverage) - (hoverCircleRadius + 2))
@@ -305,9 +307,9 @@ function drawMorningNightVis(svgClass, timeData) {
                 })
         }).on("mouseout", function(d) {
             morningCircle.attr("visibility", "hidden");
-            morningMoodCircle.attr("visibility", "hidden");
+            hoverSunIcon.attr("visibility", "hidden");
             nightCircle.attr("visibility", "hidden");
-            nightMoodCircle.attr("visibility", "hidden");
+            hoverMoonIcon.attr("visibility", "hidden");
             hoverRect.attr("visibility", "hidden");
             tooltip.style("visibility", "hidden");
         });
