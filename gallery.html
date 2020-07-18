@@ -19,6 +19,8 @@
     <script type="text/javascript" src="javascript/depthBreadthVis.js"></script>
     <script type="text/javascript" src="javascript/ikigaiVis.js"></script>
     <script type="text/javascript" src="javascript/morningNightVis.js"></script>
+    <script type="text/javascript" src="javascript/morningNightVis.js"></script>
+    <script type="text/javascript" src="javascript/intuitorsVis.js"></script>
 </head>
 <ul>
     <li style="float:right;vertical-align:top"><a href="about.html">About</a></li>
@@ -40,6 +42,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="intuitorsVis"></svg>
     </div>
 
     <script>
@@ -186,7 +189,6 @@
             drawBalanceGraph(".balance", everyoneData, personalityData);
 
             drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData);
-
             drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData);
 
             var ikigaiData = await d3.csv("ikigai.csv");
@@ -194,6 +196,10 @@
 
             let timeData = await d3.csv("time.csv");
             drawMorningNightVis(".morningNightVis", timeData);
+
+            let mbtiData = await d3.csv("types.csv");
+            drawIntuitorsVis(".intuitorsVis", everyoneData, personalityData, mbtiData);
+
         }
 
         function main() {

@@ -20,6 +20,55 @@ function getPersonDataByActivity(personData, activity) {
     return personData.filter(d => d.Activity.substring(0, 2) == activity);
 }
 
+function getPersonDataByActivityType(personData, type) {
+    return personData.filter(d => d.Activity.substring(0, 1) == type);
+}
+
+function getDataByPTypeValue(everyoneData, typesData, pType, value) {
+    let filteredList = typesData
+        .filter(d => d.Personality == pType);
+
+    let filteredListWithValue = filteredList.filter(d => d.Values == value).map(d => d["What's your email?"]);
+    let everyoneListWithValue = typesData.filter(d => d.Values == value).map(d => d["What's your email?"]);
+
+    let data1 = everyoneData.filter(d => filteredListWithValue.includes(d.Email));
+    let data2 = everyoneData.filter(d => everyoneListWithValue.includes(d.Email));
+
+    return [{
+        "percent": filteredListWithValue.length/filteredList.length, 
+        "fMood": getFrequencyByKey("Feeling", data1).keys().next().value, 
+        "fAttitude": getFrequencyByKey("Reason", data1).keys().next().value
+    }, 
+    {
+        "percent": everyoneListWithValue.length/typesData.length,
+        "fMood": getFrequencyByKey("Feeling", data2).keys().next().value, 
+        "fAttitude": getFrequencyByKey("Reason", data2).keys().next().value
+    }];
+}
+
+function getDataByPType(everyoneData, typesData, pType, activity, f) {
+    let emailList = typesData
+        .filter(d => d.Personality == pType)
+        .map(d => d["What's your email?"]);
+
+    let filteredData = everyoneData.filter(d => emailList.includes(d.Email));
+    let filteredActivityData = f(filteredData, activity);
+    console.log(filteredActivityData);
+    
+    let groupActivityData = f(everyoneData, activity);
+
+    return [{
+        "percent": filteredActivityData.length/filteredData.length, 
+        "fMood": getFrequencyByKey("Feeling", groupActivityData).keys().next().value, 
+        "fAttitude": getFrequencyByKey("Reason", groupActivityData).keys().next().value
+    }, 
+    {
+        "percent": groupActivityData.length/everyoneData.length,
+        "fMood": getFrequencyByKey("Feeling", groupActivityData).keys().next().value, 
+        "fAttitude": getFrequencyByKey("Reason", groupActivityData).keys().next().value
+    }];
+}
+
 /** 
  *   str: column name in excel, ie Activity, Reason, Feeling
  *   data: list of data entries 

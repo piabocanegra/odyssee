@@ -279,6 +279,14 @@ function setUpFilters(svgClass) {
         .attr('type', 'matrix')
         .attr('color-interpolation-filters', 'sRGB')
         .attr('values', "0 0 0 0 0.6235294 0 0 0 0 0.1490196 0 0 0 0 0.3568627 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Grey')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.804 0 0 0 0 0.804 0 0 0 0 0.804 0 0 0 1 0");
+
 }
 
 // Helper function for drawing imperfect circles and zigzag curves.
