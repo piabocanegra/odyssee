@@ -39,12 +39,16 @@ function drawThirtyDaysVis(svgClass, timeData) {
         let dateTime = dateTimeParser(d[keys.time.dateTime]);
         let hour = dateTime.getHours();
         let hourFromFive = hour < 5 ? (19 + hour) : (hour - 5);
-        let day = dateTime.getDate();
-        let timeSegment = hourFromFiveToTimeSegment(hourFromFive);
-        // console.log(dateTime)
-        // console.log("Day: " + day + " hr from five: " + hourFromFive + " Time segment: " + timeSegment)
-        monthMap[day][timeSegment].mood.push(record[keys.time.mood]);
-        monthMap[day][timeSegment].activity.push(record[keys.time.activity]);
+        let date = dateTime.getDate();
+        let month = dateTime.getMonth() + 1;
+        if ((month == 4 && date >= 15) || (month == 5 && date <= 14)) {
+            let day = month == 4 ? date - 14 : month == 5 ? date - 14 + 30 : null;
+            let timeSegment = hourFromFiveToTimeSegment(hourFromFive);
+            // console.log(dateTime)
+            // console.log("Month: " + month + " Day: " + day + " hr from five: " + hourFromFive + " Time segment: " + timeSegment)
+            monthMap[day][timeSegment].mood.push(record[keys.time.mood]);
+            monthMap[day][timeSegment].activity.push(record[keys.time.activity]);
+        }
     });
     console.log(timeData);
     console.log(monthMap);
@@ -120,34 +124,37 @@ function drawThirtyDaysVis(svgClass, timeData) {
             let timeSegment = timeSegments[segment];
             let moods = monthMap[day][segment].mood;
             let activities = monthMap[day][segment].activity;
-            let mostFrequentMood = getModeFromList(moods);
-            let mostFrequentActivity = getModeFromList(activities);
-            bivarTimeGraph.append("line")
-                .attr("x1", monthXScale(day))
-                .attr("x2", monthXScale(day))
-                .attr("y1", lineEnd == null ? timeYScale(timeSegment.start) : lineEnd)
-                .attr("y2", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2 + 1)
-                .attr("stroke", colorHexArray[mostFrequentMood])
-                // .attr("stroke-linecap", "round")
-                .attr("stroke-width", strokeWidth);
-            bivarTimeGraph.append("image")
-                .attr("xlink:href", "images/" + (mostFrequentActivity.substring(0, 2)) + ".svg")
-                .attr("x", monthXScale(day) - iconSize / 2)
-                .attr("y", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2)
-                .attr("width", iconSize)
-                .attr("height", iconSize)
-                .style('filter', function() {
-                    return 'url(#' + mostFrequentMood + ')';
-                });
-            lineEnd = timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2);
-            bivarTimeGraph.append("line")
-                .attr("x1", monthXScale(day))
-                .attr("x2", monthXScale(day))
-                .attr("y1", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 + iconSize / 2 - 1)
-                .attr("y2", lineEnd)
-                .attr("stroke", colorHexArray[mostFrequentMood])
-                // .attr("stroke-linecap", "round")
-                .attr("stroke-width", strokeWidth);
+            if (moods.length > 0 && activities.length > 0) {
+                let mostFrequentMood = getModeFromList(moods);
+                let mostFrequentActivity = getModeFromList(activities);
+                bivarTimeGraph.append("line")
+                    .attr("x1", monthXScale(day))
+                    .attr("x2", monthXScale(day))
+                    .attr("y1", lineEnd == null ? timeYScale(timeSegment.start) : lineEnd)
+                    .attr("y2", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2 + 1)
+                    .attr("stroke", colorHexArray[mostFrequentMood])
+                    // .attr("stroke-linecap", "round")
+                    .attr("stroke-width", strokeWidth);
+                bivarTimeGraph.append("image")
+                    .attr("xlink:href", "images/" + (mostFrequentActivity.substring(0, 2)) + ".svg")
+                    .attr("x", monthXScale(day) - iconSize / 2)
+                    .attr("y", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2)
+                    .attr("width", iconSize)
+                    .attr("height", iconSize)
+                    .style('filter', function() {
+                        return 'url(#' + mostFrequentMood + ')';
+                    });
+                lineEnd = timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2);
+                bivarTimeGraph.append("line")
+                    .attr("x1", monthXScale(day))
+                    .attr("x2", monthXScale(day))
+                    .attr("y1", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 + iconSize / 2 - 1)
+                    .attr("y2", lineEnd)
+                    .attr("stroke", colorHexArray[mostFrequentMood])
+                    // .attr("stroke-linecap", "round")
+                    .attr("stroke-width", strokeWidth);
+            }
+
 
         });
     });
