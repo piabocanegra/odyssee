@@ -54,14 +54,6 @@ function drawMorningNightVis(svgClass, timeData) {
         .domain([graphAttr.horizontalPadding, graphAttr.width - 3.5 * graphAttr.horizontalPadding])
         .range([0, 24]);
 
-    // morning (5am - 11:59 am), afternoon (12:00pm - 4:59pm), evening (5:00pm - 8:59pm), night (9:00pm - 4:59am).
-    let timeSegments = {
-        morning: { title: "Morning", start: 0, end: 6, image: "5am_5pm" },
-        afternoon: { title: "Afternoon", start: 7, end: 11, image: "12pm" },
-        evening: { title: "Evening", start: 12, end: 15, image: "5am_5pm" },
-        night: { title: "Night", start: 16, end: 23, image: "9pm" }
-    };
-
     // console.log(timeData);
 
     // Draw bottom time labels.

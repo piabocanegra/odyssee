@@ -19,7 +19,7 @@
     <script type="text/javascript" src="javascript/depthBreadthVis.js"></script>
     <script type="text/javascript" src="javascript/ikigaiVis.js"></script>
     <script type="text/javascript" src="javascript/morningNightVis.js"></script>
-    <script type="text/javascript" src="javascript/morningNightVis.js"></script>
+    <script type="text/javascript" src="javascript/thirtyDays.js"></script>
     <script type="text/javascript" src="javascript/intuitorsVis.js"></script>
 </head>
 <ul>
@@ -42,6 +42,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="thirtyDays"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="intuitorsVis"></svg>
     </div>
 
@@ -130,6 +131,34 @@
             5: "Amazing"
         };
 
+        // morning (5am - 11:59 am), afternoon (12:00pm - 4:59pm), evening (5:00pm - 8:59pm), night (9:00pm - 4:59am).
+        let timeSegments = {
+            morning: {
+                title: "Morning",
+                start: 0,
+                end: 6,
+                image: "5am_5pm"
+            },
+            afternoon: {
+                title: "Afternoon",
+                start: 7,
+                end: 11,
+                image: "12pm"
+            },
+            evening: {
+                title: "Evening",
+                start: 12,
+                end: 15,
+                image: "5am_5pm"
+            },
+            night: {
+                title: "Night",
+                start: 16,
+                end: 23,
+                image: "9pm"
+            }
+        };
+
         let keys = {
             personality: {
                 shortTermStressor: "Which of the following daily stressors is most significant for you?",
@@ -155,9 +184,10 @@
                 dateTime: "Time of Record (Adjusted to Time Zone)",
                 mood: "How are you feeling?",
                 morningNight: "Morning/Evening Person",
-                attitude: "I was doing this activity because"
+                attitude: "I was doing this activity because",
+                activity: "In the last 10 min, what kind of activity were you doing?"
             }
-        }
+        };
 
         const getData = async() => {
             // TODO for Jamal: replace next two lines with json list
@@ -196,6 +226,7 @@
 
             let timeData = await d3.csv("time.csv");
             drawMorningNightVis(".morningNightVis", timeData);
+            drawThirtyDaysVis(".thirtyDays", timeData);
 
             let mbtiData = await d3.csv("types.csv");
             drawIntuitorsVis(".intuitorsVis", everyoneData, personalityData, mbtiData);
