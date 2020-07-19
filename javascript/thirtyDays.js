@@ -3,13 +3,16 @@
  *   timeData: time data for records
  *   returns void, draws data vis for 30 days bivariate time.
  */
-function drawThirtyDaysVis(svgClass, timeData) {
+function drawThirtyDaysVis(svgClass, timeData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
     drawTitle(svg, "30 days");
 
     let dateTimeParser = d3.timeParse("%m/%d/%y %H:%M %p");
+    timeData.forEach(d => {
+        d.dateTime = dateTimeParser(d[keys.time.dateTime]);
+    });
 
     let monthMap = {};
 
@@ -34,20 +37,52 @@ function drawThirtyDaysVis(svgClass, timeData) {
         });
     }
 
+    let timeFrame = {
+        start: {
+            month: 4,
+            day: 15
+        },
+        end: {
+            month: 5,
+            day: 14
+        }
+    }
+
+    // Determine start and end dates for a user if displaying individual data.
+    if (email != null) {
+        let timeDataForUser = timeData.filter(d => { return d[keys.time.email] == email });
+        let minMonth = d3.min(timeDataForUser, d => { return d.dateTime.getMonth() });
+        let timeDataForUserOfMinMonth = timeDataForUser.filter(d => { return d.dateTime.getMonth() == minMonth });
+        let minDate = d3.min(timeDataForUserOfMinMonth, d => { return d.dateTime.getDate() });
+        minMonth = minMonth + 1; // getMonth() indexes month from 0, but we want to index month from 1.
+        // console.log("min month: " + minMonth + " | min date: " + minDate)
+        timeFrame.start.month = minMonth;
+        timeFrame.start.day = minDate;
+    }
+
+    timeFrame.daysOfStartMonth = new Date(2020, timeFrame.start.month, 0).getDate()
+    let daysLeftInStartMonth = timeFrame.daysOfStartMonth - timeFrame.start.day + 1;
+    timeFrame.end.month = daysLeftInStartMonth < 30 ? timeFrame.start.month + 1 : timeFrame.start.month;
+    timeFrame.end.day = daysLeftInStartMonth < 30 ? 30 - daysLeftInStartMonth : 30;
+    // console.log(timeFrame.daysOfStartMonth)
+
     timeData.forEach(d => {
-        let record = d;
-        let dateTime = dateTimeParser(d[keys.time.dateTime]);
-        let hour = dateTime.getHours();
-        let hourFromFive = hour < 5 ? (19 + hour) : (hour - 5);
-        let date = dateTime.getDate();
-        let month = dateTime.getMonth() + 1;
-        if ((month == 4 && date >= 15) || (month == 5 && date <= 14)) {
-            let day = month == 4 ? date - 14 : month == 5 ? date - 14 + 30 : null;
-            let timeSegment = hourFromFiveToTimeSegment(hourFromFive);
-            // console.log(dateTime)
-            // console.log("Month: " + month + " Day: " + day + " hr from five: " + hourFromFive + " Time segment: " + timeSegment)
-            monthMap[day][timeSegment].mood.push(record[keys.time.mood]);
-            monthMap[day][timeSegment].activity.push(record[keys.time.activity]);
+        if (email == null || d[keys.time.email] == email) {
+            let dateTime = dateTimeParser(d[keys.time.dateTime]);
+            let hour = dateTime.getHours();
+            let hourFromFive = hour < 5 ? (19 + hour) : (hour - 5);
+            let date = dateTime.getDate();
+            let month = dateTime.getMonth() + 1;
+            if ((month == timeFrame.start.month && date >= timeFrame.start.day) || (month == timeFrame.end.month && date <= timeFrame.end.day)) {
+                let day = month == timeFrame.start.month ? date - timeFrame.start.day + 1 :
+                    month == timeFrame.end.month ? date - timeFrame.start.day + 1 + timeFrame.daysOfStartMonth : null;
+                let timeSegment = hourFromFiveToTimeSegment(hourFromFive);
+                // console.log(dateTime)
+                // console.log("Month: " + month + " Date: " + date + " hr from five: " + hourFromFive + " Time segment: " + timeSegment)
+                // console.log("day: " + day)
+                monthMap[day][timeSegment].mood.push(d[keys.time.mood]);
+                monthMap[day][timeSegment].activity.push(d[keys.time.activity]);
+            }
         }
     });
     console.log(timeData);
@@ -124,10 +159,11 @@ function drawThirtyDaysVis(svgClass, timeData) {
             let timeSegment = timeSegments[segment];
             let moods = monthMap[day][segment].mood;
             let activities = monthMap[day][segment].activity;
+            let g = bivarTimeGraph.append("g");
             if (moods.length > 0 && activities.length > 0) {
                 let mostFrequentMood = getModeFromList(moods);
                 let mostFrequentActivity = getModeFromList(activities);
-                bivarTimeGraph.append("line")
+                g.append("line")
                     .attr("x1", monthXScale(day))
                     .attr("x2", monthXScale(day))
                     .attr("y1", lineEnd == null ? timeYScale(timeSegment.start) : lineEnd)
@@ -135,7 +171,7 @@ function drawThirtyDaysVis(svgClass, timeData) {
                     .attr("stroke", colorHexArray[mostFrequentMood])
                     // .attr("stroke-linecap", "round")
                     .attr("stroke-width", strokeWidth);
-                bivarTimeGraph.append("image")
+                g.append("image")
                     .attr("xlink:href", "images/" + (mostFrequentActivity.substring(0, 2)) + ".svg")
                     .attr("x", monthXScale(day) - iconSize / 2)
                     .attr("y", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2)
@@ -145,7 +181,7 @@ function drawThirtyDaysVis(svgClass, timeData) {
                         return 'url(#' + mostFrequentMood + ')';
                     });
                 lineEnd = timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2);
-                bivarTimeGraph.append("line")
+                g.append("line")
                     .attr("x1", monthXScale(day))
                     .attr("x2", monthXScale(day))
                     .attr("y1", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 + iconSize / 2 - 1)
@@ -153,9 +189,17 @@ function drawThirtyDaysVis(svgClass, timeData) {
                     .attr("stroke", colorHexArray[mostFrequentMood])
                     // .attr("stroke-linecap", "round")
                     .attr("stroke-width", strokeWidth);
+            } else {
+                g.append("line")
+                    .attr("x1", monthXScale(day))
+                    .attr("x2", monthXScale(day))
+                    .attr("y1", lineEnd == null ? timeYScale(timeSegment.start) : lineEnd)
+                    .attr("y2", timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2))
+                    .attr("stroke", "lightgrey")
+                    // .attr("stroke-linecap", "round")
+                    .attr("stroke-width", strokeWidth);
+                lineEnd = timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2);
             }
-
-
         });
     });
 }
