@@ -1,3 +1,22 @@
+function getWeekdayLetterFromIndex(weekday) {
+    switch (weekday) {
+        case 0:
+            return "S"
+        case 1:
+            return "M"
+        case 2:
+            return "T"
+        case 3:
+            return "W"
+        case 4:
+            return "R"
+        case 5:
+            return "F"
+        case 6:
+            return "S"
+    }
+}
+
 /**
  *   svgClass: tag for svg class, must include the '.'
  *   timeData: time data for records
@@ -33,7 +52,10 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
     }
 
     for (let i = 1; i <= 30; i++) {
-        monthMap[i] = {};
+        monthMap[i] = {
+            date: null,
+            weekday: null
+        };
         Object.keys(timeSegments).forEach(segment => {
             monthMap[i][segment] = {
                 mood: [],
@@ -93,6 +115,8 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
                     activity: d[keys.time.activity],
                     hourFromFive: hourFromFive
                 });
+                monthMap[day].date = month + "." + (date < 10 ? "0" + date : date);
+                monthMap[day].weekday = getWeekdayLetterFromIndex(dateTime.getDay());
             }
         }
     });
@@ -141,11 +165,13 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         });
     });
 
-    // Draw "Day" label.
-    drawText(bivarTimeGraph, "Day", {
-        x: monthXScale(1) - graphAttr.horizontalPadding - iconSize / 2,
-        y: timeYScale(24) + graphAttr.verticalPadding,
-        textAnchor: "end"
+    // Draw x axis labels.
+    ["Day", "Day of the Week", "Date"].forEach((d, i) => {
+        drawText(bivarTimeGraph, d, {
+            x: monthXScale(1) - graphAttr.horizontalPadding - iconSize / 2,
+            y: timeYScale(24) + (graphAttr.verticalPadding * (i + 1)) + 12 * i,
+            textAnchor: "end"
+        });
     });
 
     function getModeFromList(lst) {
@@ -165,9 +191,11 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
     // Draw data.
     let strokeWidth = 1;
     Object.keys(monthMap).forEach(day => {
-        drawText(bivarTimeGraph, day, {
-            x: monthXScale(day),
-            y: timeYScale(24) + graphAttr.verticalPadding
+        [day, monthMap[day].weekday, monthMap[day].date].forEach((d, i) => {
+            drawText(bivarTimeGraph, d, {
+                x: monthXScale(day),
+                y: timeYScale(24) + graphAttr.verticalPadding * (i + 1) + 12 * i
+            });
         });
         let data = [];
         Object.keys(timeSegments).forEach(segment => {
