@@ -297,7 +297,7 @@ function drawMorningNightVis(svgClass, timeData) {
                         return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
                     }
                 })
-        }).on("mouseout", function(d) {
+        }).on("mouseout", function() {
             morningCircle.attr("visibility", "hidden");
             hoverSunIcon.attr("visibility", "hidden");
             nightCircle.attr("visibility", "hidden");

@@ -33,7 +33,8 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         Object.keys(timeSegments).forEach(segment => {
             monthMap[i][segment] = {
                 mood: [],
-                activity: []
+                activity: [],
+                data: []
             };
         });
     }
@@ -83,6 +84,11 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
                 // console.log("day: " + day)
                 monthMap[day][timeSegment].mood.push(d[keys.time.mood]);
                 monthMap[day][timeSegment].activity.push(d[keys.time.activity]);
+                monthMap[day][timeSegment].data.push({
+                    mood: d[keys.time.mood],
+                    activity: d[keys.time.activity],
+                    hourFromFive: hourFromFive
+                });
             }
         }
     });
@@ -148,6 +154,10 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         return Object.keys(map).find(d => { return map[d] = maxCount })
     }
 
+    // Add tooltip.
+    let tooltipId = 'thirtyDaysBivariateVisTooltipId';
+    let tooltip = addTooltip(tooltipId);
+
     // Draw data.
     let strokeWidth = 1;
     Object.keys(monthMap).forEach(day => {
@@ -160,37 +170,77 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
             let timeSegment = timeSegments[segment];
             let moods = monthMap[day][segment].mood;
             let activities = monthMap[day][segment].activity;
+            let data = monthMap[day][segment].data;
             let g = bivarTimeGraph.append("g");
-            if (moods.length > 0 && activities.length > 0) {
-                let mostFrequentMood = getModeFromList(moods);
-                let mostFrequentActivity = getModeFromList(activities);
-                g.append("line")
-                    .attr("x1", monthXScale(day))
-                    .attr("x2", monthXScale(day))
-                    .attr("y1", lineEnd == null ? timeYScale(timeSegment.start) : lineEnd)
-                    .attr("y2", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2 + 1)
-                    .attr("stroke", colorHexArray[mostFrequentMood])
-                    // .attr("stroke-linecap", "round")
-                    .attr("stroke-width", strokeWidth);
-                g.append("image")
-                    .attr("xlink:href", "images/" + (mostFrequentActivity.substring(0, 2)) + ".svg")
-                    .attr("x", monthXScale(day) - iconSize / 2)
-                    .attr("y", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 - iconSize / 2)
-                    .attr("width", iconSize)
-                    .attr("height", iconSize)
-                    .style('filter', function() {
-                        return 'url(#' + mostFrequentMood + ')';
+            if (moods.length > 0 && activities.length > 0 && data.length > 0) {
+                if (email == null) {
+                    let mostFrequentMood = getModeFromList(moods);
+                    let mostFrequentActivity = getModeFromList(activities);
+                    data = [{
+                        mood: mostFrequentMood,
+                        activity: mostFrequentActivity,
+                        hourFromFive: (timeSegment.start + timeSegment.end) / 2
+                    }]
+                }
+                data.forEach((d, i) => {
+                    let mood = d.mood;
+                    let activity = d.activity;
+                    let hourFromFive = d.hourFromFive;
+                    let start = lineEnd == null ? timeYScale(timeSegment.start) : lineEnd;
+                    let end = timeYScale(hourFromFive) - iconSize / 2;
+                    g.append("line")
+                        .attr("x1", monthXScale(day))
+                        .attr("x2", monthXScale(day))
+                        .attr("y1", start)
+                        .attr("y2", end)
+                        .attr("stroke", colorHexArray[mood])
+                        // .attr("stroke-linecap", "round")
+                        .attr("stroke-width", strokeWidth);
+                    g.append("image")
+                        .attr("xlink:href", "images/" + (activity.substring(0, 2)) + ".svg")
+                        .attr("x", monthXScale(day) - iconSize / 2)
+                        .attr("y", timeYScale(hourFromFive) - iconSize / 2)
+                        .attr("width", iconSize)
+                        .attr("height", iconSize)
+                        .style('filter', function() {
+                            return 'url(#' + mood + ')';
+                        });
+                    start = timeYScale(hourFromFive) + iconSize / 2;
+                    end = (i + 1) >= data.length ? timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2) :
+                        (timeYScale(hourFromFive) + timeYScale(data[i + 1])) / 2;
+                    g.append("line")
+                        .attr("x1", monthXScale(day))
+                        .attr("x2", monthXScale(day))
+                        .attr("y1", start)
+                        .attr("y2", end)
+                        .attr("stroke", colorHexArray[mood])
+                        // .attr("stroke-linecap", "round")
+                        .attr("stroke-width", strokeWidth);
+                    g.on("mousemove", function() {
+                        let tooltipText = ""
+                        if (email == null) {
+                            tooltipText = "<b>MOST FREQUENT ACTIVITY:</b> " + activityShortToLong[activity.substring(0, 2)].toLowerCase() +
+                                "</br></br><b>MOST FREQUENT MOOD: </b>" + mood.toLowerCase() +
+                                "</br></br><b>FREQUENCY: </b>" + moods.length;
+                        }
+                        // Show tooltip.
+                        tooltip.html(tooltipText)
+                            .style("visibility", "visible")
+                            .style("top", event.pageY + 20)
+                            .style("left", function() {
+                                if (d3.event.clientX < 750) {
+                                    return event.pageX + 20 + "px";
+                                } else {
+                                    return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                                }
+                            });
+                    }).on("mouseout", function() {
+                        tooltip.style("visibility", "hidden");
                     });
-                lineEnd = timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2);
-                g.append("line")
-                    .attr("x1", monthXScale(day))
-                    .attr("x2", monthXScale(day))
-                    .attr("y1", (timeYScale(timeSegment.start) + timeYScale(timeSegment.end)) / 2 + iconSize / 2 - 1)
-                    .attr("y2", lineEnd)
-                    .attr("stroke", colorHexArray[mostFrequentMood])
-                    // .attr("stroke-linecap", "round")
-                    .attr("stroke-width", strokeWidth);
+                    lineEnd = end;
+                })
             } else {
+                // Handle no data with grey line.
                 g.append("line")
                     .attr("x1", monthXScale(day))
                     .attr("x2", monthXScale(day))

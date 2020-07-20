@@ -241,7 +241,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
                                 return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
                             }
                         })
-                }).on("mouseout", function(d) {
+                }).on("mouseout", function() {
                     tooltip.style("visibility", "hidden");
                 });
         });
