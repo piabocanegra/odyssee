@@ -403,9 +403,8 @@ function addTooltip(tooltipId) {
         .style('font-family', 'Courier new')
         .style('font-size', 12)
         .style('text-align', 'left')
-        .style('color', textColor)
-        .style('max-width', 250);
-}
+        .style('color', textColor);
+    }
 
 function setTooltipText(tooltip, text, leftOffset, rightOffset) {
     tooltip
