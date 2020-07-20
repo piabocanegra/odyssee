@@ -222,7 +222,9 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         let g = bivarTimeGraph.append("g");
         // console.log(day)
         // console.log(data)
-        data.forEach((d, i) => {
+        let i = 0;
+        while (i < data.length) {
+            let d = data[i];
             let mood = d.mood;
             let activity = d.activity.substring(0, 2);
             let hourFromFive = d.hourFromFive;
@@ -269,9 +271,15 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
                     tooltip.style("visibility", "hidden");
                 });
             start = timeYScale(hourFromFive) + iconSize / 2;
-            end = (i + 1) >= data.length ? timeYScale(24) - graphAttr.verticalPadding :
-                (timeYScale(hourFromFive) + timeYScale(data[i + 1].hourFromFive)) / 2;
-            end = start <= end ? end : start;
+            i = i + 1; // Increment i here.
+            end = i >= data.length ? timeYScale(24) - graphAttr.verticalPadding :
+                (timeYScale(hourFromFive) + timeYScale(data[i].hourFromFive)) / 2;
+            // Prevent overlapping of icons.
+            while (end < start) {
+                i = i + 1;
+                end = i >= data.length ? timeYScale(24) - graphAttr.verticalPadding :
+                    (timeYScale(hourFromFive) + timeYScale(data[i].hourFromFive)) / 2;
+            }
             g.append("line")
                 .attr("x1", monthXScale(day))
                 .attr("x2", monthXScale(day))
@@ -280,7 +288,7 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
                 .attr("stroke", colorHexArray[mood])
                 .attr("stroke-width", strokeWidth);
             lineEnd = end;
-        });
+        }
     });
 
     // Draw legends.
