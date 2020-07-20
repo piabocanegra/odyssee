@@ -22,18 +22,21 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     // get top activities
     let depthActivityData = getFrequencyByKey("Activity", depthActivityList);
     let depthTopThree = getTopThreeActivities(depthActivityData, exclusionList);
-    let depthPercent = getPercentageOfActivities(depthTopThree, depthActivityList);
+    let depthPercent = getPercentageOfActivities(depthTopThree, depthActivityList, exclusionList);
     let depthMood = (getFrequencyByKey("Feeling", depthActivityList)).keys().next().value;
 
     let breadthActivityData = getFrequencyByKey("Activity", breadthActivityList);
     let breadthTopThree = getTopThreeActivities(breadthActivityData, exclusionList);
-    let breadthPercent = getPercentageOfActivities(breadthTopThree, breadthActivityList);
+    let breadthPercent = getPercentageOfActivities(breadthTopThree, breadthActivityList, exclusionList);
     let breadthMood = getFrequencyByKey("Feeling", breadthActivityList).keys().next().value;
 
     let depthDistinctActivities = getDistinctActivitiesWithExclusion(depthActivityData, exclusionList.concat(depthTopThree));
     let breadthDistinctActivities = getDistinctActivitiesWithExclusion(breadthActivityData, exclusionList.concat(breadthTopThree));
-    let depthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(depthActivityData.keys()), depthActivityList, exclusionList.concat(depthTopThree));
-    let breadthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(breadthActivityData.keys()), breadthActivityList, exclusionList.concat(breadthTopThree));
+    // let depthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(depthActivityData.keys()), depthActivityList, exclusionList.concat(depthTopThree));
+    // let breadthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(breadthActivityData.keys()), breadthActivityList, exclusionList.concat(breadthTopThree));
+    let depthDistinctPercent = 1 - depthPercent;
+    let breadthDistinctPercent = 1 - breadthPercent;
+
 
     let rootScale = d3.scaleLinear()
         .domain([0, 1])
@@ -61,7 +64,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
 	    .x(function(d) { return xLeftLeafScale(d.x); })
 	    .curve(d3.curveMonotoneX);
 
-	let tooltip = addTooltip("#depthBreadthTooltip");
+	let tooltip = addTooltip("depthBreadthTooltip");
 
 	// draw ground
     drawImperfectHorizontalLine(svg, padding*2, width-padding*2, rootScale(0));
@@ -77,15 +80,20 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .on("mousemove", function() {
             let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
             let timeSpentText = "";
-            if (d3.event.clientY - svgPosY < rootScale(0)) {
-                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(depthPercent*100) + "% for 3 distinct activities";
+            if (d3.event.clientY - svgPosY > rootScale(0)) {
+                timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" + 
+                    + "<b>% TIME SPENT:</b> " + Math.trunc(depthPercent*100) + "%"
+                    + "</br></br><b># of DISTINCT ACTIVITIES*:</b> 3 most frequent" 
+                    + "</br></br><b>MODE ACTIVITY FLOW: </b>inflow";
             } else {
-                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(depthDistinctPercent*100) + "% for " + depthDistinctActivities.size + " distinct activities"
+                timeSpentText = "<u>EXPERIENCED BREADTH</u></br></br>" + 
+                    + "<b>% TIME SPENT:</b> " + Math.trunc(depthDistinctPercent*100) + "%" 
+                    + "</br></br><b># of DISTINCT ACTIVITIES*:</b> " + depthDistinctActivities.size + " (total excluding top 3)"
+                    + "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional";
             }
 
-        	let text = timeSpentText
-        	+ "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional" 
-        	+ "</br></br><b>MOST FREQUENT MOOD: </b>" + depthMood.toLowerCase();
+        	let text = timeSpentText 
+                + "</br></br><b>MOST FREQUENT MOOD: </b>" + depthMood.toLowerCase();
         	setTooltipText(tooltip, text, 20, 250);
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
@@ -99,14 +107,20 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .on("mousemove", function() {
             let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
             let timeSpentText = "";
-            if (d3.event.clientY - svgPosY < rootScale(0)) {
-                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(breadthPercent*100) + "% for 3 distinct activities";
+            if (d3.event.clientY - svgPosY > rootScale(0)) {
+                timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" + 
+                    + "<b>% TIME SPENT:</b> " + Math.trunc(breadthPercent*100) + "%"
+                    + "</br></br><b># of DISTINCT ACTIVITIES*:</b> 3 most frequent" 
+                    + "</br></br><b>MODE ACTIVITY FLOW: </b>inflow";
             } else {
-                timeSpentText = "<b>% TIME SPENT:</b> " + Math.trunc(breadthDistinctPercent*100) + "% for " + breadthDistinctActivities.size + " distinct activities"
+                timeSpentText = "<u>EXPERIENCED BREADTH</u></br></br>"
+                    + "<b>% TIME SPENT:</b> " + Math.trunc(breadthDistinctPercent*100) + "%" 
+                    + "</br></br><b># of DISTINCT ACTIVITIES*:</b> " + breadthDistinctActivities.size + " (total excluding top 3)"
+                    + "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional";
             }
 
-        	let text = timeSpentText + "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional" 
-        	+ "</br></br><b>MOST FREQUENT MOOD: </b>" + breadthMood.toLowerCase();
+        	let text = timeSpentText 
+                + "</br></br><b>MOST FREQUENT MOOD: </b>" + breadthMood.toLowerCase();
         	setTooltipText(tooltip, text, 20, 250);
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");

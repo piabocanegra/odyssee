@@ -410,17 +410,23 @@ function getTopThreeActivities(activityMap, exclusionList) {
     return finalList;
 }
 
-function getPercentageOfActivities(activityList, aggregateList) {
-    let count = 0
+function getPercentageOfActivities(activityList, aggregateList, exclusionList) {
+    let count = 0;
     for (var activity of activityList) {
         count += getPersonDataByActivity(aggregateList, activity.substring(0, 2)).length;
     }
 
-    return count / aggregateList.length;
+    let dCount = 0;
+    for (var act of exclusionList) {
+        dCount += getPersonDataByActivity(aggregateList, act.substring(0, 2)).length;
+    }
+
+    return count / (aggregateList.length - dCount);
 }
 
 function getPercentageOfActivitiesWithExclusion(activityList, aggregateList, exclusionList) {
-    let count = 0
+    let count = 0;
+    let dCount = 0;
     let tempList = activityList.filter(d => {
         return !exclusionList.includes(d + ":");
     });
