@@ -5,6 +5,10 @@
  *   returns void, draws data vis for 30 days bivariate time.
  */
 function drawThirtyDaysVis(svgClass, timeData, email = null) {
+    timeData.forEach(e => {
+        let activity = e[keys.time.activity];
+        activityShortToLong[activity.split(":")[0]] = (activity.split(":")[1]).substring(1).split("(")[0]
+    });
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
@@ -92,8 +96,8 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
             }
         }
     });
-    console.log(timeData);
-    console.log(monthMap);
+    // console.log(timeData);
+    // console.log(monthMap);
 
     let graphAttr = {
         x: 150,
