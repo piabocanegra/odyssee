@@ -227,6 +227,11 @@
             drawIkigaiVis(".ikigaiVis", everyoneData, ikigaiData);
 
             let timeData = await d3.csv("time.csv");
+            timeData.forEach(e => {
+                let activity = e[keys.time.activity];
+                activityShortToLong[activity.split(":")[0]] = (activity.split(":")[1]).substring(1).split("(")[0]
+            });
+            console.log(activityShortToLong)
             drawMorningNightVis(".morningNightVis", timeData);
             drawThirtyDaysVis(".thirtyDays", timeData);
             drawThirtyDaysVis(".thirtyDaysInd", timeData, email);

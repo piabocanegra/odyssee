@@ -165,92 +165,88 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
             x: monthXScale(day),
             y: timeYScale(24) + graphAttr.verticalPadding
         });
-        let lineEnd = null;
+        let data = [];
         Object.keys(timeSegments).forEach(segment => {
             let timeSegment = timeSegments[segment];
             let moods = monthMap[day][segment].mood;
             let activities = monthMap[day][segment].activity;
-            let data = monthMap[day][segment].data;
-            let g = bivarTimeGraph.append("g");
-            if (moods.length > 0 && activities.length > 0 && data.length > 0) {
+            if (moods.length > 0 && activities.length > 0) {
                 if (email == null) {
                     let mostFrequentMood = getModeFromList(moods);
                     let mostFrequentActivity = getModeFromList(activities);
-                    data = [{
+                    data.push([{
                         mood: mostFrequentMood,
                         activity: mostFrequentActivity,
-                        hourFromFive: (timeSegment.start + timeSegment.end) / 2
-                    }]
+                        hourFromFive: (timeSegment.start + timeSegment.end) / 2,
+                        frequency: moods.length
+                    }])
+                } else {
+                    data.push(monthMap[day][segment].data)
                 }
-                data.forEach((d, i) => {
-                    let mood = d.mood;
-                    let activity = d.activity;
-                    let hourFromFive = d.hourFromFive;
-                    let start = lineEnd == null ? timeYScale(timeSegment.start) : lineEnd;
-                    let end = timeYScale(hourFromFive) - iconSize / 2;
-                    g.append("line")
-                        .attr("x1", monthXScale(day))
-                        .attr("x2", monthXScale(day))
-                        .attr("y1", start)
-                        .attr("y2", end)
-                        .attr("stroke", colorHexArray[mood])
-                        // .attr("stroke-linecap", "round")
-                        .attr("stroke-width", strokeWidth);
-                    g.append("image")
-                        .attr("xlink:href", "images/" + (activity.substring(0, 2)) + ".svg")
-                        .attr("x", monthXScale(day) - iconSize / 2)
-                        .attr("y", timeYScale(hourFromFive) - iconSize / 2)
-                        .attr("width", iconSize)
-                        .attr("height", iconSize)
-                        .style('filter', function() {
-                            return 'url(#' + mood + ')';
-                        });
-                    start = timeYScale(hourFromFive) + iconSize / 2;
-                    end = (i + 1) >= data.length ? timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2) :
-                        (timeYScale(hourFromFive) + timeYScale(data[i + 1])) / 2;
-                    g.append("line")
-                        .attr("x1", monthXScale(day))
-                        .attr("x2", monthXScale(day))
-                        .attr("y1", start)
-                        .attr("y2", end)
-                        .attr("stroke", colorHexArray[mood])
-                        // .attr("stroke-linecap", "round")
-                        .attr("stroke-width", strokeWidth);
-                    g.on("mousemove", function() {
-                        let tooltipText = ""
-                        if (email == null) {
-                            tooltipText = "<b>MOST FREQUENT ACTIVITY:</b> " + activityShortToLong[activity.substring(0, 2)].toLowerCase() +
-                                "</br></br><b>MOST FREQUENT MOOD: </b>" + mood.toLowerCase() +
-                                "</br></br><b>FREQUENCY: </b>" + moods.length;
-                        }
-                        // Show tooltip.
-                        tooltip.html(tooltipText)
-                            .style("visibility", "visible")
-                            .style("top", event.pageY + 20)
-                            .style("left", function() {
-                                if (d3.event.clientX < 750) {
-                                    return event.pageX + 20 + "px";
-                                } else {
-                                    return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
-                                }
-                            });
-                    }).on("mouseout", function() {
-                        tooltip.style("visibility", "hidden");
-                    });
-                    lineEnd = end;
-                })
-            } else {
-                // Handle no data with grey line.
-                g.append("line")
-                    .attr("x1", monthXScale(day))
-                    .attr("x2", monthXScale(day))
-                    .attr("y1", lineEnd == null ? timeYScale(timeSegment.start) : lineEnd)
-                    .attr("y2", timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2))
-                    .attr("stroke", "lightgrey")
-                    // .attr("stroke-linecap", "round")
-                    .attr("stroke-width", strokeWidth);
-                lineEnd = timeYScale(timeSegment.end) + (segment == "night" ? 0 : iconSize / 2);
             }
+        });
+        data = data.flat().sort((a, b) => { return a.hourFromFive < b.hourFromFive ? -1 : 1 });
+        let lineEnd = null;
+        let g = bivarTimeGraph.append("g");
+        // console.log(day)
+        // console.log(data)
+        data.forEach((d, i) => {
+            let mood = d.mood;
+            let activity = d.activity.substring(0, 2);
+            let hourFromFive = d.hourFromFive;
+            let start = lineEnd == null ? timeYScale(0) : lineEnd;
+            let end = timeYScale(hourFromFive) - iconSize / 2;
+            end = start <= end ? end : start;
+            g.append("line")
+                .attr("x1", monthXScale(day))
+                .attr("x2", monthXScale(day))
+                .attr("y1", start)
+                .attr("y2", end)
+                .attr("stroke", colorHexArray[mood])
+                .attr("stroke-width", strokeWidth);
+            g.append("image")
+                .attr("xlink:href", "images/" + activity + ".svg")
+                .attr("x", monthXScale(day) - iconSize / 2)
+                .attr("y", timeYScale(hourFromFive) - iconSize / 2)
+                .attr("width", iconSize)
+                .attr("height", iconSize)
+                .style('filter', function() {
+                    return 'url(#' + mood + ')';
+                }).on("mousemove", function() {
+                    let tooltipText = ""
+                    if (email == null) {
+                        tooltipText = "<b>MOST FREQUENT ACTIVITY:</b> " + (activityShortToLong[activity].toLowerCase()) +
+                            "</br></br><b>MOST FREQUENT MOOD: </b>" + mood.toLowerCase() +
+                            "</br></br><b>FREQUENCY: </b>" + d.frequency;
+                    } else {
+                        tooltipText = "<b>ACTIVITY:</b> " + (activityShortToLong[activity].toLowerCase()) +
+                            "</br></br><b>MOOD: </b>" + mood.toLowerCase();
+                    }
+                    // Show tooltip.
+                    tooltip.html(tooltipText)
+                        .style("visibility", "visible")
+                        .style("top", event.pageY + 20)
+                        .style("left", function() {
+                            if (d3.event.clientX < 750) {
+                                return event.pageX + 20 + "px";
+                            } else {
+                                return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                            }
+                        });
+                }).on("mouseout", function() {
+                    tooltip.style("visibility", "hidden");
+                });
+            start = timeYScale(hourFromFive) + iconSize / 2;
+            end = (i + 1) >= data.length ? timeYScale(24) - graphAttr.verticalPadding : (timeYScale(hourFromFive) + timeYScale(data[i + 1])) / 2;
+            end = start <= end ? end : start;
+            g.append("line")
+                .attr("x1", monthXScale(day))
+                .attr("x2", monthXScale(day))
+                .attr("y1", start)
+                .attr("y2", end)
+                .attr("stroke", colorHexArray[mood])
+                .attr("stroke-width", strokeWidth);
+            lineEnd = end;
         });
     });
 
