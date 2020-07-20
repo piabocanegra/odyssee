@@ -1,6 +1,7 @@
 /**
  *   svgClass: tag for svg class, must include the '.'
  *   timeData: time data for records
+ *   email: email of user if displaying individual data
  *   returns void, draws data vis for 30 days bivariate time.
  */
 function drawThirtyDaysVis(svgClass, timeData, email = null) {
@@ -90,10 +91,10 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
 
     let graphAttr = {
         x: 150,
-        y: 100,
+        y: 72,
         horizontalPadding: 24,
         verticalPadding: 4,
-        height: height - 200,
+        height: height - 3.5 * padding - 72,
         width: width - 150
     }
 
@@ -202,4 +203,57 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
             }
         });
     });
+
+    // Draw legends.
+    let moodLegendAttr = {
+        x: graphAttr.x,
+        y: height - padding * 2.5,
+        width: width / 4
+    }
+    let activityLegendAttr = {
+        x: graphAttr.x + width / 4 + padding,
+        y: height - padding * 2.5,
+        width: 200
+    }
+
+    let moodLegend = svg.append("g")
+        .attr("class", "moodLegend")
+        .attr("width", moodLegendAttr.width)
+        .attr("transform", "translate(" + moodLegendAttr.x + "," + moodLegendAttr.y + ")");
+
+    let activityLegend = svg.append("g")
+        .attr("class", "moodLegend")
+        .attr("width", activityLegendAttr.width)
+        .attr("transform", "translate(" + activityLegendAttr.x + "," + activityLegendAttr.y + ")");
+
+    drawMoodLegend(moodLegend, "Most frequent mood", moodList);
+    drawActivityLegend(activityLegend)
+
+    function drawActivityLegend(activityLegend, attr = {}) {
+        let title = attr.title == null ? "Most frequent activity" : attr.title
+        let activityIcon = attr.activity == null ? "b1" : attr.activity
+        let iconSize = attr.iconSize == null ? 32 : attr.iconSize
+
+        let width = activityLegend.attr("width");
+        if (width == null) {
+            console.error("drawActivityLegend: must specify width for activityLegend.")
+        }
+
+        activityLegend.append("text")
+            .attr("x", width / 2)
+            .attr("y", 15)
+            .text(title)
+            .style("text-anchor", "middle")
+            .style("font-family", "Courier new")
+            .style("fill", textColor)
+            .style("font-size", 12);
+
+        activityLegend.append("image")
+            .attr("xlink:href", "images/" + activityIcon + ".svg")
+            .attr("x", width / 2 - iconSize / 2)
+            .attr("y", padding - iconSize / 2)
+            .attr("width", iconSize)
+            .attr("height", iconSize);
+    }
+
 }
