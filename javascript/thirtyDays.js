@@ -241,7 +241,8 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
                     tooltip.style("visibility", "hidden");
                 });
             start = timeYScale(hourFromFive) + iconSize / 2;
-            end = (i + 1) >= data.length ? timeYScale(24) - graphAttr.verticalPadding : (timeYScale(hourFromFive) + timeYScale(data[i + 1])) / 2;
+            end = (i + 1) >= data.length ? timeYScale(24) - graphAttr.verticalPadding :
+                (timeYScale(hourFromFive) + timeYScale(data[i + 1].hourFromFive)) / 2;
             end = start <= end ? end : start;
             g.append("line")
                 .attr("x1", monthXScale(day))
