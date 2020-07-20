@@ -277,33 +277,5 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         .attr("transform", "translate(" + activityLegendAttr.x + "," + activityLegendAttr.y + ")");
 
     drawMoodLegend(moodLegend, "Most frequent mood", moodList);
-    drawActivityLegend(activityLegend)
-
-    function drawActivityLegend(activityLegend, attr = {}) {
-        let title = attr.title == null ? "Most frequent activity" : attr.title
-        let activityIcon = attr.activity == null ? "b1" : attr.activity
-        let iconSize = attr.iconSize == null ? 32 : attr.iconSize
-
-        let width = activityLegend.attr("width");
-        if (width == null) {
-            console.error("drawActivityLegend: must specify width for activityLegend.")
-        }
-
-        activityLegend.append("text")
-            .attr("x", width / 2)
-            .attr("y", 15)
-            .text(title)
-            .style("text-anchor", "middle")
-            .style("font-family", "Courier new")
-            .style("fill", textColor)
-            .style("font-size", 12);
-
-        activityLegend.append("image")
-            .attr("xlink:href", "images/" + activityIcon + ".svg")
-            .attr("x", width / 2 - iconSize / 2)
-            .attr("y", padding - iconSize / 2)
-            .attr("width", iconSize)
-            .attr("height", iconSize);
-    }
-
+    drawActivityLegend(activityLegend);
 }
