@@ -81,12 +81,12 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
             let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
             let timeSpentText = "";
             if (d3.event.clientY - svgPosY > rootScale(0)) {
-                timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" + 
+                timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" 
                     + "<b>% TIME SPENT:</b> " + Math.trunc(depthPercent*100) + "%"
                     + "</br></br><b># of DISTINCT ACTIVITIES*:</b> 3 most frequent" 
                     + "</br></br><b>MODE ACTIVITY FLOW: </b>inflow";
             } else {
-                timeSpentText = "<u>EXPERIENCED BREADTH</u></br></br>" + 
+                timeSpentText = "<u>EXPERIENCED BREADTH</u></br></br>" 
                     + "<b>% TIME SPENT:</b> " + Math.trunc(depthDistinctPercent*100) + "%" 
                     + "</br></br><b># of DISTINCT ACTIVITIES*:</b> " + depthDistinctActivities.size + " (total excluding top 3)"
                     + "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional";
@@ -108,7 +108,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
             let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
             let timeSpentText = "";
             if (d3.event.clientY - svgPosY > rootScale(0)) {
-                timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" + 
+                timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" 
                     + "<b>% TIME SPENT:</b> " + Math.trunc(breadthPercent*100) + "%"
                     + "</br></br><b># of DISTINCT ACTIVITIES*:</b> 3 most frequent" 
                     + "</br></br><b>MODE ACTIVITY FLOW: </b>inflow";
