@@ -44,7 +44,9 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="thirtyDays"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="thirtyDaysInd"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="intuitorsVis"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="intuitorsVis"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="feelerThinkerVis"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="observerVis"></svg>
     </div>
 
     <script>
@@ -233,6 +235,8 @@
 
             let mbtiData = await d3.csv("types.csv");
             drawIntuitorsVis(".intuitorsVis", everyoneData, personalityData, mbtiData);
+            drawFeelerThinkerVis(".feelerThinkerVis", everyoneData, personalityData, mbtiData);
+            drawObserverVis(".observerVis", everyoneData, personalityData, mbtiData);
 
         }
 

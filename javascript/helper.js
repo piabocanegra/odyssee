@@ -24,6 +24,15 @@ function getPersonDataByActivityType(personData, type) {
     return personData.filter(d => d.Activity.substring(0, 1) == type);
 }
 
+function getPersonDataByActivities(personData, list) {
+    return personData.filter(d => list.includes(d.Activity.substring(0, 2)));
+}
+
+function getPersonDataByActivitiesAndMood(personData, actList, moodList) {
+    return personData.filter(d => actList.includes(d.Activity.substring(0, 2)))
+        .filter(d => moodList.includes(d.Feeling));
+}
+
 function getDataByPTypeValue(everyoneData, typesData, pType, value) {
     let filteredList = typesData
         .filter(d => d.Personality == pType);
@@ -46,16 +55,25 @@ function getDataByPTypeValue(everyoneData, typesData, pType, value) {
     }];
 }
 
-function getDataByPType(everyoneData, typesData, pType, activity, f) {
+function getDataByPType(everyoneData, typesData, pType, activity, f, moodList = []) {
     let emailList = typesData
         .filter(d => d.Personality == pType)
         .map(d => d["What's your email?"]);
 
     let filteredData = everyoneData.filter(d => emailList.includes(d.Email));
-    let filteredActivityData = f(filteredData, activity);
-    console.log(filteredActivityData);
+    let filteredActivityData;
+    if (moodList.length != 0) {
+        filteredActivityData = f(filteredData, activity, moodList);
+    } else {
+        filteredActivityData = f(filteredData, activity);
+    }
     
-    let groupActivityData = f(everyoneData, activity);
+    let groupActivityData;
+    if (moodList.length != 0) {
+        groupActivityData = f(everyoneData, activity, moodList);
+    } else {
+        groupActivityData = f(everyoneData, activity);
+    }
 
     return [{
         "percent": filteredActivityData.length/filteredData.length, 
