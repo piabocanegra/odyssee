@@ -44,13 +44,6 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         keys.ikigai.contribution
     ];
 
-    let ikigaiKeyToLabel = {
-        'worker': 'Citizen',
-        'bohemian': 'Bohemian',
-        'zen master': 'Zen Master',
-        'profiteer': 'Profiteer'
-    };
-
     // Setup ikigaiMap
     let ikigaiMap = {}
 
@@ -87,12 +80,6 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
     // console.log(ikigaiMap);
 
     let ikigaiGraphPadding = 24;
-    let ikigaiColorHexArray = {
-        'profiteer': '#9f265b',
-        'worker': '#ca614d',
-        'bohemian': '#edc3a3',
-        'zen master': '#f2d878',
-    };
 
     let gIkigaiAttr = {
         height: 65,
@@ -275,7 +262,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
             .attr('r', colorLegendAttr.circleRadius)
             .attr('fill', ikigaiColorHexArray[d]);
 
-        drawText(colorLegend, d, {
+        drawText(colorLegend, ikigaiKeyToLabel[d], {
             x: colorLegendAttr.horizontalPadding + colorLegendAttr.circleRadius * 2,
             y: ikigaiGroupY,
             fontSize: 12,
