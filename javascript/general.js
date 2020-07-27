@@ -244,7 +244,7 @@ function drawAttitudeHalfLegend(svgClass, attList = attitudeList, title = "Most 
 
 function drawActivityLegend(activityLegend, attr = {}) {
     let title = attr.title == null ? "Most frequent activity" : attr.title
-    let activityIcon = attr.activity == null ? "b1" : attr.activity
+    let activityIcon = attr.activity == null ? "i10" : attr.activity
     let iconSize = attr.iconSize == null ? 32 : attr.iconSize
 
     let width = activityLegend.attr("width");
@@ -267,6 +267,31 @@ function drawActivityLegend(activityLegend, attr = {}) {
         .attr("y", padding - iconSize / 2)
         .attr("width", iconSize)
         .attr("height", iconSize);
+}
+
+function drawIkigaiColorLegend(colorLegend, colorLegendAttr) {
+    drawText(colorLegend, 'Ikigai', {
+        x: 0,
+        y: 0,
+        fontSize: 12,
+        textAnchor: 'start'
+    });
+
+    ['zen master', 'bohemian', 'worker', 'profiteer'].forEach((d, i) => {
+        let ikigaiGroupY = (i + 1) * colorLegendAttr.verticalPadding;
+        colorLegend.append('circle')
+            .attr('cx', colorLegendAttr.circleRadius)
+            .attr('cy', ikigaiGroupY)
+            .attr('r', colorLegendAttr.circleRadius)
+            .attr('fill', ikigaiColorHexArray[d]);
+
+        drawText(colorLegend, ikigaiKeyToLabel[d], {
+            x: colorLegendAttr.horizontalPadding + colorLegendAttr.circleRadius * 2,
+            y: ikigaiGroupY,
+            fontSize: 12,
+            textAnchor: 'start'
+        });
+    });
 }
 
 // add color filters to website, must call this per svg 

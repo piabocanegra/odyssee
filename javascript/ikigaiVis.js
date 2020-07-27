@@ -247,28 +247,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         .attr('width', colorLegendAttr.width)
         .attr('transform', 'translate(' + colorLegendAttr.x + ',' + colorLegendAttr.y + ')');
 
-    drawText(colorLegend, 'Ikigai', {
-        x: 0,
-        y: 0,
-        fontSize: 12,
-        textAnchor: 'start'
-    });
-
-    ikigaiList.forEach((d, i) => {
-        let ikigaiGroupY = (i + 1) * colorLegendAttr.verticalPadding;
-        colorLegend.append('circle')
-            .attr('cx', colorLegendAttr.circleRadius)
-            .attr('cy', ikigaiGroupY)
-            .attr('r', colorLegendAttr.circleRadius)
-            .attr('fill', ikigaiColorHexArray[d]);
-
-        drawText(colorLegend, ikigaiKeyToLabel[d], {
-            x: colorLegendAttr.horizontalPadding + colorLegendAttr.circleRadius * 2,
-            y: ikigaiGroupY,
-            fontSize: 12,
-            textAnchor: 'start'
-        });
-    });
+    drawIkigaiColorLegend(colorLegend, colorLegendAttr);
 
     let lineLegendAttr = {
         x: colorLegendAttr.x - (width / 8) - 24,

@@ -7,10 +7,14 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    let titleVerticalPadding = 70;
+    let imageSize = 56;
+    let averageLineWidth = 48;
+    let titleVerticalPadding = 70 + imageSize;
+    let legendVerticalPadding = padding * 2.5;
+    let interGraphVerticalPadding = 24
 
     drawTitle(svg, "Occupation");
-    console.log(typesData);
+    // console.log(typesData);
 
     let ikigaiList = [{
             category: 'bohemian',
@@ -31,14 +35,14 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             title: 'citizens',
             id: 'Citizen',
             x: 0,
-            y: titleVerticalPadding + (height - titleVerticalPadding) / 2
+            y: titleVerticalPadding + (height - titleVerticalPadding - legendVerticalPadding) / 2 + interGraphVerticalPadding / 2
         },
         {
             category: 'profiteer',
             title: 'profiteers',
             id: 'Profiteer',
             x: width / 2,
-            y: titleVerticalPadding + (height - titleVerticalPadding) / 2
+            y: titleVerticalPadding + (height - titleVerticalPadding - legendVerticalPadding) / 2 + interGraphVerticalPadding / 2
         }
     ];
 
@@ -94,18 +98,18 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         });
     });
 
-    console.log(ikigaiList);
+    // console.log(ikigaiList);
 
     let maxRecords = d3.max(ikigaiList, i => {
         return d3.max(Object.keys(occupations), o => {
             return i[o].records.length
         })
     });
-    console.log(maxRecords);
+    // console.log(maxRecords);
 
     let graphAttr = {
         textWidth: 100,
-        height: (height - titleVerticalPadding) / 2,
+        height: (height - titleVerticalPadding - legendVerticalPadding - interGraphVerticalPadding) / 2,
         width: width / 2,
         horizontalPadding: 12,
         verticalPadding: 12
@@ -121,7 +125,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             .attr("transform", "translate(" + ikigai.x + ", " + ikigai.y + ")");
         drawText(ikigaiGraph, "records", {
             x: graphAttr.textWidth,
-            y: 0,
+            y: recordsScale(maxRecords),
             textAnchor: "end"
         });
         drawText(ikigaiGraph, ikigai.title, {
@@ -140,7 +144,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         Object.keys(occupations).forEach((o, i) => {
             let occupation = occupations[o];
             d3.xml("images/" + occupation.title + ".svg").then(imageData => {
-                console.log(imageData.documentElement);
+                // console.log(imageData.documentElement);
                 // Find "center" to different height-width ratios.
                 let imageBounds = imageData.documentElement.viewBox.baseVal;
                 let imageHeight = graphAttr.height * 0.3;
@@ -166,7 +170,6 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
 
             let maxActivityMultiple = d3.max(Object.keys(activityShortToLong), a => { return ikigai[o][a] });
             if (maxActivityMultiple > 0) {
-                let imageSize = 56;
                 let maxActivity = Object.keys(activityShortToLong).find(a => { return ikigai[o][a] == maxActivityMultiple });
                 ikigaiGraph.append("image")
                     .attr("xlink:href", "images/" + maxActivity + ".svg")
@@ -178,7 +181,6 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             }
 
             if (occupation.average > 0) {
-                let averageLineWidth = 48
                 ikigaiGraph.append("line")
                     .attr("x1", occupationScale(i) - averageLineWidth / 2)
                     .attr("x2", occupationScale(i) + averageLineWidth / 2)
@@ -191,4 +193,73 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
 
         });
     });
+
+    let colorLegendAttr = {
+        x: padding,
+        y: height - padding * 2.5,
+        width: 100,
+        circleRadius: 4,
+        verticalPadding: 18,
+        horizontalPadding: 16
+    }
+
+    let colorLegend = svg.append('g')
+        .attr('width', colorLegendAttr.width)
+        .attr('transform', 'translate(' + colorLegendAttr.x + ',' + colorLegendAttr.y + ')');
+
+    drawIkigaiColorLegend(colorLegend, colorLegendAttr);
+
+    let activityLegendAttr = {
+        x: colorLegendAttr.x + colorLegendAttr.width + 24,
+        y: height - padding * 2.5,
+        width: 200,
+        imageSize: 36
+    }
+
+    let activityLegend = svg.append('g')
+        .attr('width', activityLegendAttr.width)
+        .attr('transform', 'translate(' + activityLegendAttr.x + ',' + activityLegendAttr.y + ')');
+
+    activityLegend.append("image")
+        .attr("xlink:href", "images/i10.svg")
+        .attr("x", activityLegendAttr.width / 2 - activityLegendAttr.imageSize / 2)
+        .attr("y", 0)
+        .attr("width", activityLegendAttr.imageSize)
+        .attr("height", activityLegendAttr.imageSize);
+
+    drawText(activityLegend, "over-represented", {
+        x: activityLegendAttr.width / 2,
+        y: activityLegendAttr.imageSize + 16
+    });
+    drawText(activityLegend, "activity", {
+        x: activityLegendAttr.width / 2,
+        y: activityLegendAttr.imageSize + 32
+    });
+
+    let groupAverageAttr = {
+        x: activityLegendAttr.x + activityLegendAttr.width + 24,
+        y: height - padding * 2.5,
+        width: 200,
+        imageSize: 36
+    }
+
+    let groupAverageLegend = svg.append('g')
+        .attr('width', groupAverageAttr.width)
+        .attr('transform', 'translate(' + groupAverageAttr.x + ',' + groupAverageAttr.y + ')');
+
+    groupAverageLegend.append("line")
+        .attr("x1", 0)
+        .attr("x2", averageLineWidth)
+        .attr("y1", activityLegendAttr.imageSize + 16)
+        .attr("y2", activityLegendAttr.imageSize + 16)
+        .attr("stroke", "lightgrey")
+        .attr("stroke-width", 2)
+        .attr("stroke-linecap", "round");
+
+    drawText(groupAverageLegend, "entire group average", {
+        x: averageLineWidth + 12,
+        y: activityLegendAttr.imageSize + 16,
+        textAnchor: "start"
+    });
+
 }
