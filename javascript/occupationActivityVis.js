@@ -211,7 +211,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
 
             let tooltipText = "<b>IKIGAI GROUP:</b> " + ikigai.title +
                 "</br></br><b>OCCUPATION: </b>" + occupations[o].description.toLowerCase() +
-                "</br></br><b>NUMBER OF RECORDS: </b>" + numRecords +
+                "</br></br><b>NUMBER OF USERS: </b>" + numUsers +
                 "</br></br><b>OVER-REPRESENTED ACTIVITY: </b>" + overRepresentedActivity.toLowerCase();
 
             g.on("mousemove", function() {
