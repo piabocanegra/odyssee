@@ -98,7 +98,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         });
     });
 
-    // console.log(ikigaiList);
+    console.log(ikigaiList);
 
     let maxRecords = d3.max(ikigaiList, i => {
         return d3.max(Object.keys(occupations), o => {
