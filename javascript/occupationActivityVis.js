@@ -7,11 +7,12 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    let imageSize = 56;
+    let baseImageSize = 36;
     let averageLineWidth = 48;
-    let titleVerticalPadding = 70 + imageSize;
+    let titleVerticalPadding = 70;
     let legendVerticalPadding = padding * 2.5;
-    let interGraphVerticalPadding = 24
+    let interGraphVerticalPadding = 24;
+    let lineWidth = 1.5;
 
     drawTitle(svg, "Occupation");
     // console.log(typesData);
@@ -114,12 +115,18 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         horizontalPadding: 12,
         verticalPadding: 12
     }
+
     let occupationScale = d3.scaleLinear()
         .domain([0, Object.keys(occupations).length - 1])
         .range([graphAttr.textWidth + graphAttr.horizontalPadding * 2, graphAttr.width - graphAttr.horizontalPadding * 2]);
     let recordsScale = d3.scaleLinear()
         .domain([0, maxRecords])
         .range([graphAttr.height / 2, 0]);
+
+    // Add tooltip.
+    let tooltipId = "occupationActivityTooltipId";
+    let tooltip = addTooltip(tooltipId);
+
     ikigaiList.forEach(ikigai => {
         let ikigaiGraph = svg.append("g")
             .attr("transform", "translate(" + ikigai.x + ", " + ikigai.y + ")");
@@ -139,17 +146,23 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             .attr("y1", graphAttr.height / 2)
             .attr("y2", graphAttr.height / 2)
             .attr("stroke", "lightgrey")
-            .attr("stroke-width", 2)
+            .attr("stroke-width", lineWidth)
             .attr("stroke-linecap", "round");
+
         Object.keys(occupations).forEach((o, i) => {
             let occupation = occupations[o];
+            let overRepresentedActivity = "none";
+            let numRecords = ikigai[o].records.length;
+            let imageSize = baseImageSize;
+            let g = ikigaiGraph.append("g");
+
             d3.xml("images/" + occupation.title + ".svg").then(imageData => {
                 // console.log(imageData.documentElement);
                 // Find "center" to different height-width ratios.
                 let imageBounds = imageData.documentElement.viewBox.baseVal;
                 let imageHeight = graphAttr.height * 0.3;
                 let imageWidth = imageBounds.width / imageBounds.height * imageHeight;
-                ikigaiGraph.append("image")
+                g.append("image")
                     .attr("xlink:href", "images/" + occupation.title + ".svg")
                     .attr("x", occupationScale(i) - imageWidth / 2)
                     .attr("y", graphAttr.height / 2)
@@ -157,40 +170,64 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                     .attr("height", imageHeight);
             });
 
-            if (ikigai[o].records.length > 0) {
-                ikigaiGraph.append("line")
+            if (numRecords > 0) {
+                if (recordsScale(0) - recordsScale(numRecords) <= baseImageSize) {
+                    imageSize = recordsScale(0) - recordsScale(numRecords);
+                }
+                g.append("line")
                     .attr("x1", occupationScale(i))
                     .attr("x2", occupationScale(i))
                     .attr("y1", recordsScale(0))
-                    .attr("y2", recordsScale(ikigai[o].records.length))
+                    .attr("y2", recordsScale(numRecords) + imageSize)
                     .attr("stroke", ikigaiColorHexArray[ikigai.category])
-                    .attr("stroke-width", 2)
+                    .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
             }
 
             let maxActivityMultiple = d3.max(Object.keys(activityShortToLong), a => { return ikigai[o][a] });
             if (maxActivityMultiple > 0) {
                 let maxActivity = Object.keys(activityShortToLong).find(a => { return ikigai[o][a] == maxActivityMultiple });
-                ikigaiGraph.append("image")
+                g.append("image")
                     .attr("xlink:href", "images/" + maxActivity + ".svg")
                     .attr("x", occupationScale(i) - imageSize / 2)
-                    .attr("y", recordsScale(ikigai[o].records.length) - imageSize)
+                    .attr("y", recordsScale(numRecords))
                     .attr("width", imageSize)
                     .attr("height", imageSize)
                     .attr("filter", function() { return "url(#" + ikigai.id + ")"; });
+                overRepresentedActivity = activityShortToLong[maxActivity];
             }
 
             if (occupation.average > 0) {
-                ikigaiGraph.append("line")
+                g.append("line")
                     .attr("x1", occupationScale(i) - averageLineWidth / 2)
                     .attr("x2", occupationScale(i) + averageLineWidth / 2)
                     .attr("y1", recordsScale(occupation.average))
                     .attr("y2", recordsScale(occupation.average))
                     .attr("stroke", "lightgrey")
-                    .attr("stroke-width", 2)
+                    .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
             }
 
+            let tooltipText = "<b>IKIGAI GROUP:</b> " + ikigai.title +
+                "</br></br><b>OCCUPATION: </b>" + occupations[o].description.toLowerCase() +
+                "</br></br><b>NUMBER OF RECORDS: </b>" + numRecords +
+                "</br></br><b>OVER-REPRESENTED ACTIVITY: </b>" + overRepresentedActivity.toLowerCase();
+
+            g.on("mousemove", function() {
+                // Show tooltip.
+                tooltip.html(tooltipText)
+                    .style("visibility", "visible")
+                    .style("top", event.pageY + 20)
+                    .style("left", function() {
+                        if (d3.event.clientX < 750) {
+                            return event.pageX + 20 + "px";
+                        } else {
+                            return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                        }
+                    })
+            }).on("mouseout", function() {
+                tooltip.style("visibility", "hidden");
+            });
         });
     });
 
@@ -253,7 +290,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         .attr("y1", activityLegendAttr.imageSize + 16)
         .attr("y2", activityLegendAttr.imageSize + 16)
         .attr("stroke", "lightgrey")
-        .attr("stroke-width", 2)
+        .attr("stroke-width", lineWidth)
         .attr("stroke-linecap", "round");
 
     drawText(groupAverageLegend, "entire group average", {
