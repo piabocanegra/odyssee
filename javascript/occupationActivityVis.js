@@ -118,8 +118,8 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
 
     let occupationScale = d3.scaleLinear()
         .domain([0, Object.keys(occupations).length - 1])
-        .range([graphAttr.textWidth + graphAttr.horizontalPadding * 2, graphAttr.width - graphAttr.horizontalPadding * 2]);
-    let recordsScale = d3.scaleLinear()
+        .range([graphAttr.textWidth + graphAttr.horizontalPadding * 4, graphAttr.width - graphAttr.horizontalPadding * 4]);
+    let usersScale = d3.scaleLinear()
         .domain([0, maxUsers])
         .range([graphAttr.height / 2, 0]);
 
@@ -130,24 +130,6 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     ikigaiList.forEach(ikigai => {
         let ikigaiGraph = svg.append("g")
             .attr("transform", "translate(" + ikigai.x + ", " + ikigai.y + ")");
-        drawText(ikigaiGraph, "users", {
-            x: graphAttr.textWidth,
-            y: recordsScale(maxUsers),
-            textAnchor: "end"
-        });
-        drawText(ikigaiGraph, ikigai.title, {
-            x: graphAttr.textWidth,
-            y: graphAttr.height / 2,
-            textAnchor: "end"
-        });
-        ikigaiGraph.append("line")
-            .attr("x1", graphAttr.textWidth + graphAttr.horizontalPadding)
-            .attr("x2", graphAttr.width)
-            .attr("y1", graphAttr.height / 2)
-            .attr("y2", graphAttr.height / 2)
-            .attr("stroke", "lightgrey")
-            .attr("stroke-width", lineWidth)
-            .attr("stroke-linecap", "round");
 
         Object.keys(occupations).forEach((o, i) => {
             let occupation = occupations[o];
@@ -172,14 +154,14 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             });
 
             if (numRecords > 0) {
-                if (recordsScale(0) - recordsScale(numUsers) <= baseImageSize) {
-                    imageSize = recordsScale(0) - recordsScale(numUsers);
+                if (usersScale(0) - usersScale(numUsers) <= baseImageSize) {
+                    imageSize = usersScale(0) - usersScale(numUsers);
                 }
                 g.append("line")
                     .attr("x1", occupationScale(i))
                     .attr("x2", occupationScale(i))
-                    .attr("y1", recordsScale(0))
-                    .attr("y2", recordsScale(numUsers) + imageSize)
+                    .attr("y1", usersScale(0))
+                    .attr("y2", usersScale(numUsers) + imageSize)
                     .attr("stroke", ikigaiColorHexArray[ikigai.category])
                     .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
@@ -191,7 +173,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                 g.append("image")
                     .attr("xlink:href", "images/" + maxActivity + ".svg")
                     .attr("x", occupationScale(i) - imageSize / 2)
-                    .attr("y", recordsScale(numUsers))
+                    .attr("y", usersScale(numUsers))
                     .attr("width", imageSize)
                     .attr("height", imageSize)
                     .attr("filter", function() { return "url(#" + ikigai.id + ")"; });
@@ -202,8 +184,8 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                 g.append("line")
                     .attr("x1", occupationScale(i) - averageLineWidth / 2)
                     .attr("x2", occupationScale(i) + averageLineWidth / 2)
-                    .attr("y1", recordsScale(occupation.average))
-                    .attr("y2", recordsScale(occupation.average))
+                    .attr("y1", usersScale(occupation.average))
+                    .attr("y2", usersScale(occupation.average))
                     .attr("stroke", "lightgrey")
                     .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
@@ -230,6 +212,25 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                 tooltip.style("visibility", "hidden");
             });
         });
+
+        drawText(ikigaiGraph, "users", {
+            x: graphAttr.textWidth,
+            y: usersScale(maxUsers),
+            textAnchor: "end"
+        });
+        drawText(ikigaiGraph, ikigai.title, {
+            x: graphAttr.textWidth,
+            y: graphAttr.height / 2,
+            textAnchor: "end"
+        });
+        ikigaiGraph.append("line")
+            .attr("x1", graphAttr.textWidth + graphAttr.horizontalPadding)
+            .attr("x2", graphAttr.width)
+            .attr("y1", graphAttr.height / 2)
+            .attr("y2", graphAttr.height / 2)
+            .attr("stroke", "lightgrey")
+            .attr("stroke-width", lineWidth)
+            .attr("stroke-linecap", "round");
     });
 
     let colorLegendAttr = {
