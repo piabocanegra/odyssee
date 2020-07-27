@@ -61,8 +61,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     Object.keys(occupations).forEach(o => {
         let emailsByOccupation = typesData.filter(d => { return d[keys.types.occupation] == occupations[o].description })
             .map(d => { return d[keys.types.email] });
-        let recordsByOccupation = everyoneData.filter(d => { return emailsByOccupation.includes(d[keys.everyone.email]) });
-        occupations[o].average = recordsByOccupation.length / ikigaiList.length;
+        occupations[o].average = emailsByOccupation.length / ikigaiList.length;
     });
 
     // Get denominator for activity multiples.
@@ -86,6 +85,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                 .map(d => { return d[keys.types.email] });
             i[o] = {};
             // Get records per ikigai group and occupation.
+            i[o].users = i.users.filter(d => { return emailsByOccupation.includes(d) });
             i[o].records = i.records.filter(d => { return emailsByOccupation.includes(d[keys.everyone.email]) });
             Object.keys(activityShortToLong).forEach(a => {
                 // Get record count per ikigai group, occupation, and activity.
@@ -101,12 +101,12 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
 
     console.log(ikigaiList);
 
-    let maxRecords = d3.max(ikigaiList, i => {
+    let maxUsers = d3.max(ikigaiList, i => {
         return d3.max(Object.keys(occupations), o => {
-            return i[o].records.length
+            return i[o].users.length
         })
     });
-    // console.log(maxRecords);
+    // console.log(maxUsers);
 
     let graphAttr = {
         textWidth: 100,
@@ -120,7 +120,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         .domain([0, Object.keys(occupations).length - 1])
         .range([graphAttr.textWidth + graphAttr.horizontalPadding * 2, graphAttr.width - graphAttr.horizontalPadding * 2]);
     let recordsScale = d3.scaleLinear()
-        .domain([0, maxRecords])
+        .domain([0, maxUsers])
         .range([graphAttr.height / 2, 0]);
 
     // Add tooltip.
@@ -130,9 +130,9 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     ikigaiList.forEach(ikigai => {
         let ikigaiGraph = svg.append("g")
             .attr("transform", "translate(" + ikigai.x + ", " + ikigai.y + ")");
-        drawText(ikigaiGraph, "records", {
+        drawText(ikigaiGraph, "users", {
             x: graphAttr.textWidth,
-            y: recordsScale(maxRecords),
+            y: recordsScale(maxUsers),
             textAnchor: "end"
         });
         drawText(ikigaiGraph, ikigai.title, {
@@ -153,6 +153,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             let occupation = occupations[o];
             let overRepresentedActivity = "none";
             let numRecords = ikigai[o].records.length;
+            let numUsers = ikigai[o].users.length;
             let imageSize = baseImageSize;
             let g = ikigaiGraph.append("g");
 
@@ -171,14 +172,14 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             });
 
             if (numRecords > 0) {
-                if (recordsScale(0) - recordsScale(numRecords) <= baseImageSize) {
-                    imageSize = recordsScale(0) - recordsScale(numRecords);
+                if (recordsScale(0) - recordsScale(numUsers) <= baseImageSize) {
+                    imageSize = recordsScale(0) - recordsScale(numUsers);
                 }
                 g.append("line")
                     .attr("x1", occupationScale(i))
                     .attr("x2", occupationScale(i))
                     .attr("y1", recordsScale(0))
-                    .attr("y2", recordsScale(numRecords) + imageSize)
+                    .attr("y2", recordsScale(numUsers) + imageSize)
                     .attr("stroke", ikigaiColorHexArray[ikigai.category])
                     .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
@@ -190,7 +191,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                 g.append("image")
                     .attr("xlink:href", "images/" + maxActivity + ".svg")
                     .attr("x", occupationScale(i) - imageSize / 2)
-                    .attr("y", recordsScale(numRecords))
+                    .attr("y", recordsScale(numUsers))
                     .attr("width", imageSize)
                     .attr("height", imageSize)
                     .attr("filter", function() { return "url(#" + ikigai.id + ")"; });
