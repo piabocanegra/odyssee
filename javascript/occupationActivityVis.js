@@ -7,7 +7,6 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    let baseImageSize = 36;
     let averageLineWidth = 48;
     let titleVerticalPadding = 70;
     let legendVerticalPadding = padding * 2.5;
@@ -127,6 +126,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
     let tooltipId = "occupationActivityTooltipId";
     let tooltip = addTooltip(tooltipId);
 
+    let baseImageSize = usersScale(0) - usersScale(1);
     ikigaiList.forEach(ikigai => {
         let ikigaiGraph = svg.append("g")
             .attr("transform", "translate(" + ikigai.x + ", " + ikigai.y + ")");
