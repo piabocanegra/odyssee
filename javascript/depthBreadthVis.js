@@ -36,34 +36,14 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     // let breadthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(breadthActivityData.keys()), breadthActivityList, exclusionList.concat(breadthTopThree));
     let depthDistinctPercent = 1 - depthPercent;
     let breadthDistinctPercent = 1 - breadthPercent;
+    console.log(depthDistinctActivities)
+    console.log(breadthDistinctActivities)
 
 
     let rootScale = d3.scaleLinear()
         .domain([0, 1])
         .range([height*0.3, height]);
-
-    let xRightLeafScale = d3.scaleLinear()
-        .domain([1, 10])
-        .range([padding*7, padding*7.5]);
-
-    let xLeftLeafScale = d3.scaleLinear()
-        .domain([1, 10])
-        .range([padding*7, padding*6.5]);
-
-    let yLeafScale = d3.scaleLinear()
-        .domain([0, 1])
-        .range([height*0.67, height*0.65]);
-
-    let rightLeafGenerator = d3.line()
-	    .y(function(d) { return yLeafScale(d.y); })
-	    .x(function(d) { return xRightLeafScale(d.x); })
-	    .curve(d3.curveMonotoneX);
-
-	let leftLeafGenerator = d3.line()
-	    .y(function(d) { return yLeafScale(d.y); })
-	    .x(function(d) { return xLeftLeafScale(d.x); })
-	    .curve(d3.curveMonotoneX);
-
+    
 	let tooltip = addTooltip("depthBreadthTooltip");
 
 	// draw ground
@@ -74,7 +54,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     	.attr('xlink:href', 'images/depth_plant.svg')
         .attr('id', 'depthPlant')
         .attr('x', width*0.55)
-        .attr('y', height*0.1)
+        .attr('y', height*0.14)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
@@ -101,7 +81,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     svg.append("image")
     	.attr('xlink:href', 'images/breadth_plant.svg')
         .attr('x', width*0.15)
-        .attr('y', height*0.12)
+        .attr('y', height*0.14)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
@@ -126,19 +106,31 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
             tooltip.style("visibility", "hidden");
         });
 
-    // pseduo plant data
-    let dataset = [
-    	{"x": 1, "y": 0},
-    	{"x": 2, "y": 0.301},
-    	{"x": 3, "y": 0.477},
-    	{"x": 4, "y": 0.602},
-    	{"x": 5, "y": 0.699},
-    	{"x": 6, "y": 0.778},
-    	{"x": 7, "y": 0.845},
-    	{"x": 8, "y": 0.903},
-    	{"x": 9, "y": 0.954},
-    	{"x": 10, "y": 1}
-    ];
+    drawPlantLegend(svg, padding*7, height*0.68);
+    svg.append("text")
+        .attr("x", padding*7.9)
+        .attr("y", height*0.63)
+        .text("length of root")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", padding*7.9)
+        .attr("y", height*0.65)
+        .text("and width of plant represents")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", padding*7.9)
+        .attr("y", height*0.67)
+        .text("% of time spent on a specific")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", padding*7.9)
+        .attr("y", height*0.69)
+        .text("number of activities*")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
 
     // mode activity legend
     svg.append("text")
@@ -202,52 +194,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     drawDiamond(svg, 4, 0.682);
 
     // plant legend
-    svg.append("line")
-    	.attr("x1", padding*7)
-    	.attr("x2", padding*7)
-    	.attr("y1", height*0.67)
-    	.attr("y2", height*0.7)
-    	.attr("stroke", textColor)
-    	.attr("stroke-width", 2)
-        .style("stroke-linecap", "round");
-    svg.append("path")
-    	.datum(dataset)
-    	.attr("d", rightLeafGenerator)
-    	.style("fill", "none")
-    	.style("stroke", textColor)
-    	.attr("stroke-width", 2)
-        .style("stroke-linecap", "round");
-    svg.append("path")
-    	.datum(dataset)
-    	.attr("d", leftLeafGenerator)
-    	.style("fill", "none")
-    	.style("stroke", textColor)
-    	.attr("stroke-width", 2)
-        .style("stroke-linecap", "round");
-    svg.append("text")
-    	.attr("x", padding*7.9)
-    	.attr("y", height*0.63)
-    	.text("length of root")
-    	.style("font-family", "Courier new")
-        .style("font-size", 12);
-    svg.append("text")
-    	.attr("x", padding*7.9)
-    	.attr("y", height*0.65)
-    	.text("and width of plant represents")
-    	.style("font-family", "Courier new")
-        .style("font-size", 12);
-    svg.append("text")
-    	.attr("x", padding*7.9)
-    	.attr("y", height*0.67)
-    	.text("% of time spent on a specific")
-    	.style("font-family", "Courier new")
-        .style("font-size", 12);
-    svg.append("text")
-    	.attr("x", padding*7.9)
-    	.attr("y", height*0.69)
-    	.text("number of activities*")
-    	.style("font-family", "Courier new")
-        .style("font-size", 12);
+    
 
     // most frequent mood legend
     svg.append("text")
