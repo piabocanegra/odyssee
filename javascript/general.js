@@ -244,7 +244,7 @@ function drawAttitudeHalfLegend(svgClass, attList = attitudeList, title = "Most 
 
 function drawActivityLegend(activityLegend, attr = {}) {
     let title = attr.title == null ? "Most frequent activity" : attr.title
-    let activityIcon = attr.activity == null ? "b1" : attr.activity
+    let activityIcon = attr.activity == null ? "i10" : attr.activity
     let iconSize = attr.iconSize == null ? 32 : attr.iconSize
 
     let width = activityLegend.attr("width");
@@ -269,6 +269,31 @@ function drawActivityLegend(activityLegend, attr = {}) {
         .attr("height", iconSize);
 }
 
+function drawIkigaiColorLegend(colorLegend, colorLegendAttr) {
+    drawText(colorLegend, 'Ikigai', {
+        x: 0,
+        y: 0,
+        fontSize: 12,
+        textAnchor: 'start'
+    });
+
+    ['zen master', 'bohemian', 'worker', 'profiteer'].forEach((d, i) => {
+        let ikigaiGroupY = (i + 1) * colorLegendAttr.verticalPadding;
+        colorLegend.append('circle')
+            .attr('cx', colorLegendAttr.circleRadius)
+            .attr('cy', ikigaiGroupY)
+            .attr('r', colorLegendAttr.circleRadius)
+            .attr('fill', ikigaiColorHexArray[d]);
+
+        drawText(colorLegend, ikigaiKeyToLabel[d], {
+            x: colorLegendAttr.horizontalPadding + colorLegendAttr.circleRadius * 2,
+            y: ikigaiGroupY,
+            fontSize: 12,
+            textAnchor: 'start'
+        });
+    });
+}
+
 // add color filters to website, must call this per svg 
 function setUpFilters(svgClass) {
     let svg = d3.select(svgClass);
@@ -287,7 +312,21 @@ function setUpFilters(svgClass) {
         .attr('values', "0 0 0 0 0.9490196 0 0 0 0 0.84705882 0 0 0 0 0.4705882 0 0 0 1 0");
 
     svg.append('filter')
+        .attr('id', 'Zen')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.9490196 0 0 0 0 0.84705882 0 0 0 0 0.4705882 0 0 0 1 0");
+
+    svg.append('filter')
         .attr('id', 'Ok')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.92941176 0 0 0 0 0.76470588 0 0 0 0 0.63921568 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Bohemian')
         .append('feColorMatrix')
         .attr('type', 'matrix')
         .attr('color-interpolation-filters', 'sRGB')
@@ -301,7 +340,21 @@ function setUpFilters(svgClass) {
         .attr('values', "0 0 0 0 0.79215686 0 0 0 0 0.380392156 0 0 0 0 0.30196078 0 0 0 1 0");
 
     svg.append('filter')
+        .attr('id', 'Citizen')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.79215686 0 0 0 0 0.380392156 0 0 0 0 0.30196078 0 0 0 1 0");
+
+    svg.append('filter')
         .attr('id', 'Awful')
+        .append('feColorMatrix')
+        .attr('type', 'matrix')
+        .attr('color-interpolation-filters', 'sRGB')
+        .attr('values', "0 0 0 0 0.6235294 0 0 0 0 0.1490196 0 0 0 0 0.3568627 0 0 0 1 0");
+
+    svg.append('filter')
+        .attr('id', 'Profiteer')
         .append('feColorMatrix')
         .attr('type', 'matrix')
         .attr('color-interpolation-filters', 'sRGB')
@@ -404,7 +457,7 @@ function addTooltip(tooltipId) {
         .style('font-size', 12)
         .style('text-align', 'left')
         .style('color', textColor);
-    }
+}
 
 function setTooltipText(tooltip, text, leftOffset, rightOffset) {
     tooltip
