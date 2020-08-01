@@ -33,6 +33,35 @@ function getPersonDataByActivitiesAndMood(personData, actList, moodList) {
         .filter(d => moodList.includes(d.Feeling));
 }
 
+function getDataByPTypePData(everyoneData, typesData, pData, pType, column, cValue) {
+    // list of ppl with personality type
+    let filteredList = typesData
+        .filter(d => d.Personality == pType)
+        .map(d => d["What's your email?"]);
+
+    let filteredEmailList = pData.filter(d => d[column] == cValue)
+                                    .map(d => d["What's your email?"])
+                                    .filter(d => filteredList.includes(d));
+    let everyoneList = pData.filter(d => d[column] == cValue).map(d => d["What's your email?"]);
+
+    let data1 = everyoneData.filter(d => filteredEmailList.includes(d.Email));
+    let data2 = everyoneData.filter(d => everyoneList.includes(d.Email));
+
+    console.log(filteredList);
+    console.log(filteredEmailList);
+
+    return [{
+        "percent": filteredEmailList.length/filteredList.length, 
+        "fMood": getFrequencyByKey("Feeling", data1).keys().next().value, 
+        "fAttitude": getFrequencyByKey("Reason", data1).keys().next().value
+    }, 
+    {
+        "percent": everyoneList.length/typesData.length,
+        "fMood": getFrequencyByKey("Feeling", data2).keys().next().value, 
+        "fAttitude": getFrequencyByKey("Reason", data2).keys().next().value
+    }];
+}
+
 function getDataByPTypeValue(everyoneData, typesData, pType, value) {
     let filteredList = typesData
         .filter(d => d.Personality == pType);
@@ -53,6 +82,14 @@ function getDataByPTypeValue(everyoneData, typesData, pType, value) {
         "fMood": getFrequencyByKey("Feeling", data2).keys().next().value, 
         "fAttitude": getFrequencyByKey("Reason", data2).keys().next().value
     }];
+}
+
+function getActivityListByPType(everyoneData, typesData, pType) {
+    let emailList = typesData
+        .filter(d => d.Personality == pType)
+        .map(d => d["What's your email?"]);
+
+    return everyoneData.filter(d => emailList.includes(d.Email));
 }
 
 function getDataByPType(everyoneData, typesData, pType, activity, f, moodList = []) {

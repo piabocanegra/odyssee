@@ -540,3 +540,66 @@ function drawImperfectVerticalLine(svg, yStart, yEnd, x, dashArr, color = "#cdcd
         })
         .style("stroke-dasharray", dashArr);
 }
+
+function drawPlantLegend(svg, x, y, hasRoot = true) {
+    // pseduo plant data
+    let dataset = [
+        {"x": 1, "y": 0},
+        {"x": 2, "y": 0.301},
+        {"x": 3, "y": 0.477},
+        {"x": 4, "y": 0.602},
+        {"x": 5, "y": 0.699},
+        {"x": 6, "y": 0.778},
+        {"x": 7, "y": 0.845},
+        {"x": 8, "y": 0.903},
+        {"x": 9, "y": 0.954},
+        {"x": 10, "y": 1}
+    ];
+
+    let yLeafScale = d3.scaleLinear()
+        .domain([0, 1])
+        .range([y-15, y-30]);
+
+    let xRightLeafScale = d3.scaleLinear()
+        .domain([1, 10])
+        .range([x, x+(padding*0.5)]);
+
+    let xLeftLeafScale = d3.scaleLinear()
+        .domain([1, 10])
+        .range([x, x-(padding*0.5)]);
+
+    let rightLeafGenerator = d3.line()
+        .y(function(d) { return yLeafScale(d.y); })
+        .x(function(d) { return xRightLeafScale(d.x); })
+        .curve(d3.curveMonotoneX);
+
+    let leftLeafGenerator = d3.line()
+        .y(function(d) { return yLeafScale(d.y); })
+        .x(function(d) { return xLeftLeafScale(d.x); })
+        .curve(d3.curveMonotoneX);
+
+    if (hasRoot) {
+        svg.append("line")
+        .attr("x1", x)
+        .attr("x2", x)
+        .attr("y1", y-15)
+        .attr("y2", y)
+        .attr("stroke", textColor)
+        .attr("stroke-width", 2)
+        .style("stroke-linecap", "round");
+    }
+    svg.append("path")
+        .datum(dataset)
+        .attr("d", rightLeafGenerator)
+        .style("fill", "none")
+        .style("stroke", textColor)
+        .attr("stroke-width", 2)
+        .style("stroke-linecap", "round");
+    svg.append("path")
+        .datum(dataset)
+        .attr("d", leftLeafGenerator)
+        .style("fill", "none")
+        .style("stroke", textColor)
+        .attr("stroke-width", 2)
+        .style("stroke-linecap", "round");
+}
