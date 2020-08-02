@@ -72,11 +72,16 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             });
         });
 
+        console.log("Percentage in category: ")
+        console.log(countMap)
+
         let categoryCountMap = {};
         Object.keys(countMap.total).filter(key => { return key != countKey && key != "X" }).forEach(key => {
             countMap.group[key] = countMap.group[key] == undefined ? 0 : countMap.group[key];
             categoryCountMap[key] = countMap.group[key] / countMap.total[key];
         });
+        console.log("Percentage in group / Percentage in total: ")
+        console.log(categoryCountMap)
         return categoryCountMap;
     }
 
@@ -244,6 +249,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
                     .attr("fill", ikigaiColorHexArray[i]);
             }
         });
+        console.log(d.value + ": " + getMinMaxOfCountMap(d.personality).max)
         svg.append("image")
             .attr("xlink:href", "images/" + personalityShorttoLong[getMinMaxOfCountMap(d.personality).max] + ".svg")
             .attr("x", lengthXScale(d.count))
