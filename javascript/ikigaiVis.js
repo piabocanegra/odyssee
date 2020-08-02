@@ -33,7 +33,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         .attr('height', imageAttr.height);
 
     // Order for legend: Zen Master, Bohemian, Citizen, Profiteer
-    let ikigaiList = ['zen master', 'bohemian', 'worker', 'profiteer'];
+    let ikigaiList = ikigaiGroups;
 
     // Order: Happiness, Money, Skill, Passion, Contribution
     let ikigaiScoreList = [
