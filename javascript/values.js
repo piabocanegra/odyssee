@@ -3,7 +3,7 @@
  *   timeData: time data for records
  *   returns void, draws data vis for values.
  */
-function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
+function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalityData) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
@@ -15,15 +15,69 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
     let imageSize = 56;
     let horizontalPadding = 24;
 
+    console.log(personalityData);
+
     drawTitle(svg, "Values");
     console.log(typesData);
     console.log(ikigaiData);
     console.log(everyoneData);
     let valueCountMap = {};
 
+    let personalityShorttoLong = {
+        "I": "Introversion",
+        "E": "Extroversion",
+        "S": "Observing",
+        "N": "Intuition",
+        "T": "Thinking",
+        "F": "Feeling",
+        "J": "Judging",
+        "P": "Prospecting",
+    }
+
+    let valueLongtoShort = {
+        "Achieving stability of society, of relationships, and of self": "Stability",
+        "Enjoying life": "enjoying life",
+        "Looking out for my family, friends, and community": "Looking out",
+        "Achieving personal success": "Personal Success",
+    }
+
     function incrementMapCount(map, key) {
         let count = map[key];
         map[key] = count == null ? 1 : count + 1;
+        return map;
+    }
+
+    function getPersonalityMultiples(totalData, usersOfGroup, traitKey, emailKey) {
+        let countKey = "count"
+        let countMap = {
+            group: {},
+            total: {}
+        };
+
+        totalData.forEach(d => {
+            d[traitKey].split("").forEach(trait => {
+                incrementMapCount(countMap.total, trait); // Increment total data.
+                incrementMapCount(countMap.total, countKey);
+                if (usersOfGroup.includes(d[emailKey])) {
+                    incrementMapCount(countMap.group, trait); // Increment group's data.
+                    incrementMapCount(countMap.group, countKey);
+                }
+            });
+        });
+
+        Object.keys(countMap).forEach(type => {
+            Object.keys(countMap[type]).filter(key => { return key != countKey }).forEach(key => {
+                // Divide by number of total data for group.
+                countMap[type][key] = countMap[type][key] / countMap[type][countKey];
+            });
+        });
+
+        let categoryCountMap = {};
+        Object.keys(countMap.total).filter(key => { return key != countKey && key != "X" }).forEach(key => {
+            countMap.group[key] = countMap.group[key] == undefined ? 0 : countMap.group[key];
+            categoryCountMap[key] = countMap.group[key] / countMap.total[key];
+        });
+        return categoryCountMap;
     }
 
     function getCategoryRepresentedMultiples(totalData, usersOfGroup, category, emailKey) {
@@ -42,7 +96,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
             }
         });
         Object.keys(countMap).forEach(type => {
-            Object.keys(countMap[type]).forEach(key => {
+            Object.keys(countMap[type]).filter(key => { return key != countKey }).forEach(key => {
                 // Divide by number of total data for group.
                 countMap[type][key] = countMap[type][key] / countMap[type][countKey];
             });
@@ -81,7 +135,8 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
         let attitudeMultiples = getCategoryRepresentedMultiples(everyoneData, users, keys.everyone.attitude, keys.everyone.email);
         let ikigaiMultiples = getCategoryRepresentedMultiples(ikigaiData, users, keys.ikigai.category, keys.ikigai.email);
         let occupationMultiples = getCategoryRepresentedMultiples(typesData, users, keys.types.occupation, keys.types.email);
-        let personalityMultiples = getCategoryRepresentedMultiples(typesData, users, keys.types.personality, keys.types.email);
+        let personalityMultiples = getPersonalityMultiples(typesData, users, keys.types.personality, keys.types.email);
+        console.log(personalityMultiples);
         v.users = users;
         v.activity = activityMultiples;
         v.attitude = attitudeMultiples;
@@ -105,7 +160,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
     let staticWidth = valueImageSize + horizontalPadding * 4 + imageSize * 2;
     let lengthXScale = d3.scaleLinear()
         .domain([minUserCount, maxUserCount])
-        .range([staticWidth + ikigaiWidth, width]);
+        .range([staticWidth + ikigaiWidth, width - imageSize]);
     let ikigaiXScale = d3.scaleBand()
         .domain(ikigaiGroups)
         .range([staticWidth, staticWidth + ikigaiWidth]);
@@ -118,15 +173,14 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
         });
         let underOverRepOccupation = getMinMaxOfCountMap(d.occupation);
         svg.append("image")
-            .attr("xlink:href", "images/" + d.value + ".svg")
+            .attr("xlink:href", "images/" + valueLongtoShort[d.value] + ".svg")
             .attr("x", 0)
             .attr("y", y - valueImageSize / 2)
             .attr("width", valueImageSize)
-            .attr("height", valueImageSize)
-            .attr("filter", function() { return "url(#Grey)"; });
+            .attr("height", valueImageSize);
         svg.append("line")
             .attr("x1", valueImageSize + horizontalPadding)
-            .attr("x2", lengthXScale(d.count))
+            .attr("x2", lengthXScale(d.count) + imageSize)
             .attr("y1", y)
             .attr("y2", y)
             .attr("stroke", "lightgrey")
@@ -139,15 +193,13 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
             .attr("y", y - imageSize)
             .attr("width", imageSize)
             .attr("height", imageSize)
-            .attr("filter", function() { return "url(#Grey)"; })
             .attr("transform", "rotate(180 " + (valueImageSize + horizontalPadding * 2 + imageSize / 2) + " " + (y - imageSize / 2) + ")");
         svg.append("image")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.min] + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 2)
             .attr("y", y)
             .attr("width", imageSize)
-            .attr("height", imageSize)
-            .attr("filter", function() { return "url(#Grey)"; });
+            .attr("height", imageSize);
         svg.append("image")
             .attr("xlink:href", "images/" + underOverRepActivities.max + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 3 + imageSize)
@@ -193,12 +245,11 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData) {
             }
         });
         svg.append("image")
-            .attr("xlink:href", "images/" + getMinMaxOfCountMap(d.personality).max + ".svg")
-            .attr("x", lengthXScale(d.count) - imageSize)
+            .attr("xlink:href", "images/" + personalityShorttoLong[getMinMaxOfCountMap(d.personality).max] + ".svg")
+            .attr("x", lengthXScale(d.count))
             .attr("y", y - imageSize)
             .attr("width", imageSize)
-            .attr("height", imageSize)
-            .attr("filter", function() { return "url(#Grey)"; });
+            .attr("height", imageSize);
     });
 
     let colorLegendAttr = {
