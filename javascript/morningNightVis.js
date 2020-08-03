@@ -161,13 +161,13 @@ function drawMorningNightVis(svgClass, timeData) {
     morningNightGraph.append("path")
         .attr("d", morningData)
         .attr("fill", "none")
-        .attr("stroke", "lightgrey")
+        .attr("stroke", "#bbbbbb")
         .attr("stroke-width", 2)
         .style("stroke-linecap", "round");
     morningNightGraph.append("path")
         .attr("d", nightData)
         .attr("fill", "none")
-        .attr("stroke", "lightgrey")
+        .attr("stroke", "#bbbbbb")
         .attr("stroke-width", 2)
         .style("stroke-linecap", "round");
 
@@ -212,11 +212,11 @@ function drawMorningNightVis(svgClass, timeData) {
     let hoverCircleRadius = 5;
     let morningCircle = morningNightGraph.append("circle")
         .attr("visibility", "hidden")
-        .attr("stroke", "lightgrey")
+        .attr("stroke", "#bbbbbb")
         .attr("r", hoverCircleRadius);
     let nightCircle = morningNightGraph.append("circle")
         .attr("visibility", "hidden")
-        .attr("stroke", "lightgrey")
+        .attr("stroke", "#bbbbbb")
         .attr("r", hoverCircleRadius);
     let hoverSunIcon = morningNightGraph.append("image")
         .attr("xlink:href", "images/morning.svg")
@@ -231,7 +231,7 @@ function drawMorningNightVis(svgClass, timeData) {
     let hoverRect = morningNightGraph.append("rect")
         .attr("visibility", "hidden")
         .attr("fill", "#c4c4c41a")
-        .attr("stroke", "lightgrey")
+        .attr("stroke", "#bbbbbb")
         .attr("rx", hoverCircleRadius + 2);
 
     // Add tooltip.

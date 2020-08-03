@@ -80,35 +80,35 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
     // add tooltip highlight
     svg.selectAll(".balanceRect")
-    	.data(avgStdDataForGraph)
-    	.enter()
-    	.append("rect")
-    	.attr("id", function(d) {
-    		return d.x;
-    	})
-    	.attr('x', function(d) {
+        .data(avgStdDataForGraph)
+        .enter()
+        .append("rect")
+        .attr("id", function(d) {
+            return d.x;
+        })
+        .attr('x', function(d) {
             var key1 = (d.x).split(":")[0];
             var key2 = (d.x).split(":")[1];
             var offset = key2 == "want to" ? 15 : -25;
             return xScale(key1) - offset;
         })
         .attr('y', yScale(0.82))
-        .attr('height', yScale(0)-yScale(0.82))
+        .attr('height', yScale(0) - yScale(0.82))
         .attr('width', 30)
         .attr('fill', '#c4c4c41a')
         .attr('opacity', 0)
         .attr('rx', 4)
-        .attr('stroke', 'lightgrey')
+        .attr('stroke', '#bbbbbb')
         .attr('stroke-width', 1)
-        .on("mousemove", function(d){
-        	let attitude = (d.x).split(":")[1];
-			let tooltipText = "<b>ATTITUDE:</b> " + attitude 
-			+ "</br></br><b>FREQUENCY: </b>" + d.count 
-			+ "</br></br><b>AVERAGE TIME SPENT: </b>" + Math.trunc(d.y*100) + "%" 
-			+"</br></br><b>MIN TIME SPENT: </b>" + Math.trunc(d.min*100) + "%"
-			+"</br></br><b>MAX TIME SPENT: </b>" + Math.trunc(d.max*100) + "%";
-        	setTooltipText(tooltip, tooltipText, 20, 220);
-        	event.target.style.opacity = 1;
+        .on("mousemove", function(d) {
+            let attitude = (d.x).split(":")[1];
+            let tooltipText = "<b>ATTITUDE:</b> " + attitude +
+                "</br></br><b>FREQUENCY: </b>" + d.count +
+                "</br></br><b>AVERAGE TIME SPENT: </b>" + Math.trunc(d.y * 100) + "%" +
+                "</br></br><b>MIN TIME SPENT: </b>" + Math.trunc(d.min * 100) + "%" +
+                "</br></br><b>MAX TIME SPENT: </b>" + Math.trunc(d.max * 100) + "%";
+            setTooltipText(tooltip, tooltipText, 20, 220);
+            event.target.style.opacity = 1;
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
             event.target.style.opacity = 0;
@@ -188,27 +188,27 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
             .attr('xlink:href', 'images/' + category + '.svg')
             .attr('x', xScale(category) - 10)
             .attr('y', yScale(0) + 10)
-            .attr('width', iconWidth-10)
-            .attr('height', iconWidth-10);
+            .attr('width', iconWidth - 10)
+            .attr('height', iconWidth - 10);
         svg.append('text')
-            .attr('x', xScale(category) + (iconWidth/2) - 15)
+            .attr('x', xScale(category) + (iconWidth / 2) - 15)
             .attr('y', yScale(0) + iconWidth + 10)
             .text(balanceShortToLong1[category])
             .style("font-family", "Courier new")
-	        .style("text-anchor", "middle")
-	        .style("font-size", 11);
-	    svg.append('text')
-            .attr('x', xScale(category) + (iconWidth/2) - 15)
+            .style("text-anchor", "middle")
+            .style("font-size", 11);
+        svg.append('text')
+            .attr('x', xScale(category) + (iconWidth / 2) - 15)
             .attr('y', yScale(0) + iconWidth + 25)
             .text(balanceShortToLong2[category])
             .style("font-family", "Courier new")
-	        .style("text-anchor", "middle")
-	        .style("font-size", 11);
+            .style("text-anchor", "middle")
+            .style("font-size", 11);
     }
 
     //add x axis label
     svg.append("text")
-        .attr("x", width*0.48)
+        .attr("x", width * 0.48)
         .attr("y", yScale(0) + iconWidth + 50)
         .text("Do you think your life is balanced?")
         .style("font-family", "Courier new")
@@ -230,7 +230,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .attr("class", "y_axis")
         .attr("transform", "translate(" + (padding * 1.5) + ", 0)")
         .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d, i, n) {
-            return n[i + 1] ? d*100 : "";
+            return n[i + 1] ? d * 100 : "";
         }));
     yAxis.selectAll("text")
         .style("font-family", "Courier new")

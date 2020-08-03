@@ -185,7 +185,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
                 .attr('y2', gIkigaiAttr.height - ikigaiYScale(typeAverage))
                 .attr('x1', ikigaiXScale(type) - interLinePadding / 2)
                 .attr('x2', ikigaiXScale(type) - interLinePadding / 2)
-                .attr('stroke', 'lightgrey')
+                .attr('stroke', '#bbbbbb')
                 .attr('stroke-width', 2)
                 .style('stroke-linecap', 'round');
 
@@ -288,7 +288,7 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         .attr('x2', lineLegendAttr.width / 2 - lineLegendAttr.strokeWidth / 2)
         .attr('y1', lineLegendAttr.lineHeight + 2 * lineLegendAttr.verticalPadding)
         .attr('y2', lineLegendAttr.lineHeight + 2 * lineLegendAttr.verticalPadding + lineLegendAttr.lineHeight)
-        .attr('stroke', 'lightgrey')
+        .attr('stroke', '#bbbbbb')
         .attr('stroke-width', lineLegendAttr.strokeWidth)
         .style('stroke-linecap', 'round');
 

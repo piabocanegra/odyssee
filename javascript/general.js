@@ -48,7 +48,7 @@ function drawTab(svg, x, y, orientation) {
         .attr('x2', orientation == 'horizontal' ? x + tabHeight / 2 : x)
         .attr('y1', orientation == 'vertical' ? y - tabHeight / 2 : y)
         .attr('y2', orientation == 'vertical' ? y + tabHeight / 2 : y)
-        .attr('stroke', 'lightgrey')
+        .attr('stroke', '#bbbbbb')
         .attr('stroke-width', 2)
         .style("stroke-linecap", "round");
 }
@@ -365,7 +365,7 @@ function setUpFilters(svgClass) {
         .append('feColorMatrix')
         .attr('type', 'matrix')
         .attr('color-interpolation-filters', 'sRGB')
-        .attr('values', "0 0 0 0 0.804 0 0 0 0 0.804 0 0 0 0 0.804 0 0 0 1 0");
+        .attr('values', "0 0 0 0 0.73 0 0 0 0 0.73 0 0 0 0 0.73 0 0 0 1 0");
 
 }
 
@@ -395,7 +395,7 @@ function drawImperfectCircle(svg, center, radius, attr = {}) {
     let maxOffset = attr.maxOffset == null ? Math.ceil(radius / 65) : attr.maxOffset; // Control radius max offset.
     // Stroke.
     let strokeWidth = attr.strokeWidth == null ? 2 : attr.strokeWidth; // Control thickness of line.
-    let stroke = attr.stroke == null ? "lightgrey" : attr.stroke; // Control color of line.
+    let stroke = attr.stroke == null ? "#bbbbbb" : attr.stroke; // Control color of line.
 
     // Setup arc generator.
     let circleArcGen = d3.line()
@@ -423,7 +423,7 @@ function drawZigzagArc(svg, center, radius, attr = {}) {
     let maxAngle = attr.maxAngle == null ? 360 : attr.maxAngle; // Control arc angle end.
     // Stroke.
     let strokeWidth = attr.strokeWidth == null ? 2 : attr.strokeWidth; // Control thickness of line.
-    let stroke = attr.stroke == null ? "lightgrey" : attr.stroke; // Control color of line.
+    let stroke = attr.stroke == null ? "#bbbbbb" : attr.stroke; // Control color of line.
 
     // Setup arc generator.
     let zigzagArcGen = d3.line()

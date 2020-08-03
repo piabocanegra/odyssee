@@ -186,7 +186,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                     .attr("x2", occupationScale(i) + averageLineWidth / 2)
                     .attr("y1", usersScale(occupation.average))
                     .attr("y2", usersScale(occupation.average))
-                    .attr("stroke", "lightgrey")
+                    .attr("stroke", "#bbbbbb")
                     .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
             }
@@ -228,7 +228,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
             .attr("x2", graphAttr.width)
             .attr("y1", graphAttr.height / 2)
             .attr("y2", graphAttr.height / 2)
-            .attr("stroke", "lightgrey")
+            .attr("stroke", "#bbbbbb")
             .attr("stroke-width", lineWidth)
             .attr("stroke-linecap", "round");
     });
@@ -291,7 +291,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         .attr("x2", averageLineWidth)
         .attr("y1", activityLegendAttr.imageSize + 16)
         .attr("y2", activityLegendAttr.imageSize + 16)
-        .attr("stroke", "lightgrey")
+        .attr("stroke", "#bbbbbb")
         .attr("stroke-width", lineWidth)
         .attr("stroke-linecap", "round");
 

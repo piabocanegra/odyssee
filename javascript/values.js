@@ -72,16 +72,16 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             });
         });
 
-        console.log("Percentage in category: ")
-        console.log(countMap)
+        // console.log("Percentage in category: ")
+        // console.log(countMap)
 
         let categoryCountMap = {};
         Object.keys(countMap.total).filter(key => { return key != countKey && key != "X" }).forEach(key => {
             countMap.group[key] = countMap.group[key] == undefined ? 0 : countMap.group[key];
             categoryCountMap[key] = countMap.group[key] / countMap.total[key];
         });
-        console.log("Percentage in group / Percentage in total: ")
-        console.log(categoryCountMap)
+        // console.log("Percentage in group / Percentage in total: ")
+        // console.log(categoryCountMap)
         return categoryCountMap;
     }
 
@@ -188,7 +188,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             .attr("x2", lengthXScale(d.count) + imageSize)
             .attr("y1", y)
             .attr("y2", y)
-            .attr("stroke", "lightgrey")
+            .attr("stroke", "#bbbbbb")
             .attr("stroke-width", lineWidth)
             .attr("stroke-linecap", "round")
             .style("stroke-dasharray", dashArray[getMinMaxOfCountMap(d.attitude).max]);
@@ -249,13 +249,15 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
                     .attr("fill", ikigaiColorHexArray[i]);
             }
         });
-        console.log(d.value + ": " + getMinMaxOfCountMap(d.personality).max)
+        // console.log(d.value + ": " + getMinMaxOfCountMap(d.personality).max)
+        let overrepPersonality = getMinMaxOfCountMap(d.personality).max;
+        let personalityImageSize = (overrepPersonality == "I" || overrepPersonality == "E") ? imageSize / 3 : imageSize;
         svg.append("image")
-            .attr("xlink:href", "images/" + personalityShorttoLong[getMinMaxOfCountMap(d.personality).max] + ".svg")
-            .attr("x", lengthXScale(d.count))
-            .attr("y", y - imageSize)
-            .attr("width", imageSize)
-            .attr("height", imageSize);
+            .attr("xlink:href", "images/" + personalityShorttoLong[overrepPersonality] + ".svg")
+            .attr("x", lengthXScale(d.count) + imageSize - personalityImageSize)
+            .attr("y", y - personalityImageSize - 12)
+            .attr("width", personalityImageSize)
+            .attr("height", personalityImageSize);
     });
 
     let colorLegendAttr = {
