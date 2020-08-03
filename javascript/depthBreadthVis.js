@@ -36,8 +36,8 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     // let breadthDistinctPercent = getPercentageOfActivitiesWithExclusion(Array.from(breadthActivityData.keys()), breadthActivityList, exclusionList.concat(breadthTopThree));
     let depthDistinctPercent = 1 - depthPercent;
     let breadthDistinctPercent = 1 - breadthPercent;
-    console.log(depthDistinctActivities)
-    console.log(breadthDistinctActivities)
+    // console.log(depthDistinctActivities)
+    // console.log(breadthDistinctActivities)
 
 
     let rootScale = d3.scaleLinear()
