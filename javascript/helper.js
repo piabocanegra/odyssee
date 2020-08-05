@@ -47,9 +47,6 @@ function getDataByPTypePData(everyoneData, typesData, pData, pType, column, cVal
     let data1 = everyoneData.filter(d => filteredEmailList.includes(d.Email));
     let data2 = everyoneData.filter(d => everyoneList.includes(d.Email));
 
-    console.log(filteredList);
-    console.log(filteredEmailList);
-
     return [{
         "percent": filteredEmailList.length/filteredList.length, 
         "fMood": getFrequencyByKey("Feeling", data1).keys().next().value, 
