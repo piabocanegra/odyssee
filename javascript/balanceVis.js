@@ -98,7 +98,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .attr('fill', '#c4c4c41a')
         .attr('opacity', 0)
         .attr('rx', 4)
-        .attr('stroke', '#bbbbbb')
+        .attr('stroke', greyColor)
         .attr('stroke-width', 1)
         .on("mousemove", function(d) {
             let attitude = (d.x).split(":")[1];

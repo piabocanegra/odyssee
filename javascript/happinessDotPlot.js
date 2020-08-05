@@ -116,7 +116,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         .attr('x2', plotLineAttr.experienced.x2)
         .attr('y1', plotLineAttr.experienced.y)
         .attr('y2', plotLineAttr.experienced.y)
-        .attr('stroke', '#bbbbbb')
+        .attr('stroke', greyColor)
         .attr('stroke-width', 2);
 
     drawTab(svg, plotLineAttr.experienced.x1, plotLineAttr.experienced.y, 'vertical');
@@ -132,7 +132,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         .attr('x2', plotLineAttr.remembered.x)
         .attr('y1', plotLineAttr.remembered.y1)
         .attr('y2', plotLineAttr.remembered.y2)
-        .attr('stroke', '#bbbbbb')
+        .attr('stroke', greyColor)
         .attr('stroke-width', 2);
 
     drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y1, 'horizontal');
@@ -181,7 +181,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
                 .attr('fill', '#c4c4c41a')
                 .attr('opacity', 0)
                 .attr('rx', 4)
-                .attr('stroke', '#bbbbbb')
+                .attr('stroke', greyColor)
                 .attr('stroke-width', 1)
                 .on("mousemove", function() {
                     showTooltip(tooltipText, rect);

@@ -15,12 +15,12 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
     let imageSize = 56;
     let horizontalPadding = 24;
 
-    console.log(personalityData);
+    // console.log(personalityData);
 
     drawTitle(svg, "Values");
-    console.log(typesData);
-    console.log(ikigaiData);
-    console.log(everyoneData);
+    // console.log(typesData);
+    // console.log(ikigaiData);
+    // console.log(everyoneData);
     let valueCountMap = {};
 
     let personalityShorttoLong = {
@@ -141,7 +141,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         let ikigaiMultiples = getCategoryRepresentedMultiples(ikigaiData, users, keys.ikigai.category, keys.ikigai.email);
         let occupationMultiples = getCategoryRepresentedMultiples(typesData, users, keys.types.occupation, keys.types.email);
         let personalityMultiples = getPersonalityMultiples(typesData, users, keys.types.personality, keys.types.email);
-        console.log(personalityMultiples);
+        // console.log(personalityMultiples);
         v.users = users;
         v.activity = activityMultiples;
         v.attitude = attitudeMultiples;
@@ -150,7 +150,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         v.personality = personalityMultiples;
     });
 
-    console.log(mostFrequentValues);
+    // console.log(mostFrequentValues);
 
     let graphStart = titleVerticalPadding + verticalPadding;
     let graphEnd = height - legendVerticalPadding - valueImageSize - verticalPadding;
@@ -188,11 +188,12 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             .attr("x2", lengthXScale(d.count) + imageSize)
             .attr("y1", y)
             .attr("y2", y)
-            .attr("stroke", "#bbbbbb")
+            .attr("stroke", greyColor)
             .attr("stroke-width", lineWidth)
             .attr("stroke-linecap", "round")
             .style("stroke-dasharray", dashArray[getMinMaxOfCountMap(d.attitude).max]);
         svg.append("image")
+            .attr("class", "valuesImage")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.max] + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 2)
             .attr("y", y - imageSize)
@@ -200,6 +201,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             .attr("height", imageSize)
             .attr("transform", "rotate(180 " + (valueImageSize + horizontalPadding * 2 + imageSize / 2) + " " + (y - imageSize / 2) + ")");
         svg.append("image")
+            .attr("class", "valuesImage")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.min] + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 2)
             .attr("y", y)
@@ -261,7 +263,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
     });
 
     let colorLegendAttr = {
-        x: padding,
+        x: 0,
         y: height - padding * 2.5,
         width: 100,
         circleRadius: 4,
@@ -275,4 +277,131 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
 
     drawIkigaiColorLegend(colorLegend, colorLegendAttr);
 
+    let overrepLegendAttr = {
+        x: colorLegendAttr.x + colorLegendAttr.width + 32,
+        y: height - padding * 3,
+        height: padding * 3,
+        width: width * 0.3,
+        imageSize: 44
+    };
+
+    let overrepLegend = svg.append("g")
+        .attr("class", "attitudeLegend")
+        .attr("width", overrepLegendAttr.width)
+        .attr("transform", "translate(" + overrepLegendAttr.x + "," + overrepLegendAttr.y + ")");
+
+    drawOverrepLegend(overrepLegend, overrepLegendAttr);
+
+    let overrepTextLegendAttr = {
+        x: overrepLegendAttr.x + overrepLegendAttr.width + 32,
+        y: height - padding * 2.8,
+        height: padding * 3,
+        width: width * 0.2,
+        imageSize: 44
+    };
+
+    let overrepTextLegend = svg.append("g")
+        .attr("class", "attitudeLegend")
+        .attr("width", overrepTextLegendAttr.width)
+        .attr("transform", "translate(" + overrepTextLegendAttr.x + "," + overrepTextLegendAttr.y + ")");
+
+    let overrepTextLegendText = [
+        { extraPadding: 0, lines: ["distance from line", "represents how far", "ikigai group is from the average"] },
+        { extraPadding: 16 * 3, lines: ["line represents", "value group's average"] },
+        { extraPadding: 16 * 5, lines: ["length of line represents", "# of participants with", "that value"] }
+    ];
+
+    overrepTextLegendText.forEach((paragraph, ip) => {
+        paragraph.lines.forEach((line, il) => {
+            drawText(overrepTextLegend, line, {
+                x: 0,
+                y: 16 * il + paragraph.extraPadding + 12 * ip,
+                textAnchor: "start"
+            });
+        })
+    });
+
+
+    let attitudeLegendAttr = {
+        x: overrepTextLegendAttr.x + overrepTextLegendAttr.width + 72,
+        y: height - padding * 2.5,
+        width: width - (overrepTextLegendAttr.x + overrepTextLegendAttr.width + 100),
+    };
+
+    let attitudeLegend = svg.append("g")
+        .attr("class", "attitudeLegend")
+        .attr("width", attitudeLegendAttr.width)
+        .attr("transform", "translate(" + attitudeLegendAttr.x + "," + attitudeLegendAttr.y + ")");
+
+    drawAttitudeLegend(attitudeLegend, "Most over-represented attitude", attitudeList);
+
+}
+
+function drawOverrepLegend(overrepLegend, overrepLegendAttr) {
+    drawText(overrepLegend, "over-represented groups", {
+        x: overrepLegendAttr.width / 2,
+        y: 0,
+        alignmentBaseline: "hanging"
+    });
+    drawText(overrepLegend, "under-represented groups", {
+        x: overrepLegendAttr.width / 2,
+        y: overrepLegendAttr.height - 8,
+        alignmentBaseline: "bottom"
+    });
+
+    overrepLegend.append("line")
+        .attr("x1", 0)
+        .attr("x2", overrepLegendAttr.width)
+        .attr("y1", overrepLegendAttr.height / 2)
+        .attr("y2", overrepLegendAttr.height / 2)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2)
+        .attr("stroke-linecap", "round");
+
+    overrepLegend.append("image")
+        .attr("xlink:href", "images/i10.svg")
+        .attr("x", 0)
+        .attr("y", overrepLegendAttr.height / 2 - overrepLegendAttr.imageSize)
+        .attr("width", overrepLegendAttr.imageSize)
+        .attr("height", overrepLegendAttr.imageSize)
+        .attr("filter", function() { return "url(#Grey)"; });
+    overrepLegend.append("image")
+        .attr("xlink:href", "images/i6.svg")
+        .attr("x", 0)
+        .attr("y", overrepLegendAttr.height / 2)
+        .attr("width", overrepLegendAttr.imageSize)
+        .attr("height", overrepLegendAttr.imageSize)
+        .attr("filter", function() { return "url(#Grey)"; });
+
+    drawText(overrepLegend, "activity /", {
+        x: overrepLegendAttr.imageSize,
+        y: overrepLegendAttr.height / 2 + 16,
+        textAnchor: "start"
+    });
+    drawText(overrepLegend, "occupation /", {
+        x: overrepLegendAttr.imageSize,
+        y: overrepLegendAttr.height / 2 + 16 * 2,
+        textAnchor: "start"
+    });
+    drawText(overrepLegend, "personality", {
+        x: overrepLegendAttr.imageSize,
+        y: overrepLegendAttr.height / 2 + 16 * 3,
+        textAnchor: "start"
+    });
+
+    overrepLegend.append("circle")
+        .attr("fill", textColor)
+        .attr("r", 4)
+        .attr("cx", overrepLegendAttr.width - 100)
+        .attr("cy", overrepLegendAttr.height * 0.25);
+    drawText(overrepLegend, "ikigai group", {
+        x: overrepLegendAttr.width,
+        y: overrepLegendAttr.height * 0.25,
+        textAnchor: "end"
+    });
+    overrepLegend.append("circle")
+        .attr("fill", textColor)
+        .attr("r", 4)
+        .attr("cx", overrepLegendAttr.width - 100)
+        .attr("cy", overrepLegendAttr.height * 0.75);
 }
