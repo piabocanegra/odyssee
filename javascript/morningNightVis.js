@@ -208,6 +208,16 @@ function drawMorningNightVis(svgClass, timeData) {
         textAnchor: "start"
     });
 
+    let baseAnnotationY = nightLegendAttr.y + iconSize + 28;
+    let annotation = ["Morning people are happier than", "night people"];
+    annotation.forEach((line, i) => {
+        drawText(morningNightGraph, line, {
+            x: nightLegendAttr.x,
+            y: baseAnnotationY + 16 * i,
+            textAnchor: "start"
+        });
+    });
+
     // Setup hover bar.
     let hoverCircleRadius = 5;
     let morningCircle = morningNightGraph.append("circle")

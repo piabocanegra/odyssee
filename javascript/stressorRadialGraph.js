@@ -225,6 +225,33 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
 
     // Add legend.
     drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivityMap);
+
+    // Add annotation.
+    let baseY = height * 0.14
+    drawText(svg, "The sources of our stress are somewhat related to", {
+        x: width / 2,
+        y: baseY
+    });
+    drawText(svg, "the activities we feel most negatively about", {
+        x: width / 2,
+        y: baseY + 16
+    });
+    svg.append("line")
+        .attr("x1", width / 2)
+        .attr("x2", width / 2)
+        .attr("y1", baseY + 16 * 2)
+        .attr("y2", baseY + 16 * 2 + 56)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 1.5)
+        .attr("stroke-linecap", "round");
+    svg.append("line")
+        .attr("x1", width * 0.37)
+        .attr("x2", width * 0.63)
+        .attr("y1", baseY + 16 * 2 + 56)
+        .attr("y2", baseY + 16 * 2 + 56)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 1.5)
+        .attr("stroke-linecap", "round");
 }
 
 function drawStressorRadialGraphBar(constants, type) {
@@ -265,7 +292,10 @@ function drawStressorRadialGraphBar(constants, type) {
         y: center.y + (outerRadius[type] + 12) * Math.sin(radialScale(category) + Math.PI / 4 + angleOffset)
     }
     termAttr.transform = "rotate(" + (angle) + " " + (termAttr.x) + " " + (termAttr.y) + ")"
-    svg.append("image")
+
+    let g = svg.append("g")
+
+    g.append("image")
         .attr("xlink:href", "images/" + type + "-term.svg")
         .attr("x", termAttr.x - termAttr.size / 2)
         .attr("y", termAttr.y - termAttr.size / 2)
@@ -280,7 +310,7 @@ function drawStressorRadialGraphBar(constants, type) {
     }
     let transform = "rotate(" + angle + " " + (imageAttr.x) + " " + (imageAttr.y) + ")";
 
-    svg.append("image")
+    g.append("image")
         .attr("xlink:href", "images/" + categoryActivityMap[category][type] + ".svg")
         .attr("x", imageAttr.x - iconSize / 2)
         .attr("y", imageAttr.y - iconSize / 2)
@@ -288,31 +318,8 @@ function drawStressorRadialGraphBar(constants, type) {
         .attr("height", iconSize)
         .style("filter", function() { return "url(#" + categoryMoodMap[category][type] + ")"; })
         .attr("transform", transform)
-        .on("mousemove", function() {
-            var tooltipText = "<b>STRESSOR:</b> " + type + "-term" + " - " + category +
-                "</br></br><b>ACTIVITY: </b>" + activityShortToLong[categoryActivityMap[category][type]].toLowerCase() +
-                "</br></br><b>MOST FREQUENT MOOD: </b>" + categoryMoodMap[category][type].toLowerCase() +
-                "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[categoryReasonMap[category][type]].toLowerCase();
-            constants.tooltip.html(tooltipText)
-                .style("font-family", "Courier new")
-                .style("font-size", 12)
-                .style("text-align", "left")
-                .style("color", textColor)
-                .style("visibility", "visible")
-                .style("max-width", 250)
-                .style("top", event.pageY + 20)
-                .style("left", function() {
-                    if (d3.event.clientX < 750) {
-                        return event.pageX + 20 + "px";
-                    } else {
-                        return event.pageX - document.getElementById(constants.tooltipId).clientWidth - 20 + "px";
-                    }
-                })
-        }).on("mouseout", function(d) {
-            constants.tooltip.style("visibility", "hidden");
-        });
 
-    svg.append("line")
+    g.append("line")
         .attr("x1", lineAttr.x1)
         .attr("x2", lineAttr.x2)
         .attr("y1", lineAttr.y1)
@@ -321,6 +328,30 @@ function drawStressorRadialGraphBar(constants, type) {
         .attr("stroke-width", 2.5)
         .style("stroke-linecap", "round")
         .style("stroke-dasharray", dashArray[categoryReasonMap[category][type]]);
+
+    g.on("mousemove", function() {
+        var tooltipText = "<b>STRESSOR:</b> " + type + "-term" + " - " + category +
+            "</br></br><b>ACTIVITY: </b>" + activityShortToLong[categoryActivityMap[category][type]].toLowerCase() +
+            "</br></br><b>MOST FREQUENT MOOD: </b>" + categoryMoodMap[category][type].toLowerCase() +
+            "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[categoryReasonMap[category][type]].toLowerCase();
+        constants.tooltip.html(tooltipText)
+            .style("font-family", "Courier new")
+            .style("font-size", 12)
+            .style("text-align", "left")
+            .style("color", textColor)
+            .style("visibility", "visible")
+            .style("max-width", 250)
+            .style("top", event.pageY + 20)
+            .style("left", function() {
+                if (d3.event.clientX < 750) {
+                    return event.pageX + 20 + "px";
+                } else {
+                    return event.pageX - document.getElementById(constants.tooltipId).clientWidth - 20 + "px";
+                }
+            })
+    }).on("mouseout", function(d) {
+        constants.tooltip.style("visibility", "hidden");
+    });
 }
 
 function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivityMap) {
