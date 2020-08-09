@@ -279,8 +279,8 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             y: y - imageSize,
             height: imageSize * 2,
             width: imageSize,
-            text: "</br></br><b>OVER-REPRESENTED OCCUPATION: </b>" + occupationLongtoShort[underOverRepOccupation.max].toLowerCase() +
-                "</br></br><b>UNDER-REPRESENTED OCCUPATION: </b>" + occupationLongtoShort[underOverRepOccupation.min].toLowerCase()
+            text: "</br></br><b>OVER-REPRESENTED OCCUPATION: </b>" + underOverRepOccupation.max.toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED OCCUPATION: </b>" + underOverRepOccupation.min.toLowerCase()
         }, {
             x: valueImageSize + horizontalPadding * 3 + imageSize,
             y: y - imageSize,
@@ -293,8 +293,8 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             y: y - imageSize,
             height: imageSize * 2,
             width: ikigaiXScale(ikigaiGroups[ikigaiGroups.length - 1]) - ikigaiXScale(ikigaiGroups[0]) + ikigaiRadius * 4,
-            text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + underOverRepIkigai.max.toLowerCase() +
-                "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + underOverRepIkigai.min.toLowerCase()
+            text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.max].toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.min].toLowerCase()
         }, {
             x: lengthXScale(d.count) + imageSize - personalityImageSize,
             y: y - personalityImageSize - 12,
