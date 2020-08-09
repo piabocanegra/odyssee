@@ -170,6 +170,10 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         .domain(ikigaiGroups)
         .range([staticWidth, staticWidth + ikigaiWidth]);
 
+    // Add tooltip.
+    let tooltipId = 'valuesVisTooltipId';
+    let tooltip = addTooltip(tooltipId);
+
     mostFrequentValues.forEach((d, i) => {
         let y = valueYScale(i);
         let underOverRepActivities = getMinMaxOfCountMap(d.activity);
@@ -177,13 +181,15 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             underOverRepActivities[key] = underOverRepActivities[key].substring(0, 2);
         });
         let underOverRepOccupation = getMinMaxOfCountMap(d.occupation);
-        svg.append("image")
+        let g = svg.append("g")
+
+        g.append("image")
             .attr("xlink:href", "images/" + valueLongtoShort[d.value] + ".svg")
             .attr("x", 0)
             .attr("y", y - valueImageSize / 2)
             .attr("width", valueImageSize)
             .attr("height", valueImageSize);
-        svg.append("line")
+        g.append("line")
             .attr("x1", valueImageSize + horizontalPadding)
             .attr("x2", lengthXScale(d.count) + imageSize)
             .attr("y1", y)
@@ -192,7 +198,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             .attr("stroke-width", lineWidth)
             .attr("stroke-linecap", "round")
             .style("stroke-dasharray", dashArray[getMinMaxOfCountMap(d.attitude).max]);
-        svg.append("image")
+        g.append("image")
             .attr("class", "valuesImage")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.max] + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 2)
@@ -200,21 +206,21 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
             .attr("width", imageSize)
             .attr("height", imageSize)
             .attr("transform", "rotate(180 " + (valueImageSize + horizontalPadding * 2 + imageSize / 2) + " " + (y - imageSize / 2) + ")");
-        svg.append("image")
+        g.append("image")
             .attr("class", "valuesImage")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.min] + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 2)
             .attr("y", y)
             .attr("width", imageSize)
             .attr("height", imageSize);
-        svg.append("image")
+        g.append("image")
             .attr("xlink:href", "images/" + underOverRepActivities.max + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 3 + imageSize)
             .attr("y", y - imageSize)
             .attr("width", imageSize)
             .attr("height", imageSize)
             .attr("filter", function() { return "url(#Grey)"; });
-        svg.append("image")
+        g.append("image")
             .attr("xlink:href", "images/" + underOverRepActivities.min + ".svg")
             .attr("x", valueImageSize + horizontalPadding * 3 + imageSize)
             .attr("y", y)
@@ -230,13 +236,13 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         let domainRange = Math.max(maxIkigaiCount - averageIkigai, averageIkigai - minIkigaiCount);
         let ikigaiYScale = d3.scaleLinear()
             .domain([averageIkigai - domainRange, averageIkigai + domainRange])
-            .range([y - graphHeight / 2 + ikigaiRadius, y + graphHeight / 2 - ikigaiRadius]);
+            .range([y + graphHeight / 2 - ikigaiRadius, y - graphHeight / 2 + ikigaiRadius]);
 
         ikigaiGroups.forEach(i => {
             if (d.ikigai[i] == undefined) {
                 // Handle no data.
                 d.ikigai[i] = averageIkigai;
-                svg.append("circle")
+                g.append("circle")
                     .attr("cx", ikigaiXScale(i))
                     .attr("cy", ikigaiYScale(d.ikigai[i]))
                     .attr("r", ikigaiRadius - lineWidth / 2)
@@ -244,7 +250,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
                     .attr("stroke", ikigaiColorHexArray[i])
                     .attr("stroke-width", lineWidth);
             } else {
-                svg.append("circle")
+                g.append("circle")
                     .attr("cx", ikigaiXScale(i))
                     .attr("cy", ikigaiYScale(d.ikigai[i]))
                     .attr("r", ikigaiRadius)
@@ -254,12 +260,71 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         // console.log(d.value + ": " + getMinMaxOfCountMap(d.personality).max)
         let overrepPersonality = getMinMaxOfCountMap(d.personality).max;
         let personalityImageSize = (overrepPersonality == "I" || overrepPersonality == "E") ? imageSize / 3 : imageSize;
-        svg.append("image")
+        g.append("image")
             .attr("xlink:href", "images/" + personalityShorttoLong[overrepPersonality] + ".svg")
             .attr("x", lengthXScale(d.count) + imageSize - personalityImageSize)
             .attr("y", y - personalityImageSize - 12)
             .attr("width", personalityImageSize)
             .attr("height", personalityImageSize);
+
+        let hoverTargets = [{
+            x: 0,
+            y: y - valueImageSize / 2,
+            height: valueImageSize,
+            width: valueImageSize,
+            text: "</br></br><b>OVER-REPRESENTED ATTITUDE: </b>" + attitudeLongtoShort[getMinMaxOfCountMap(d.attitude).max].toLowerCase()
+
+        }, {
+            x: valueImageSize + horizontalPadding * 2,
+            y: y - imageSize,
+            height: imageSize * 2,
+            width: imageSize,
+            text: "</br></br><b>OVER-REPRESENTED OCCUPATION: </b>" + occupationLongtoShort[underOverRepOccupation.max].toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED OCCUPATION: </b>" + occupationLongtoShort[underOverRepOccupation.min].toLowerCase()
+        }, {
+            x: valueImageSize + horizontalPadding * 3 + imageSize,
+            y: y - imageSize,
+            height: imageSize * 2,
+            width: imageSize,
+            text: "</br></br><b>OVER-REPRESENTED ACTIVITY: </b>" + activityShortToLong[underOverRepActivities.max].toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED ACTIVITY: </b>" + activityShortToLong[underOverRepActivities.min].toLowerCase()
+        }, {
+            x: ikigaiXScale(ikigaiGroups[0]) - ikigaiRadius * 2,
+            y: y - imageSize,
+            height: imageSize * 2,
+            width: ikigaiXScale(ikigaiGroups[ikigaiGroups.length - 1]) - ikigaiXScale(ikigaiGroups[0]) + ikigaiRadius * 4,
+            text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + underOverRepIkigai.max.toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + underOverRepIkigai.min.toLowerCase()
+        }, {
+            x: lengthXScale(d.count) + imageSize - personalityImageSize,
+            y: y - personalityImageSize - 12,
+            height: personalityImageSize,
+            width: personalityImageSize,
+            text: "</br></br><b>OVER-REPRESENTED PERSONALITY: </b>" + personalityShorttoLong[overrepPersonality].toLowerCase()
+        }]
+        hoverTargets.forEach(targetRect => {
+            g.append("rect")
+                .attr("x", targetRect.x)
+                .attr("y", targetRect.y)
+                .attr("height", targetRect.height)
+                .attr("width", targetRect.width)
+                .attr("opacity", 0)
+                .on("mousemove", function() {
+                    let tooltipText = "<b>VALUE:</b> " + d.value.toLowerCase() + "</br></br><b># OF PARTICIPANTS: </b>" + d.count + targetRect.text;
+                    tooltip.html(tooltipText)
+                        .style("visibility", "visible")
+                        .style("top", event.pageY + 20)
+                        .style("left", function() {
+                            if (d3.event.clientX < 750) {
+                                return event.pageX + 20 + "px";
+                            } else {
+                                return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
+                            }
+                        })
+                }).on("mouseout", function() {
+                    tooltip.style("visibility", "hidden");
+                });
+        });
     });
 
     let colorLegendAttr = {
