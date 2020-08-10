@@ -109,6 +109,19 @@ function getDataByPType(everyoneData, typesData, pType, activity, f, moodList = 
         groupActivityData = f(everyoneData, activity);
     }
 
+    if (moodList.length != 0) {
+        return [{
+            "percent": filteredActivityData.length/getPersonDataByActivities(filteredData, activity).length, 
+            "fMood": getFrequencyByKey("Feeling", groupActivityData).keys().next().value, 
+            "fAttitude": getFrequencyByKey("Reason", groupActivityData).keys().next().value
+        }, 
+        {
+            "percent": groupActivityData.length/getPersonDataByActivities(everyoneData, activity).length,
+            "fMood": getFrequencyByKey("Feeling", groupActivityData).keys().next().value, 
+            "fAttitude": getFrequencyByKey("Reason", groupActivityData).keys().next().value
+        }];
+    }
+
     return [{
         "percent": filteredActivityData.length/filteredData.length, 
         "fMood": getFrequencyByKey("Feeling", groupActivityData).keys().next().value, 

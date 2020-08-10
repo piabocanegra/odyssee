@@ -60,8 +60,8 @@ function drawFeelerThinkerVis(svgClass, everyoneData, personalityData, typesData
     displayerPersonalityIcon(svg, width * 0.15, 450, "ESFJ");
     drawMultipleYIcons(svg, width * 0.15, 450, communicationList);
     setUpMultipleLinesGraph(svg, width * 0.15, 450, "ESFJ", esfjDataBad, esfjDataAwful, tooltip, " % of records that are “bad” or “awful” for any form of communication: ", "% of records");
-    // console.log(esfjDataBad);
-    // console.log(esfjDataAwful);
+    console.log(esfjDataBad);
+    console.log(esfjDataAwful);
 
     let enfjData = getDataByPTypePData(everyoneData, typesData, personalityData, "ENFJ", "Do you prefer breadth or depth in life?", "Depth");
     displayPersonalityTitle(svg, width * 0.55, 450, "ENFJ: Tolerant & Reliable");
@@ -87,8 +87,8 @@ function drawObserverVis(svgClass, everyoneData, personalityData, typesData) {
     setUpSingleLineGraph(svg, width * 0.3, 100, "ISTJ", istjData, tooltip, "% of participants who work at a company: ", "% of participants");
 
 
-    let isfjDataGood = getDataByPType(everyoneData, typesData, "ISFJ", isfjActList, getPersonDataByActivitiesAndMood, ["Good"])
-    let isfjDataOk = getDataByPType(everyoneData, typesData, "ISFJ", isfjActList, getPersonDataByActivitiesAndMood, ["Ok"])
+    let isfjDataGood = getDataByPType(everyoneData, typesData, "ISFJ", isfjActList, getPersonDataByActivitiesAndMood, ["Good"]);
+    let isfjDataOk = getDataByPType(everyoneData, typesData, "ISFJ", isfjActList, getPersonDataByActivitiesAndMood, ["Ok"]);
     displayPersonalityTitle(svg, width * 0.7, 100, "ISFJ: Practical & Altruistic");
     displayerPersonalityIcon(svg, width * 0.7, 100, "ISFJ");
     drawSingleYIcon(svg, width * 0.68, 100, isfjActList[0]);
@@ -101,7 +101,7 @@ function drawObserverVis(svgClass, everyoneData, personalityData, typesData) {
         .attr("x", width * 0.3 + mWidth / 2 - (iconDim / 2))
         .attr("y", 450 + 10)
         .attr("width", iconDim)
-        .attr("height", iconDim);
+        .attr("height", iconDim);	
 
     let esfpData = getDataByPTypeValue(everyoneData, typesData, "ESFP", "Adhering to my culture or religion");
     displayPersonalityTitle(svg, width * 0.7, 450, "ESFP: Bold");
@@ -310,7 +310,7 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
         .style("font-size", 10);
 
     let yScale = d3.scaleLinear()
-        .domain([0, Math.max(0.02, data1[0].percent)])
+        .domain([0, d3.max(data1.concat(data2), function (d) { return d.percent;})])
         .range([y + mHeight - 10, y + 30]);
 
     // draw data1 lines 
@@ -377,7 +377,7 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
     	.on("mousemove", function() { 
     		let titleText = "GROUP";
     		let text = "<b>" + titleText + "</b></br></br>"
-    			+ tooltipText + (data1[1].percent + data2[1].percent).toFixed(2) + "%";
+    			+ tooltipText + ((data1[1].percent + data2[1].percent)*100).toFixed(2) + "%";
     		setTooltipText(tooltip, text, 20, 270);
     	}).on("mouseout", function(d) {
     		tooltip.style("visibility", "hidden");
@@ -399,7 +399,7 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
     	.on("mousemove", function() { 
     		let titleText = personality;
     		let text = "<b>" + titleText + "</b></br></br>"
-    			+ tooltipText + (data1[0].percent + data2[0].percent).toFixed(2) + "%";
+    			+ tooltipText + ((data1[0].percent + data2[0].percent)*100).toFixed(2) + "%";
     		setTooltipText(tooltip, text, 20, 270);
     	}).on("mouseout", function(d) {
     		tooltip.style("visibility", "hidden");
