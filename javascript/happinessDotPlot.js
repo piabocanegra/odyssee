@@ -5,9 +5,16 @@
  *   returns void, draws data vis for happiness dot plot
  */
 function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
-    let svg = d3.select(svgClass);
-    let height = svg.attr('height');
-    let width = svg.attr('width');
+    let baseSvg = d3.select(svgClass);
+    let height = baseSvg.attr("height");
+    let width = baseSvg.attr("width");
+    let svgX = width / 2 - (width - 400) / 2;
+    let svg = baseSvg.append("svg")
+        .attr("height", height)
+        .attr("width", width - 400)
+        .attr("x", svgX);
+    height = svg.attr("height");
+    width = svg.attr("width");
 
     // console.log(personalityData);
 
@@ -79,12 +86,12 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
     for (let i = 1; i <= 5; i++) {
         drawText(svg, i, { x: experiencedScale(i), y: rememberedScale(0) + graphPadding });
     }
-    drawText(svg, '"I am generally happy with my life."', {
+    drawText(svg, "I am generally happy with my life.", {
         x: experiencedScale(0) - graphPadding - graphLabelInterTextPadding,
         y: rememberedScale(2.5),
         transform: 'rotate(270 ' + (experiencedScale(0) - graphPadding - graphLabelInterTextPadding) + ' ' + rememberedScale(2.5) + ')'
     });
-    drawText(svg, '"How are you feeling?"', {
+    drawText(svg, "How are you feeling?", {
         x: experiencedScale(2.5),
         y: rememberedScale(0) + graphPadding + graphLabelInterTextPadding
     });
@@ -249,4 +256,14 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
 
     drawMoodLegend(moodLegend, "Most frequent mood", moodList);
     drawStdDevAvgLegend(svg);
+
+    let baseAnnotationY = rememberedScale(5);
+    let annotation = ["Remembered happiness", "varies more than", "experienced happiness"];
+    annotation.forEach((line, i) => {
+        drawText(baseSvg, line, {
+            x: svgX + width * 0.9,
+            y: baseAnnotationY + 16 * i,
+            textAnchor: "start"
+        });
+    });
 }
