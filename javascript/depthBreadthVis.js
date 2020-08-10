@@ -49,6 +49,33 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
 	// draw ground
     drawImperfectHorizontalLine(svg, padding*2, width-padding*2, rootScale(0));
 
+    // add text labels
+    svg.append("text")
+        .attr("x", padding*2-15)
+        .attr("y", rootScale(0))
+        .text("breadth")
+        .style("text-anchor", "end")
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("font-weight", "bold");
+    svg.append("text")
+        .attr("x", width-padding*2+15)
+        .attr("y", rootScale(0))
+        .text("depth")
+        .style("text-anchor", "start")
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("font-weight", "bold");
+    svg.append("text")
+        .attr("x", width/2)
+        .attr("y", rootScale(0)-15)
+        .text("\"do you prefer breadth or depth in life?\"")
+        .style("text-anchor", "middle")
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("font-weight", "bold");
+
+
     // draw plants
     svg.append("image")
     	.attr('xlink:href', 'images/depth_plant.svg')
@@ -193,7 +220,43 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     drawDiamond(svg, 4, 0.668);
     drawDiamond(svg, 4, 0.682);
 
-    // plant legend
+    // add takeaway
+    svg.append("text")
+        .attr("x", width-padding*5)
+        .attr("y", height*0.5)
+        .text("Takeaway:")
+        .style("text-anchor", "start")
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("font-weight", "bold");
+    svg.append("text")
+        .attr("x", width-padding*5)
+        .attr("y", height*0.5+20)
+        .text("Self-proclaimed breadth and depth")
+        .style("text-anchor", "start")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width-padding*5)
+        .attr("y", height*0.5+35)
+        .text("people don't differ in the")
+        .style("text-anchor", "start")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width-padding*5)
+        .attr("y", height*0.5+50)
+        .text("breadth and depth of activities")
+        .style("text-anchor", "start")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", width-padding*5)
+        .attr("y", height*0.5+65)
+        .text("they do")
+        .style("text-anchor", "start")
+        .style("font-family", "Courier new")
+        .style("font-size", 12);
     
 
     // most frequent mood legend

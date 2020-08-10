@@ -3,7 +3,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     let balanceData = groupMapByValue(createMapFromPersonality(personalityData, "Balanced", balanceLongToShort));
 
     let balanceKeys = ["yes happy", "yes unhappy", "no happy", "no unhappy"];
-
+    let bWidth = 1200;
     let dataForGraph = [];
     let avgStdDataForGraph = [];
     for (var key of balanceKeys) {
@@ -70,7 +70,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     }
     let xScale = d3.scaleBand()
         .domain(balanceKeys)
-        .range([padding * 2.5, width]);
+        .range([padding * 5, bWidth-padding * 2.5]);
 
     let yScale = d3.scaleLinear()
         .domain([0, 1])
@@ -208,7 +208,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
     //add x axis label
     svg.append("text")
-        .attr("x", width * 0.48)
+        .attr("x", bWidth * 0.48)
         .attr("y", yScale(0) + iconWidth + 50)
         .text("Do you think your life is balanced?")
         .style("font-family", "Courier new")
@@ -218,7 +218,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
     //add y axis text
     svg.append("text")
-        .attr("x", padding * 2)
+        .attr("x", padding * 4)
         .attr("y", yScale(0.85))
         .text("% of time spent")
         .style("font-family", "Courier new")
@@ -228,7 +228,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     let yAxis = d3.select(svgClass)
         .append("g")
         .attr("class", "y_axis")
-        .attr("transform", "translate(" + (padding * 1.5) + ", 0)")
+        .attr("transform", "translate(" + (padding * 3.5) + ", 0)")
         .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d, i, n) {
             return n[i + 1] ? d * 100 : "";
         }));
@@ -238,14 +238,76 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .style("fill", textColor)
         .style("font-size", 11);
 
+    // add takeaway
+    svg.append("text")
+        .attr("x", bWidth * 0.785)
+        .attr("y", height*0.15+15)
+        .text("There are two types of self")
+        .style("font-family", "Courier new")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", bWidth * 0.785)
+        .attr("y", height*0.15+30)
+        .text("-proclaimed unbalanced and unhappy")
+        .style("font-family", "Courier new")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", bWidth * 0.785)
+        .attr("y", height*0.15+45)
+        .text("people: passion seekers (people who")
+        .style("font-family", "Courier new")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", bWidth * 0.785)
+        .attr("y", height*0.15+60)
+        .text("do what they want) and obligators")
+        .style("font-family", "Courier new")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start")
+        .style("font-size", 12);
+    svg.append("text")
+        .attr("x", bWidth * 0.785)
+        .attr("y", height*0.15+75)
+        .text("(people who do what they have to do)")
+        .style("font-family", "Courier new")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start")
+        .style("font-size", 12);
+    svg.append("line")
+        .attr("x1", bWidth*0.76)
+        .attr("x2", bWidth * 0.77)
+        .attr("y1", yScale(0.5))
+        .attr("y2", yScale(0.5))
+        .style("stroke", "#cdcdcd")
+        .style("stroke-width", 2.5);
+    svg.append("line")
+        .attr("x1", bWidth*0.76)
+        .attr("x2", bWidth * 0.77)
+        .attr("y1", yScale(0.81))
+        .attr("y2", yScale(0.81))
+        .style("stroke", "#cdcdcd")
+        .style("stroke-width", 2.5);
+    svg.append("line")
+        .attr("x1", bWidth*0.77)
+        .attr("x2", bWidth * 0.77)
+        .attr("y1", yScale(0.5))
+        .attr("y2", yScale(0.81))
+        .style("stroke", "#cdcdcd")
+        .style("stroke-width", 2.5);
 
     // add legends
     drawStdDevAvgLegend(svg);
 
     let attitudeLegendAttr = {
-        x: width * 0.55,
+        x: bWidth * 0.55,
         y: height - padding * 2.5,
-        width: width * 0.1,
+        width: bWidth * 0.1,
     };
 
     let attitudeLegend = svg.append("g")
