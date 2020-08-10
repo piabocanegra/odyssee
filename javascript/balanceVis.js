@@ -289,15 +289,15 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     svg.append("line")
         .attr("x1", bWidth*0.76)
         .attr("x2", bWidth * 0.77)
-        .attr("y1", yScale(0.81))
-        .attr("y2", yScale(0.81))
+        .attr("y1", yScale(0.79))
+        .attr("y2", yScale(0.79))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
     svg.append("line")
         .attr("x1", bWidth*0.77)
         .attr("x2", bWidth * 0.77)
         .attr("y1", yScale(0.5))
-        .attr("y2", yScale(0.81))
+        .attr("y2", yScale(0.79))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
 
