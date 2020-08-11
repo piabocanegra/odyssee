@@ -3,7 +3,7 @@
  *   timeData: time data for records
  *   returns void, draws data vis for occupation.
  */
-function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
+function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
@@ -55,6 +55,14 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
         exploring: { title: "Exploring", description: "Exploring and enjoying life" },
         other: { title: "Other", description: "Other" }
     };
+
+    let myData = null;
+    if (email != null) {
+        myData = {
+            ikigai: ikigaiData.find(d => { return d[keys.ikigai.email] == email })[keys.ikigai.category],
+            occupation: typesData.find(d => { return d[keys.types.email] == email })[keys.types.occupation]
+        }
+    }
 
     // Determine average number of records for each occupation.
     Object.keys(occupations).forEach(o => {
@@ -195,6 +203,10 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData) {
                 "</br></br><b>OCCUPATION: </b>" + occupations[o].description.toLowerCase() +
                 "</br></br><b>NUMBER OF USERS: </b>" + numUsers +
                 "</br></br><b>OVER-REPRESENTED ACTIVITY: </b>" + overRepresentedActivity.toLowerCase();
+
+            if (myData != null && myData.ikigai == ikigai.category && myData.occupation == occupations[o].description) {
+                tooltipText += "</br></br><b>YOU ARE IN THIS IKIGAI/OCCUPATION GROUP</b>"
+            }
 
             g.on("mousemove", function() {
                 // Show tooltip.
