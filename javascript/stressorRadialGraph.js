@@ -36,7 +36,7 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
  *   everyoneData: record data for everyone
  *   personalityData: personality data for everyone
  */
-function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
+function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
@@ -64,6 +64,9 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
     let categoryReasonMap = {};
     let categoryMoodMap = {};
 
+    // myData defaults to null, will update to hold longTerm and shortTerm stressors if they exist.
+    let myData = null;
+
     // Setup categoryActivityCountMap.
     // Structure - { category: { short: { activity: negative mood count }, long: { ... }} }
     categories.forEach(category => {
@@ -77,6 +80,15 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         let shortTermEmailList = getEmailListForCategory(personalityData, category, keys.personality.shortTermStressor);
         let longTermRecords = everyoneData.filter(record => { return longTermEmailList.includes(record[keys.everyone.email]) });
         let shortTermRecords = everyoneData.filter(record => { return shortTermEmailList.includes(record[keys.everyone.email]) });
+
+        if (email != null && longTermEmailList.includes(email)) {
+            myData = myData == null ? {} : myData
+            myData.longTerm = category
+        }
+        if (email != null && shortTermEmailList.includes(email)) {
+            myData = myData == null ? {} : myData
+            myData.shortTerm = category
+        }
 
         getCountMapNegativePercentageFromRecords(longTermRecords, "long", activityCountMap, reasonCountMap, moodCountMap);
         getCountMapNegativePercentageFromRecords(shortTermRecords, "short", activityCountMap, reasonCountMap, moodCountMap);
@@ -219,8 +231,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         }
 
         // Add icons and radial lines.
-        drawStressorRadialGraphBar(constants, "long");
-        drawStressorRadialGraphBar(constants, "short");
+        drawStressorRadialGraphBar(constants, "long", myData);
+        drawStressorRadialGraphBar(constants, "short", myData);
     });
 
     // Add legend.
@@ -254,7 +266,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData) {
         .attr("stroke-linecap", "round");
 }
 
-function drawStressorRadialGraphBar(constants, type) {
+function drawStressorRadialGraphBar(constants, type, myData) {
     // Unwrap constants.
     let svg = constants.svg;
     let center = constants.center;
@@ -334,6 +346,12 @@ function drawStressorRadialGraphBar(constants, type) {
             "</br></br><b>ACTIVITY: </b>" + activityShortToLong[categoryActivityMap[category][type]].toLowerCase() +
             "</br></br><b>MOST FREQUENT MOOD: </b>" + categoryMoodMap[category][type].toLowerCase() +
             "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[categoryReasonMap[category][type]].toLowerCase();
+        if (myData != null && category == myData.shortTerm && type == "short") {
+            tooltipText += "</br></br><b>YOU ARE IN THIS SHORT-TERM STRESSOR GROUP</b>";
+        }
+        if (myData != null && category == myData.longTerm && type == "long") {
+            tooltipText += "</br></br><b>YOU ARE IN THIS LONG-TERM STRESSOR GROUP</b>";
+        }
         constants.tooltip.html(tooltipText)
             .style("font-family", "Courier new")
             .style("font-size", 12)
