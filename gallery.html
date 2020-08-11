@@ -265,7 +265,7 @@
             drawIkigaiVis(".ikigaiVis", ikigaiData, email);
 
             let timeData = await d3.csv("time.csv");
-            drawMorningNightVis(".morningNightVis", timeData);
+            drawMorningNightVis(".morningNightVis", timeData, email);
             drawThirtyDaysVis(".thirtyDays", timeData);
             drawThirtyDaysVis(".thirtyDaysInd", timeData, email);
 

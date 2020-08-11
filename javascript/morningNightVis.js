@@ -3,7 +3,7 @@
  *   timeData: time data for records
  *   returns void, draws data vis for Morning vs. Night people
  */
-function drawMorningNightVis(svgClass, timeData) {
+function drawMorningNightVis(svgClass, timeData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr('height');
     let width = svg.attr('width');
@@ -54,7 +54,14 @@ function drawMorningNightVis(svgClass, timeData) {
         .domain([graphAttr.horizontalPadding, graphAttr.width - 3.5 * graphAttr.horizontalPadding])
         .range([0, 24]);
 
-    // console.log(timeData);
+    console.log(timeData);
+
+    let myData = null;
+    if (email != null) {
+        myData = {
+            morningNight: timeData.find(d => { return d[keys.time.email] == email })[keys.time.morningNight]
+        }
+    }
 
     // Draw bottom time labels.
     let iconSize = 32;
@@ -274,6 +281,10 @@ function drawMorningNightVis(svgClass, timeData) {
                 Math.round(timeMoodAverageMap[hourFromFive].morning * 100) / 100 + " (" + morningMoodAverage + ")" +
                 "</br></br><b>MOOD AVERAGE (NIGHT): </b>" +
                 Math.round(timeMoodAverageMap[hourFromFive].night * 100) / 100 + " (" + nightMoodAverage + ")";
+            if (myData != null) {
+                tooltipText += "</br></br><b>YOU ARE A SELF-IDENTIFIED " +
+                    (myData.morningNight == "Evening" ? "NIGHT" : "MORNING") + " PERSON</b>"
+            }
             // Adjust and show hover bar.
             let morningY = moodYScale(morningAverage);
             let nightY = moodYScale(nightAverage);
