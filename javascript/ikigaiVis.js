@@ -4,7 +4,7 @@
  *   everyoneData: records for everyone
  *   returns void, draws data vis for happiness dot plot
  */
-function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
+function drawIkigaiVis(svgClass, ikigaiData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr('height');
     let width = svg.attr('width');
@@ -43,6 +43,13 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
         keys.ikigai.passion,
         keys.ikigai.contribution
     ];
+
+    let myData = null
+    if (email != null) {
+        myData = {
+            ikigai: ikigaiData.find(d => { return d[keys.ikigai.email] == email })[keys.ikigai.category]
+        }
+    }
 
     // Setup ikigaiMap
     let ikigaiMap = {}
@@ -209,6 +216,10 @@ function drawIkigaiVis(svgClass, everyoneData, ikigaiData) {
             let tooltipText = "<b>IKIGAI GROUP:</b> " + ikigaiKeyToLabel[category].toLowerCase() +
                 "</br></br><b>" + type.toUpperCase() + " SCORE: </b>" + Math.round(categoryAverage * 100) / 100 +
                 "</br></br><b>GROUP SCORE: </b>" + Math.round(typeAverage * 100) / 100;
+
+            if (myData != null && myData.ikigai == category) {
+                tooltipText += "</br></br><b>YOU ARE A " + ikigaiKeyToLabel[category].toUpperCase() + "</b>"
+            }
 
             // Add tooltip target.
             ikigaiGraph.append('rect')

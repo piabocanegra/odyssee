@@ -39,10 +39,8 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="balance"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1400" class="happinessDotPlot"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1400" class="happinessDotPlot2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
@@ -257,16 +255,14 @@
 
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData, email);
-            drawStressorRadialGraph(".stressorRadial2", everyoneData, personalityData);
 
             drawBalanceGraph(".balance", everyoneData, personalityData);
 
             drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData, email);
-            drawHappinessDotPlot(".happinessDotPlot2", everyoneData, personalityData);
             drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData);
 
             var ikigaiData = await d3.csv("ikigai.csv");
-            drawIkigaiVis(".ikigaiVis", everyoneData, ikigaiData);
+            drawIkigaiVis(".ikigaiVis", ikigaiData, email);
 
             let timeData = await d3.csv("time.csv");
             drawMorningNightVis(".morningNightVis", timeData);
