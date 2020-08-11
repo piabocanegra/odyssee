@@ -258,7 +258,7 @@
 
             drawBalanceGraph(".balance", everyoneData, personalityData);
 
-            drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData);
+            drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData, email);
             drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData);
 
             var ikigaiData = await d3.csv("ikigai.csv");

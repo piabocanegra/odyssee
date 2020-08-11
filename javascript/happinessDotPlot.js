@@ -1,10 +1,10 @@
 /**
- *   svgClass: tag for svg class, must include the '.'
+ *   svgClass: tag for svg class, must include the "."
  *   personalityData: list of personality data for everyone
  *   everyoneData: records for everyone
  *   returns void, draws data vis for happiness dot plot
  */
-function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
+function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = null) {
     let baseSvg = d3.select(svgClass);
     let height = baseSvg.attr("height");
     let width = baseSvg.attr("width");
@@ -26,6 +26,8 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
     for (let i = 1; i <= 5; i++) {
         happinessData[i] = []
     }
+
+    let myData = null;
     personalityData.forEach(person => {
         let recordsForUser = getPersonData(everyoneData, person[keys.personality.email]); // average of moods is y position
         let rememberedHappiness = Number(person[keys.personality.happiness]); // x position
@@ -38,6 +40,12 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         // Remembered can be NaN if user did not record any data. Also check that experienced is not NaN to be safe.
         if (!isNaN(rememberedHappiness) && !isNaN(experiencedHappiness)) {
             happinessData[rememberedHappiness].push(experiencedHappiness);
+            if (email == person[keys.personality.email]) {
+                myData = {
+                    experienced: experiencedHappiness,
+                    remembered: rememberedHappiness,
+                }
+            }
         }
     });
 
@@ -89,7 +97,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
     drawText(svg, "I am generally happy with my life.", {
         x: experiencedScale(0) - graphPadding - graphLabelInterTextPadding,
         y: rememberedScale(2.5),
-        transform: 'rotate(270 ' + (experiencedScale(0) - graphPadding - graphLabelInterTextPadding) + ' ' + rememberedScale(2.5) + ')'
+        transform: "rotate(270 " + (experiencedScale(0) - graphPadding - graphLabelInterTextPadding) + " " + rememberedScale(2.5) + ")"
     });
     drawText(svg, "How are you feeling?", {
         x: experiencedScale(2.5),
@@ -118,37 +126,37 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
         }
     }
 
-    svg.append('line')
-        .attr('x1', plotLineAttr.experienced.x1)
-        .attr('x2', plotLineAttr.experienced.x2)
-        .attr('y1', plotLineAttr.experienced.y)
-        .attr('y2', plotLineAttr.experienced.y)
-        .attr('stroke', greyColor)
-        .attr('stroke-width', 2);
+    svg.append("line")
+        .attr("x1", plotLineAttr.experienced.x1)
+        .attr("x2", plotLineAttr.experienced.x2)
+        .attr("y1", plotLineAttr.experienced.y)
+        .attr("y2", plotLineAttr.experienced.y)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2);
 
-    drawTab(svg, plotLineAttr.experienced.x1, plotLineAttr.experienced.y, 'vertical');
-    drawTab(svg, plotLineAttr.experienced.x2, plotLineAttr.experienced.y, 'vertical');
+    drawTab(svg, plotLineAttr.experienced.x1, plotLineAttr.experienced.y, "vertical");
+    drawTab(svg, plotLineAttr.experienced.x2, plotLineAttr.experienced.y, "vertical");
 
-    drawText(svg, 'experienced happiness', {
+    drawText(svg, "experienced happiness", {
         x: experiencedScale(groupAverage.experienced),
         y: plotLineAttr.experienced.y + plotLineTextOffset
     });
 
-    svg.append('line')
-        .attr('x1', plotLineAttr.remembered.x)
-        .attr('x2', plotLineAttr.remembered.x)
-        .attr('y1', plotLineAttr.remembered.y1)
-        .attr('y2', plotLineAttr.remembered.y2)
-        .attr('stroke', greyColor)
-        .attr('stroke-width', 2);
+    svg.append("line")
+        .attr("x1", plotLineAttr.remembered.x)
+        .attr("x2", plotLineAttr.remembered.x)
+        .attr("y1", plotLineAttr.remembered.y1)
+        .attr("y2", plotLineAttr.remembered.y2)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2);
 
-    drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y1, 'horizontal');
-    drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y2, 'horizontal');
+    drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y1, "horizontal");
+    drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y2, "horizontal");
 
-    drawText(svg, 'remembered happiness', {
+    drawText(svg, "remembered happiness", {
         x: plotLineAttr.remembered.x - plotLineTextOffset,
         y: rememberedScale(groupAverage.remembered),
-        transform: 'rotate(270 ' + (plotLineAttr.remembered.x - plotLineTextOffset) + ' ' + rememberedScale(groupAverage.remembered) + ')'
+        transform: "rotate(270 " + (plotLineAttr.remembered.x - plotLineTextOffset) + " " + rememberedScale(groupAverage.remembered) + ")"
     });
 
     let tooltipId = "happinessDotPlotTooltipId"
@@ -180,47 +188,53 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
             let tooltipText = "<b>REMEMBERED HAPPINESS:</b> " + r +
                 "</br></br><b>EXPERIENCED HAPPINESS AVG: </b>" + (Math.round(average * 100) / 100) +
                 "</br></br><b>FREQUENCY: </b>" + happinessData[r].length;
-            let rect = svg.append('rect')
-                .attr('x', experiencedScale(0) - graphPadding - 12)
-                .attr('y', rememberedScale(r) - rectAttr.height / 2)
-                .attr('height', rectAttr.height)
-                .attr('width', rectAttr.width)
-                .attr('fill', '#c4c4c41a')
-                .attr('opacity', 0)
-                .attr('rx', 4)
-                .attr('stroke', greyColor)
-                .attr('stroke-width', 1)
-                .on("mousemove", function() {
-                    showTooltip(tooltipText, rect);
-                }).on("mouseout", function() {
-                    hideTooltip(rect);
-                });
+
+            let g = svg.append("g")
+            let rect = g.append("rect")
+                .attr("x", experiencedScale(0) - graphPadding - 12)
+                .attr("y", rememberedScale(r) - rectAttr.height / 2)
+                .attr("height", rectAttr.height)
+                .attr("width", rectAttr.width)
+                .attr("fill", "#c4c4c41a")
+                .attr("opacity", 0)
+                .attr("rx", 4)
+                .attr("stroke", greyColor)
+                .attr("stroke-width", 1);
 
             // Draw points per person.
             happinessData[r].forEach(e => {
-                svg.append('circle')
-                    .attr('cx', experiencedScale(e))
-                    .attr('cy', rememberedScale(r))
-                    .attr('r', 4)
-                    .attr('fill', colorHexArray[scoreToMood[Math.round(e)]])
-                    .on("mousemove", function() {
-                        showTooltip(tooltipText, rect);
-                    }).on("mouseout", function() {
-                        hideTooltip(rect);
-                    });
+                g.append("circle")
+                    .attr("cx", experiencedScale(e))
+                    .attr("cy", rememberedScale(r))
+                    .attr("r", 4)
+                    .attr("fill", colorHexArray[scoreToMood[Math.round(e)]]);
             });
 
             // Draw average.
-            svg.append('circle')
-                .attr('cx', experiencedScale(average))
-                .attr('cy', rememberedScale(r))
-                .attr('r', 5)
-                .attr('fill', textColor)
-                .on("mousemove", function() {
-                    showTooltip(tooltipText, rect);
-                }).on("mouseout", function() {
-                    hideTooltip(rect);
-                });
+            g.append("circle")
+                .attr("cx", experiencedScale(average))
+                .attr("cy", rememberedScale(r))
+                .attr("r", 5)
+                .attr("fill", textColor);
+
+            if (myData != null) {
+                if (email != null && myData.remembered == r) {
+                    tooltipText += "</br></br><b>YOU ARE IN THIS REMEMBERED HAPPINESS GROUP</b>"
+                }
+                g.append("circle")
+                    .attr("cx", experiencedScale(myData.experienced))
+                    .attr("cy", rememberedScale(myData.remembered))
+                    .attr("r", 10)
+                    .attr("fill", "none")
+                    .attr("stroke", greyColor)
+                    .attr("stroke-width", 1.5);
+            }
+
+            g.on("mousemove", function() {
+                showTooltip(tooltipText, rect);
+            }).on("mouseout", function() {
+                hideTooltip(rect);
+            });
         }
     });
 
@@ -235,12 +249,12 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData) {
                     return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
                 }
             });
-        rect.attr('opacity', 1);
+        rect.attr("opacity", 1);
     }
 
     function hideTooltip(rect) {
         tooltip.style("visibility", "hidden");
-        rect.attr('opacity', 0);
+        rect.attr("opacity", 0);
     }
 
     // Draw mood legend.
