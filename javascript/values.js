@@ -3,7 +3,7 @@
  *   timeData: time data for records
  *   returns void, draws data vis for values.
  */
-function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalityData) {
+function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
@@ -14,8 +14,6 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
     let valueImageSize = 48;
     let imageSize = 56;
     let horizontalPadding = 24;
-
-    // console.log(personalityData);
 
     drawTitle(svg, "Values");
     // console.log(typesData);
@@ -125,6 +123,14 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         }
     }
 
+    let myData = null;
+    if (email != null) {
+        myData = {
+            value: typesData.find(d => { return d[keys.types.email] == email })[keys.types.value],
+            included: false
+        }
+    }
+
     typesData.forEach(d => {
         incrementMapCount(valueCountMap, d[keys.types.value]);
     });
@@ -148,6 +154,9 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
         v.ikigai = ikigaiMultiples;
         v.occupation = occupationMultiples;
         v.personality = personalityMultiples;
+        if (myData != null && myData.value == v.value) {
+            myData.included = true
+        }
     });
 
     // console.log(mostFrequentValues);
@@ -311,6 +320,12 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, personalit
                 .attr("opacity", 0)
                 .on("mousemove", function() {
                     let tooltipText = "<b>VALUE:</b> " + d.value.toLowerCase() + "</br></br><b># OF PARTICIPANTS: </b>" + d.count + targetRect.text;
+
+                    if (myData != null && d.value == myData.value) {
+                        tooltipText += "</br></br><b>YOU ARE IN THIS VALUE GROUP</b>"
+                    } else if (myData != null && myData.included == false) {
+                        tooltipText += "</br></br><b>YOUR MOST IMPORTANT VALUE IS NOT THE GROUP’S TOP 4 VALUES</b>"
+                    }
                     tooltip.html(tooltipText)
                         .style("visibility", "visible")
                         .style("top", event.pageY + 20)
