@@ -303,7 +303,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
         .attr('stroke-width', lineLegendAttr.strokeWidth)
         .style('stroke-linecap', 'round');
 
-    drawText(lineLegend, 'entire group average', {
+    drawText(lineLegend, "entire group average", {
         x: lineLegendAttr.width / 2,
         y: lineLegendAttr.lineHeight + 3 * lineLegendAttr.verticalPadding + lineLegendAttr.lineHeight,
         fontSize: 12
@@ -311,28 +311,29 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
 
     let baseAnnotationY = 72;
     let annotation = [
-        "Based on the four ikigai pillars (i.e., what you love,",
-        "what you are good at, what you can be paid for, what the",
-        "world needs), we found four different profiles of people:",
-        "profiteers, citizens, bohemians, and zen masters"
+        "Based on the four ikigai pillars, we found",
+        "four different profiles of people: profiteers,",
+        "citizens, bohemians, and zen masters."
     ];
     annotation.forEach((line, i) => {
         drawText(svg, line, {
             x: padding,
             y: baseAnnotationY + 16 * i,
-            textAnchor: "start"
+            textAnchor: "start",
+            fontWeight: "bold"
         });
     });
     baseAnnotationY = height * 0.7;
     annotation = [
         "Zen masters are the happiest and profiteers",
-        "are the saddest"
+        "are the saddest."
     ];
     annotation.forEach((line, i) => {
         drawText(svg, line, {
             x: ikigaiGraphMap['zen master'].x + 24,
             y: baseAnnotationY + 16 * i,
-            textAnchor: "start"
+            textAnchor: "start",
+            fontWeight: "bold"
         });
     });
 }

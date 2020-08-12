@@ -28,6 +28,7 @@ function drawText(svg, text, attr) {
     let fontSize = attr.fontSize == null ? 12 : attr.fontSize;
     let transform = attr.transform == null ? '' : attr.transform;
     let fill = attr.fill == null ? textColor : attr.fill;
+    let fontWeight = attr.fontWeight == null ? 400 : attr.fontWeight;
 
     return svg.append('text')
         .attr('x', x)
@@ -36,6 +37,7 @@ function drawText(svg, text, attr) {
         .attr('font-family', 'Courier new')
         .attr('fill', fill)
         .attr('font-size', fontSize)
+        .attr('font-weight', fontWeight)
         .attr('alignment-baseline', alignmentBaseline)
         .attr('transform', transform)
         .text(text);
@@ -443,20 +445,20 @@ function drawZigzagArc(svg, center, radius, attr = {}) {
 
 function addTooltip(tooltipId) {
     return d3.select("body")
-        .append('div')
-        .attr('id', tooltipId)
-        .style('padding', 10)
-        .style('position', 'absolute')
-        .style('z-index', '10')
-        .style('visibility', 'hidden')
-        .attr('white-space', 'pre-line')
-        .style('background-color', backgroundColor)
-        .style('border-radius', '15px')
-        .style('border', '1px solid #cdcdcd')
-        .style('font-family', 'Courier new')
-        .style('font-size', 12)
-        .style('text-align', 'left')
-        .style('color', textColor);
+        .append("div")
+        .attr("id", tooltipId)
+        .style("padding", 10)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden")
+        .attr("white-space", "pre-line")
+        .style("background-color", backgroundColor)
+        .style("border-radius", "15px")
+        .style("border", "1px solid #cdcdcd")
+        .style("font-family", "Courier new")
+        .style("font-size", 12)
+        .style("text-align", "left")
+        .style("color", textColor);
 }
 
 function setTooltipText(tooltip, text, leftOffset, rightOffset) {

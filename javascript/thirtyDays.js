@@ -161,7 +161,8 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         drawText(bivarTimeGraph, timeSegment.title, {
             x: monthXScale(1) - graphAttr.horizontalPadding * 2 - iconSize,
             y: timeYScale(timeSegment.start),
-            textAnchor: "end"
+            textAnchor: "end",
+            fontWeight: "bold"
         });
     });
 

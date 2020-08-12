@@ -233,7 +233,8 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
         drawText(ikigaiGraph, ikigai.title, {
             x: graphAttr.textWidth,
             y: graphAttr.height / 2,
-            textAnchor: "end"
+            textAnchor: "end",
+            fontWeight: "bold"
         });
         ikigaiGraph.append("line")
             .attr("x1", graphAttr.textWidth + graphAttr.horizontalPadding)

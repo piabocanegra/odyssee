@@ -70,7 +70,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     }
     let xScale = d3.scaleBand()
         .domain(balanceKeys)
-        .range([padding * 5, bWidth-padding * 2.5]);
+        .range([padding * 5, bWidth - padding * 2.5]);
 
     let yScale = d3.scaleLinear()
         .domain([0, 1])
@@ -180,7 +180,8 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .attr("cy", function(d) {
             return yScale(d.y);
         })
-        .attr("r", 5);
+        .attr("r", 5)
+        .style("fill", textColor);
 
     // add icons on x axis
     for (var category of balanceKeys) {
@@ -196,14 +197,16 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
             .text(balanceShortToLong1[category])
             .style("font-family", "Courier new")
             .style("text-anchor", "middle")
-            .style("font-size", 11);
+            .style("font-size", 11)
+            .style("fill", textColor);
         svg.append('text')
             .attr('x', xScale(category) + (iconWidth / 2) - 15)
             .attr('y', yScale(0) + iconWidth + 25)
             .text(balanceShortToLong2[category])
             .style("font-family", "Courier new")
             .style("text-anchor", "middle")
-            .style("font-size", 11);
+            .style("font-size", 11)
+            .style("fill", textColor);
     }
 
     //add x axis label
@@ -214,7 +217,8 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "middle")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
 
     //add y axis text
     svg.append("text")
@@ -224,7 +228,8 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "end")
-        .style("font-size", 11);
+        .style("font-size", 11)
+        .style("fill", textColor);
     let yAxis = d3.select(svgClass)
         .append("g")
         .attr("class", "y_axis")
@@ -241,60 +246,65 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
     // add takeaway
     svg.append("text")
         .attr("x", bWidth * 0.785)
-        .attr("y", height*0.15+15)
+        .attr("y", height * 0.15 + 15)
         .text("There are two types of self")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
     svg.append("text")
         .attr("x", bWidth * 0.785)
-        .attr("y", height*0.15+30)
+        .attr("y", height * 0.15 + 30)
         .text("-proclaimed unbalanced and unhappy")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
     svg.append("text")
         .attr("x", bWidth * 0.785)
-        .attr("y", height*0.15+45)
+        .attr("y", height * 0.15 + 45)
         .text("people: passion seekers (people who")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
     svg.append("text")
         .attr("x", bWidth * 0.785)
-        .attr("y", height*0.15+60)
+        .attr("y", height * 0.15 + 60)
         .text("do what they want) and obligators")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
     svg.append("text")
         .attr("x", bWidth * 0.785)
-        .attr("y", height*0.15+75)
+        .attr("y", height * 0.15 + 75)
         .text("(people who do what they have to do)")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
     svg.append("line")
-        .attr("x1", bWidth*0.76)
+        .attr("x1", bWidth * 0.76)
         .attr("x2", bWidth * 0.77)
         .attr("y1", yScale(0.5))
         .attr("y2", yScale(0.5))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
     svg.append("line")
-        .attr("x1", bWidth*0.76)
+        .attr("x1", bWidth * 0.76)
         .attr("x2", bWidth * 0.77)
         .attr("y1", yScale(0.79))
         .attr("y2", yScale(0.79))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
     svg.append("line")
-        .attr("x1", bWidth*0.77)
+        .attr("x1", bWidth * 0.77)
         .attr("x2", bWidth * 0.77)
         .attr("y1", yScale(0.5))
         .attr("y2", yScale(0.79))

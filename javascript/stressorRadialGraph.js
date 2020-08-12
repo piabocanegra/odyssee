@@ -206,6 +206,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
         let textAttr = {
             fontSize: 12,
             fontFamily: "Courier new",
+            fontWeight: "bold",
             textAnchor: "middle",
             alignment: "middle",
             x: center.x + (innerRadius - 12 - iconSize) * Math.cos(radialScale(category) + Math.PI / 4),
@@ -242,11 +243,13 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     let baseY = height * 0.14
     drawText(svg, "The sources of our stress are somewhat related to", {
         x: width / 2,
-        y: baseY
+        y: baseY,
+        fontWeight: "bold"
     });
-    drawText(svg, "the activities we feel most negatively about", {
+    drawText(svg, "the activities we feel most negatively about.", {
         x: width / 2,
-        y: baseY + 16
+        y: baseY + 16,
+        fontWeight: "bold"
     });
     svg.append("line")
         .attr("x1", width / 2)

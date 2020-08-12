@@ -89,19 +89,29 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     // Add graph labels.
     let graphLabelInterTextPadding = 48;
     for (let i = 0; i <= 5; i++) {
-        drawText(svg, i, { x: experiencedScale(0) - graphPadding, y: rememberedScale(i) });
+        drawText(svg, i == 5 ? "5 - Strongly Agree" : i, {
+            x: experiencedScale(0) - graphPadding,
+            y: rememberedScale(i),
+            textAnchor: "start"
+        });
     }
     for (let i = 1; i <= 5; i++) {
-        drawText(svg, i, { x: experiencedScale(i), y: rememberedScale(0) + graphPadding });
+        drawText(svg, i == 5 ? "5 - Amazing" : i, {
+            x: experiencedScale(i),
+            y: rememberedScale(0) + graphPadding,
+            textAnchor: i == 5 ? "start" : "middle"
+        });
     }
-    drawText(svg, "I am generally happy with my life.", {
+    drawText(svg, '"I am generally happy with my life."', {
         x: experiencedScale(0) - graphPadding - graphLabelInterTextPadding,
         y: rememberedScale(2.5),
-        transform: "rotate(270 " + (experiencedScale(0) - graphPadding - graphLabelInterTextPadding) + " " + rememberedScale(2.5) + ")"
+        transform: "rotate(270 " + (experiencedScale(0) - graphPadding - graphLabelInterTextPadding) + " " + rememberedScale(2.5) + ")",
+        fontWeight: "bold"
     });
-    drawText(svg, "How are you feeling?", {
+    drawText(svg, '"How are you feeling?"', {
         x: experiencedScale(2.5),
-        y: rememberedScale(0) + graphPadding + graphLabelInterTextPadding
+        y: rememberedScale(0) + graphPadding + graphLabelInterTextPadding,
+        fontWeight: "bold"
     });
 
     // Plot standard deviation lines and labels.
@@ -272,12 +282,13 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     drawStdDevAvgLegend(svg);
 
     let baseAnnotationY = rememberedScale(5);
-    let annotation = ["Remembered happiness", "varies more than", "experienced happiness"];
+    let annotation = ["Remembered happiness", "varies more than", "experienced happiness."];
     annotation.forEach((line, i) => {
         drawText(baseSvg, line, {
             x: svgX + width * 0.9,
             y: baseAnnotationY + 16 * i,
-            textAnchor: "start"
+            textAnchor: "start",
+            fontWeight: "bold"
         });
     });
 }

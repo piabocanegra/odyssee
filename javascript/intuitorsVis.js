@@ -101,7 +101,7 @@ function drawObserverVis(svgClass, everyoneData, personalityData, typesData) {
         .attr("x", width * 0.3 + mWidth / 2 - (iconDim / 2))
         .attr("y", 450 + 10)
         .attr("width", iconDim)
-        .attr("height", iconDim);	
+        .attr("height", iconDim);
 
     let esfpData = getDataByPTypeValue(everyoneData, typesData, "ESFP", "Adhering to my culture or religion");
     displayPersonalityTitle(svg, width * 0.7, 450, "ESFP: Bold");
@@ -122,7 +122,8 @@ function drawPersonalityKey(svgClass) {
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
         .style("font-weight", "bold")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
 
     svg.append("image")
         .attr('xlink:href', 'images/Thinking.svg')
@@ -212,7 +213,8 @@ function addTextLabel(svg, x, y, text, isMiddle = true) {
             return "left"
         })
         .style("font-weight", "bold")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
 }
 
 function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText, yLabel = "") {
@@ -224,7 +226,8 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "middle")
-        .style("font-size", 11);
+        .style("font-size", 11)
+        .style("fill", textColor);
 
     // display y axis label
     svg.append("text")
@@ -233,7 +236,8 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
         .text(yLabel)
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
-        .style("font-size", 10);
+        .style("font-size", 10)
+        .style("fill", textColor);
 
     let yScale = d3.scaleLinear()
         .domain([0, d3.max([data[0].percent, data[1].percent])])
@@ -268,23 +272,23 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
         .data(data)
         .enter()
         .append('rect')
-    	.attr('x', function(d, i) {
-    		return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 5 - 10;
-    	})
-    	.attr('y', function(d) {
+        .attr('x', function(d, i) {
+            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 5 - 10;
+        })
+        .attr('y', function(d) {
             return yScale(d.percent);
         })
-    	.attr('width', 20)
-    	.attr('height', function(d) {
-            return yScale(0)-yScale(d.percent);
+        .attr('width', 20)
+        .attr('height', function(d) {
+            return yScale(0) - yScale(d.percent);
         })
-    	.style('opacity', 0)
-    	.on("mousemove", function(d, i) { 
-    		let titleText = (i == 0) ? personality : "GROUP";
-    		let text = "<b>" + titleText + "</b></br></br>"
-    			+ tooltipText + (d.percent*100).toFixed(2) + "%";
-    		setTooltipText(tooltip, text, 20, 270, "uppercase");
-    	}).on("mouseout", function(d) {
+        .style('opacity', 0)
+        .on("mousemove", function(d, i) {
+            let titleText = (i == 0) ? personality : "GROUP";
+            let text = "<b>" + titleText + "</b></br></br>" +
+                tooltipText + (d.percent * 100).toFixed(2) + "%";
+            setTooltipText(tooltip, text, 20, 270, "uppercase");
+        }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
         });
 }
@@ -298,7 +302,8 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "middle")
-        .style("font-size", 11);
+        .style("font-size", 11)
+        .style("fill", textColor);
 
     // display y axis label
     svg.append("text")
@@ -307,10 +312,11 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
         .text(yLabel)
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
-        .style("font-size", 10);
+        .style("font-size", 10)
+        .style("fill", textColor);
 
     let yScale = d3.scaleLinear()
-        .domain([0, d3.max(data1.concat(data2), function (d) { return d.percent;})])
+        .domain([0, d3.max(data1.concat(data2), function(d) { return d.percent; })])
         .range([y + mHeight - 10, y + 30]);
 
     // draw data1 lines 
@@ -363,49 +369,49 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
 
     // tooltip for group
     svg.append('rect')
-    	.attr('x', function(d, i) {
-    		return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 - 15;
-    	})
-    	.attr('y', function(d) {
+        .attr('x', function(d, i) {
+            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 - 15;
+        })
+        .attr('y', function(d) {
             return yScale(Math.max(0.02, data1[1].percent));
         })
-    	.attr('width', 20)
-    	.attr('height', function(d) {
-            return yScale(0)-yScale(Math.max(0.02, data1[1].percent));
+        .attr('width', 20)
+        .attr('height', function(d) {
+            return yScale(0) - yScale(Math.max(0.02, data1[1].percent));
         })
-    	.style('opacity', 0)
-    	.on("mousemove", function() { 
-    		let titleText = "GROUP";
-    		let text = "<b>" + titleText + "</b></br></br>"
-    			+ tooltipText + ((data1[1].percent + data2[1].percent)*100).toFixed(2) + "%";
-    		setTooltipText(tooltip, text, 20, 270);
-    	}).on("mouseout", function(d) {
-    		tooltip.style("visibility", "hidden");
+        .style('opacity', 0)
+        .on("mousemove", function() {
+            let titleText = "GROUP";
+            let text = "<b>" + titleText + "</b></br></br>" +
+                tooltipText + ((data1[1].percent + data2[1].percent) * 100).toFixed(2) + "%";
+            setTooltipText(tooltip, text, 20, 270);
+        }).on("mouseout", function(d) {
+            tooltip.style("visibility", "hidden");
         });
 
-   	// tooltip for personality
+    // tooltip for personality
     svg.append('rect')
-    	.attr('x', function(d, i) {
-    		return x + mWidth / 4 + iconDim / 2 - 15;
-    	})
-    	.attr('y', function(d) {
+        .attr('x', function(d, i) {
+            return x + mWidth / 4 + iconDim / 2 - 15;
+        })
+        .attr('y', function(d) {
             return yScale(Math.max(0.02, data1[0].percent));
         })
-    	.attr('width', 20)
-    	.attr('height', function(d) {
-            return yScale(0)-yScale(Math.max(0.02, data1[0].percent));
+        .attr('width', 20)
+        .attr('height', function(d) {
+            return yScale(0) - yScale(Math.max(0.02, data1[0].percent));
         })
-    	.style('opacity', 0)
-    	.on("mousemove", function() { 
-    		let titleText = personality;
-    		let text = "<b>" + titleText + "</b></br></br>"
-    			+ tooltipText + ((data1[0].percent + data2[0].percent)*100).toFixed(2) + "%";
-    		setTooltipText(tooltip, text, 20, 270);
-    	}).on("mouseout", function(d) {
-    		tooltip.style("visibility", "hidden");
+        .style('opacity', 0)
+        .on("mousemove", function() {
+            let titleText = personality;
+            let text = "<b>" + titleText + "</b></br></br>" +
+                tooltipText + ((data1[0].percent + data2[0].percent) * 100).toFixed(2) + "%";
+            setTooltipText(tooltip, text, 20, 270);
+        }).on("mouseout", function(d) {
+            tooltip.style("visibility", "hidden");
         });
-            
-            
+
+
 }
 
 function setUpLeftPersonalityTitleIcon(svg, img, title) {
@@ -416,7 +422,8 @@ function setUpLeftPersonalityTitleIcon(svg, img, title) {
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
         .style("font-weight", "bold")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
 
     svg.append("image")
         .attr('xlink:href', 'images/' + img + '.svg')
@@ -434,7 +441,8 @@ function setUpRightPersonalityTitleIcon(svg, img, title) {
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
         .style("font-weight", "bold")
-        .style("font-size", 12);
+        .style("font-size", 12)
+        .style("fill", textColor);
 
     svg.append("image")
         .attr('xlink:href', 'images/' + img + '.svg')
@@ -452,7 +460,8 @@ function displayPersonalityTitle(svg, x, y, title) {
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "middle")
-        .style("font-size", 11);
+        .style("font-size", 11)
+        .style("fill", textColor);
 }
 
 function displayerPersonalityIcon(svg, x, y, personality) {

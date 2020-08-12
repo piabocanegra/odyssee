@@ -125,7 +125,8 @@ function drawMorningNightVis(svgClass, timeData, email = null) {
             x: 0,
             y: moodYScale(moodToScore[mood]),
             fill: colorHexArray[mood],
-            textAnchor: "end"
+            textAnchor: "end",
+            fontWeight: "bold"
         });
     });
 
@@ -212,16 +213,18 @@ function drawMorningNightVis(svgClass, timeData, email = null) {
     drawText(morningNightGraph, "Are you a morning or night person?", {
         x: nightLegendAttr.x,
         y: Math.min(morningLegendAttr.y, nightLegendAttr.y) - 24,
-        textAnchor: "start"
+        textAnchor: "start",
+        fontWeight: "bold"
     });
 
     let baseAnnotationY = nightLegendAttr.y + iconSize + 28;
-    let annotation = ["Morning people are happier than", "night people"];
+    let annotation = ["Morning people are happier than", "night people."];
     annotation.forEach((line, i) => {
         drawText(morningNightGraph, line, {
             x: nightLegendAttr.x,
             y: baseAnnotationY + 16 * i,
-            textAnchor: "start"
+            textAnchor: "start",
+            fontWeight: "bold"
         });
     });
 
