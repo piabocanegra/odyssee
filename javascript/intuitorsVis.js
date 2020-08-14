@@ -212,7 +212,6 @@ function addTextLabel(svg, x, y, text, isMiddle = true) {
             if (isMiddle) return "middle"
             return "left"
         })
-        .style("font-weight", "bold")
         .style("font-size", 12)
         .style("fill", textColor);
 }
@@ -244,28 +243,11 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
         .range([y + mHeight - 10, y + 30]);
 
     // draw line 
-    svg.selectAll('.bars')
-        .data(data)
-        .enter()
-        .append("line")
-        .attr("x1", function(d, i) {
-            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 5;
-        })
-        .attr("x2", function(d, i) {
-            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 5;
-        })
-        .attr("y1", yScale(0))
-        .attr("y2", function(d) {
-            return yScale(d.percent);
-        })
-        .style("stroke", function(d) {
-            return colorHexArray[d.fMood];
-        })
-        .style("stroke-dasharray", function(d) {
-            return dashArray[d.fAttitude];
-        })
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round");
+    for (var i = 0; i < data.length; i++) {
+    	var d = data[i];
+    	var xLine = x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 5;
+    	drawImperfectVerticalLine(svg, yScale(d.percent), yScale(0), xLine, dashArray[d.fAttitude], colorHexArray[d.fMood]);
+    }
 
     // draw tooltip areas
     svg.selectAll('.tooltip')
@@ -319,54 +301,21 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
         .domain([0, d3.max(data1.concat(data2), function(d) { return d.percent; })])
         .range([y + mHeight - 10, y + 30]);
 
-    // draw data1 lines 
-    svg.selectAll('.bars')
-        .data(data1)
-        .enter()
-        .append("line")
-        .attr("x1", function(d, i) {
-            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 10;
-        })
-        .attr("x2", function(d, i) {
-            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 10;
-        })
-        .attr("y1", yScale(0))
-        .attr("y2", function(d) {
-            return yScale(d.percent);
-        })
-        .style("stroke", function(d) {
-            return colorHexArray[d.fMood];
-        })
-        .style("stroke-dasharray", function(d) {
-            return dashArray[d.fAttitude];
-        })
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round");
+
+    // draw data1 line 
+    for (var i = 0; i < data1.length; i++) {
+    	var d = data1[i];
+    	var x1 = x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 10;
+    	drawImperfectVerticalLine(svg, yScale(d.percent), yScale(0), x1, dashArray[d.fAttitude], colorHexArray[d.fMood]);
+    }
 
     // draw data2 lines 
-    svg.selectAll('.bars')
-        .data(data2)
-        .enter()
-        .append("line")
-        .attr("x1", function(d, i) {
-            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i;
-        })
-        .attr("x2", function(d, i) {
-            return x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i;
-        })
-        .attr("y1", yScale(0))
-        .attr("y2", function(d) {
-            return yScale(d.percent);
-        })
-        .style("stroke", function(d) {
-            return colorHexArray[d.fMood];
-        })
-        .style("stroke-dasharray", function(d) {
-            return dashArray[d.fAttitude];
-        })
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round");
-
+   for (var i = 0; i < data2.length; i++) {
+    	var d = data2[i];
+    	var x2 = x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i;
+    	drawImperfectVerticalLine(svg, yScale(d.percent), yScale(0), x2, dashArray[d.fAttitude], colorHexArray[d.fMood]);
+    }
+    
     // tooltip for group
     svg.append('rect')
         .attr('x', function(d, i) {

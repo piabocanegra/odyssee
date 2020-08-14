@@ -57,7 +57,6 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .style("text-anchor", "end")
         .style("font-family", "Courier new")
         .style("font-size", 12)
-        .style("font-weight", "bold")
         .style("fill", textColor);
     svg.append("text")
         .attr("x", width - padding * 2 + 15)
@@ -66,7 +65,6 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
         .style("font-size", 12)
-        .style("font-weight", "bold")
         .style("fill", textColor);
     svg.append("text")
         .attr("x", width / 2)
@@ -235,15 +233,6 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     // add takeaway
     svg.append("text")
         .attr("x", width - padding * 5)
-        .attr("y", height * 0.5)
-        .text("Takeaway:")
-        .style("text-anchor", "start")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("font-weight", "bold")
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", width - padding * 5)
         .attr("y", height * 0.5 + 20)
         .text("Self-proclaimed breadth and depth")
         .style("text-anchor", "start")
@@ -269,7 +258,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     svg.append("text")
         .attr("x", width - padding * 5)
         .attr("y", height * 0.5 + 65)
-        .text("they do")
+        .text("they do.")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
         .style("font-size", 12)

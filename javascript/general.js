@@ -525,6 +525,8 @@ function drawImperfectVerticalLine(svg, yStart, yEnd, x, dashArr, color = "#cdcd
     }
 
     points.push({ "x": x, "y": yEnd });
+    console.log(points);
+
 
     let lineGenerator = d3.line()
         .x(function(d) { return d.x; })
