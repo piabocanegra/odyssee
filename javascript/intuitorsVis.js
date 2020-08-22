@@ -212,8 +212,8 @@ function drawPersonalityKey(svgClass) {
         .attr("y", height * 0.85)
         .attr("width", 150)
         .attr("height", 150);
-    addTextLabel(svg, width * 0.2 - 20, height * 0.85, "example:", true, false);
-    addTextLabel(svg, width * 0.2 - 20, height * 0.85 + 15, "ESTP", true, false);
+    addTextLabel(svg, width * 0.2 - 20, height * 0.85, "example:", false, false);
+    addTextLabel(svg, width * 0.2 - 20, height * 0.85 + 15, "ESTP", false, false);
 
     addTextLabel(svg, width * 0.7, height * 0.53, "We categorized personality types by", true, false);
     addTextLabel(svg, width * 0.7, height * 0.53 + 15, "their dominant function.", true, false);
