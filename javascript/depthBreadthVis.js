@@ -1,4 +1,4 @@
-function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
+function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
     let svg = d3.select(svgClass);
 
     let dbData = groupMapByValue(createMapFromPersonality(personalityData, "Do you prefer breadth or depth in life?"));
@@ -8,15 +8,25 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
     // excluding rest, self-care, eating and drinking
     let exclusionList = ["i8:", "i3:", "i9:"];
 
+    let myData = null;
+
     // create aggregate lists for depth/breadth groups
     for (var email of dbData["Depth"]) {
         var personData = getPersonData(everyoneData, email);
         depthActivityList = depthActivityList.concat(personData);
+
+        if (mEmail != null && mEmail == email) {
+            myData = "depth";
+        }
     }
 
     for (var email of dbData["Breadth"]) {
         var personData = getPersonData(everyoneData, email);
         breadthActivityList = breadthActivityList.concat(personData);
+
+        if (mEmail != null && mEmail == email) {
+            myData = "breadth";
+        }
     }
 
     // get top activities
@@ -88,20 +98,29 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .on("mousemove", function() {
             let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
             let timeSpentText = "";
+            let personalizedText = "";
             if (d3.event.clientY - svgPosY > rootScale(0)) {
                 timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" +
                     "<b>% TIME SPENT:</b> " + Math.trunc(depthPercent * 100) + "%" +
                     "</br></br><b># of DISTINCT ACTIVITIES*:</b> 3 most frequent" +
                     "</br></br><b>MODE ACTIVITY FLOW: </b>inflow";
+
+                if (myData != null && myData == "depth") {
+                    personalizedText = "</br></br><b>YOU ARE A SELF-IDENTIFIED DEPTH PERSON</b>";
+                }
             } else {
                 timeSpentText = "<u>EXPERIENCED BREADTH</u></br></br>" +
                     "<b>% TIME SPENT:</b> " + Math.trunc(depthDistinctPercent * 100) + "%" +
                     "</br></br><b># of DISTINCT ACTIVITIES*:</b> " + depthDistinctActivities.size + " (total excluding top 3)" +
                     "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional";
+
+                    if (myData != null && myData == "depth") {
+                    personalizedText = "</br></br><b>YOU ARE A SELF-IDENTIFIED DEPTH PERSON</b>";
+                }
             }
 
             let text = timeSpentText +
-                "</br></br><b>MOST FREQUENT MOOD: </b>" + depthMood.toLowerCase();
+                "</br></br><b>MOST FREQUENT MOOD: </b>" + depthMood.toLowerCase() + personalizedText;
             setTooltipText(tooltip, text, 20, 250);
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
@@ -115,20 +134,29 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .on("mousemove", function() {
             let svgPosY = document.querySelector(svgClass).getBoundingClientRect().y;
             let timeSpentText = "";
+            let personalizedText = "";
             if (d3.event.clientY - svgPosY > rootScale(0)) {
                 timeSpentText = "<u>EXPERIENCED DEPTH</u></br></br>" +
                     "<b>% TIME SPENT:</b> " + Math.trunc(breadthPercent * 100) + "%" +
                     "</br></br><b># of DISTINCT ACTIVITIES*:</b> 3 most frequent" +
                     "</br></br><b>MODE ACTIVITY FLOW: </b>inflow";
+
+                if (myData != null && myData == "breadth") {
+                    personalizedText = "</br></br><b>YOU ARE A SELF-IDENTIFIED BREADTH PERSON</b>";
+                }
             } else {
                 timeSpentText = "<u>EXPERIENCED BREADTH</u></br></br>" +
                     "<b>% TIME SPENT:</b> " + Math.trunc(breadthDistinctPercent * 100) + "%" +
                     "</br></br><b># of DISTINCT ACTIVITIES*:</b> " + breadthDistinctActivities.size + " (total excluding top 3)" +
                     "</br></br><b>MODE ACTIVITY FLOW: </b>bi-directional";
+
+                if (myData != null && myData == "breadth") {
+                    personalizedText = "</br></br><b>YOU ARE A SELF-IDENTIFIED BREADTH PERSON</b>";
+                }
             }
 
             let text = timeSpentText +
-                "</br></br><b>MOST FREQUENT MOOD: </b>" + breadthMood.toLowerCase();
+                "</br></br><b>MOST FREQUENT MOOD: </b>" + breadthMood.toLowerCase() + personalizedText;
             setTooltipText(tooltip, text, 20, 250);
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
@@ -237,6 +265,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .text("Self-proclaimed breadth and depth")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
+        .style("font-weight", "bold")
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
@@ -245,6 +274,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .text("people don't differ in the")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
+        .style("font-weight", "bold")
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
@@ -253,6 +283,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .text("breadth and depth of activities")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
+        .style("font-weight", "bold")
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
@@ -261,6 +292,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData) {
         .text("they do.")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
+        .style("font-weight", "bold")
         .style("font-size", 12)
         .style("fill", textColor);
 

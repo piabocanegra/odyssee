@@ -1,11 +1,14 @@
-function drawBalanceGraph(svgClass, everyoneData, personalityData) {
+function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     let svg = d3.select(svgClass);
     let balanceData = groupMapByValue(createMapFromPersonality(personalityData, "Balanced", balanceLongToShort));
 
     let balanceKeys = ["yes happy", "yes unhappy", "no happy", "no unhappy"];
-    let bWidth = 1200;
+    let bWidth = 1300;
     let dataForGraph = [];
     let avgStdDataForGraph = [];
+
+    let myData = null;
+    let personalizedData = [];
     for (var key of balanceKeys) {
         var totalHaveToPercent = 0;
         var totalWantToPercent = 0;
@@ -17,6 +20,12 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
         for (var i = 0; i < balanceData[key].length; i++) {
             var email = balanceData[key][i];
+
+            // set personalized tooltip
+            if (email != null && email == mEmail) {
+                myData = key;
+            }
+
             var personData = getPersonData(everyoneData, email);
             var frequencyMap = getFrequencyByKey("Reason", personData);
 
@@ -41,10 +50,20 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
 
             if (!Number.isNaN(haveToPercent)) {
                 dataForGraph.push({ "x": (key + ":have to"), "y": haveToPercent, "avg": haveToAvg });
+
+                // set personalized tooltip
+                if (email != null && email == mEmail) {
+                    personalizedData.push({ "x": (key + ":have to"), "y": haveToPercent});
+                }
             }
 
             if (!Number.isNaN(wantToPercent)) {
                 dataForGraph.push({ "x": (key + ":want to"), "y": wantToPercent, "avg": wantToAvg });
+
+                // set personalized tooltip
+                if (email != null && email == mEmail) {
+                    personalizedData.push({ "x": (key + ":want to"), "y": wantToPercent});
+                }
             }
         }
         avgStdDataForGraph.push({
@@ -107,6 +126,11 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
                 "</br></br><b>AVERAGE TIME SPENT: </b>" + Math.trunc(d.y * 100) + "%" +
                 "</br></br><b>MIN TIME SPENT: </b>" + Math.trunc(d.min * 100) + "%" +
                 "</br></br><b>MAX TIME SPENT: </b>" + Math.trunc(d.max * 100) + "%";
+
+            if (myData != null && myData == (d.x).split(":")[0]) {
+                tooltipText += "</br></br><b>YOU ARE IN THIS BALANCE GROUP</b>";
+            }
+
             setTooltipText(tooltip, tooltipText, 20, 220);
             event.target.style.opacity = 1;
         }).on("mouseout", function(d) {
@@ -166,6 +190,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
             return colorHexArray[moodList[d.avg]];
         });
 
+    
     // add dots for group avg of each category
     svg.selectAll(".balanceAvgDots")
         .data(avgStdDataForGraph)
@@ -182,6 +207,27 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         })
         .attr("r", 5)
         .style("fill", textColor);
+
+    // add personalized circle tooltip
+    if (myData != null) {
+        svg.selectAll(".pCircle")
+        .data(personalizedData)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d, i) {
+            var key1 = (d.x).split(":")[0];
+            var key2 = (d.x).split(":")[1];
+            var offset = key2 == "want to" ? 0 : 40;
+            return xScale(key1) + offset;
+        })
+        .attr("cy", function(d) {
+            return yScale(d.y);
+        })
+        .attr("r", 10)
+        .attr("fill", "none")
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 1.5);
+    }
 
     // add icons on x axis
     for (var category of balanceKeys) {
@@ -293,21 +339,21 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData) {
         .attr("x1", bWidth * 0.715)
         .attr("x2", bWidth * 0.715)
         .attr("y1", yScale(0.78))
-        .attr("y2", yScale(0.82))
+        .attr("y2", yScale(0.8))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
     svg.append("line")
         .attr("x1", bWidth * 0.715)
         .attr("x2", bWidth * 0.765)
-        .attr("y1", yScale(0.82))
-        .attr("y2", yScale(0.82))
+        .attr("y1", yScale(0.8))
+        .attr("y2", yScale(0.8))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
     svg.append("line")
         .attr("x1", bWidth * 0.765)
         .attr("x2", bWidth * 0.765)
         .attr("y1", yScale(0.78))
-        .attr("y2", yScale(0.82))
+        .attr("y2", yScale(0.8))
         .style("stroke", "#cdcdcd")
         .style("stroke-width", 2.5);
 

@@ -89,6 +89,12 @@ function getActivityListByPType(everyoneData, typesData, pType) {
     return everyoneData.filter(d => emailList.includes(d.Email));
 }
 
+function getPersonalizedPType(email, typesData) {
+    return typesData
+        .filter(d => d["What's your email?"] == email)
+        .map(d => d.Personality);
+}
+
 function getDataByPType(everyoneData, typesData, pType, activity, f, moodList = []) {
     let emailList = typesData
         .filter(d => d.Personality == pType)

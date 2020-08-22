@@ -38,7 +38,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="indBursts"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="balance"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="balance"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1400" class="happinessDotPlot"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
@@ -55,6 +55,7 @@
 
     <script>
         let data;
+        // TODO for jamal
         let email = "lh484@cornell.edu"; //hardcoded
         let personData = [];
         let width = 1000;
@@ -252,10 +253,10 @@
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData, email);
 
-            drawBalanceGraph(".balance", everyoneData, personalityData);
+            drawBalanceGraph(".balance", everyoneData, personalityData, email);
 
             drawHappinessDotPlot(".happinessDotPlot", everyoneData, personalityData, email);
-            drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData);
+            drawDepthBreadthPlot(".depthBreadth", everyoneData, personalityData, email);
 
             var ikigaiData = await d3.csv("ikigai.csv");
             drawIkigaiVis(".ikigaiVis", ikigaiData, email);
@@ -266,9 +267,9 @@
             drawThirtyDaysVis(".thirtyDaysInd", timeData, email);
 
             let mbtiData = await d3.csv("types.csv");
-            drawIntuitorsVis(".intuitorsVis", everyoneData, personalityData, mbtiData);
-            drawFeelerThinkerVis(".feelerThinkerVis", everyoneData, personalityData, mbtiData);
-            drawObserverVis(".observerVis", everyoneData, personalityData, mbtiData);
+            drawIntuitorsVis(".intuitorsVis", everyoneData, personalityData, mbtiData, email);
+            drawFeelerThinkerVis(".feelerThinkerVis", everyoneData, personalityData, mbtiData, email);
+            drawObserverVis(".observerVis", everyoneData, personalityData, mbtiData, email);
             drawPersonalityKey(".personalityKey");
 
             drawOccupationVis(".occupationActivityVis", ikigaiData, mbtiData, everyoneData, email);
