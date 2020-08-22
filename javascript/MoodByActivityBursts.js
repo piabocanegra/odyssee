@@ -73,7 +73,7 @@ function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, di
  *   personData: list of data entries
  *   returns void, handles drawing of entire vis 
  */
-function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, personData, title) {
+function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, personData, title, isSinglePerson) {
     let svg = d3.select(svgClass);
 
     let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
@@ -153,11 +153,16 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
             maxTicks = maxTicks < tempNumTicks ? tempNumTicks : maxTicks;
         });
 
+        let divisionFactor = 1;
+        if (!isSinglePerson) {
+            divisionFactor = Math.ceil(maxTicks / 30);
+        }
+
         //draw bursts
         Object.keys(burstMap[activity]).forEach(function(mood) {
             let burstData = burstMap[activity][mood];
             drawBurst(svgClass, burstData, xScale(keyList[i]) + 10, yScale(moodList.indexOf(mood)), keyList2[i].split("(")[0].toLowerCase(),
-                mood, moodList[Math.round(avgMap[activity])].toLowerCase(), Math.ceil(maxTicks / 30));
+                mood, moodList[Math.round(avgMap[activity])].toLowerCase(), divisionFactor);
         });
     });
 

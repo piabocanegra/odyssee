@@ -36,6 +36,7 @@
         <svg style="margin-top: 100; margin-bottom: 100" height="700" width="1000" class="indTwoWeeks"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="aggTwoWeeks"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="indBursts"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="indBursts2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="balance"></svg>
@@ -56,7 +57,7 @@
     <script>
         let data;
         // TODO for jamal
-        let email = "lh484@cornell.edu"; //hardcoded
+        let email = "piabocanegra2@gmail.com"; //hardcoded
         let personData = [];
         let width = 1000;
         let height = 700;
@@ -246,7 +247,10 @@
             var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
             var categoryFullMap3 = getFrequencyByKey("Activity", everyoneData, 1);
             drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap3, "Everyone's last 2 weeks", everyoneData);
-            drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Mood by Activity");
+
+            // TODO for Jamal + Yanlam: parameters change for personalized/not personalized
+            drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Mood by Activity", false);
+            drawMoodByActivityBursts(".indBursts2", categoryMap2, categoryFullMap3, personData3, "Mood by Activity", true);
 
             drawIndActivityFlower(".indActFlower", "Activity", personData3);
 
