@@ -84,11 +84,11 @@ function drawStdDevAvgLegend(svg) {
         .attr("cx", width * 0.85)
         .attr("cy", height - padding * 1)
         .attr("r", 4)
-        .style("fill", textColor);
+        .style("fill", colorHexArray[moodList[3]]);
     svg.append("text")
         .attr("x", width * 0.83)
         .attr("y", height - padding * 1)
-        .text("a user")
+        .text("an individual")
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
         .style("fill", textColor)
@@ -296,7 +296,7 @@ function drawIkigaiColorLegend(colorLegend, colorLegendAttr) {
     });
 }
 
-// add color filters to website, must call this per svg 
+// add color filters to website, must call this per svg
 function setUpFilters(svgClass) {
     let svg = d3.select(svgClass);
     svg.append('filter')

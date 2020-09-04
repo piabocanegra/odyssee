@@ -9,11 +9,11 @@ var tooltip;
 
 /**
  *   svgClass: tag for svg clas, must include the '.'
- *   data: list of data entries from excel 
+ *   data: list of data entries from excel
  *   centerX: x location for center of burst
  *   centerY: y location for center of burst
  *   mood: mood that the burst represents, ie "Good" -- used for color of burst
- *   returns void, handles drawing of one burst 
+ *   returns void, handles drawing of one burst
  */
 function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, divisionFactor) {
     let svg = d3.select(svgClass);
@@ -71,7 +71,7 @@ function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, di
  *   categoryFullMap: map of long formed activity keys ("eating and drinking") to frequency
  *   title: title of graph
  *   personData: list of data entries
- *   returns void, handles drawing of entire vis 
+ *   returns void, handles drawing of entire vis
  */
 function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, personData, title, isSinglePerson) {
     let svg = d3.select(svgClass);
@@ -238,7 +238,11 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
     svg.append("text")
         .attr("x", padding * 3 + width * 0.22)
         .attr("y", height - padding * 1.75)
-        .text("one tick represents " + Math.ceil(maxTicks / 30) + " ticks")
+        .text(function() {
+          let str = "one tick represents " + Math.ceil(maxTicks / 30) + " record";
+          if (Math.ceil(maxTicks / 30) > 1) { str += "s"; }
+          return str;
+        })
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
         .style("fill", textColor)

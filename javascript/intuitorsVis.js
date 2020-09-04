@@ -16,7 +16,7 @@ function drawIntuitorsVis(svgClass, everyoneData, personalityData, typesData, mE
     if (tempType.length != 0) {
     	myData = tempType[0];
     	personalizedTooltipText = "YOU ARE A " + myData;
-    } 
+    }
 
     // console.log(typesData);
     let infjData = getDataByPType(everyoneData, typesData, "INFJ", "b4", getPersonDataByActivity);
@@ -53,7 +53,7 @@ function drawFeelerThinkerVis(svgClass, everyoneData, personalityData, typesData
     let tempType = getPersonalizedPType(mEmail, typesData);
     if (tempType.length != 0) {
     	myData = tempType[0];
-    } 
+    }
 
     let isfpData = getDataByPType(everyoneData, typesData, "ISFP", communicationList, getPersonDataByActivities)
     displayPersonalityTitle(svg, width * 0.15, 100, "ISFP: Fiercely Independent");
@@ -95,7 +95,7 @@ function drawObserverVis(svgClass, everyoneData, personalityData, typesData, mEm
     let tempType = getPersonalizedPType(mEmail, typesData);
     if (tempType.length != 0) {
     	myData = tempType[0];
-    } 
+    }
 
     let istjData = getDataByPTypePData(everyoneData, typesData, personalityData, "ISTJ", "What do you spend most of your time doing?", "Working for a company");
     displayPersonalityTitle(svg, width * 0.3, 100, "ISTJ: Loyal to structured organizations");
@@ -120,11 +120,18 @@ function drawObserverVis(svgClass, everyoneData, personalityData, typesData, mEm
         .attr("width", iconDim)
         .attr("height", iconDim);
 
-    let esfpData = getDataByPTypeValue(everyoneData, typesData, "ESFP", "Adhering to my culture or religion");
-    displayPersonalityTitle(svg, width * 0.7, 450, "ESFP: Bold");
-    displayerPersonalityIcon(svg, width * 0.7, 450, "ESFP");
-    drawSingleYIcon(svg, width * 0.7, 450, "religion");
-    setUpSingleLineGraph(svg, width * 0.7, 450, "ESFP", esfpData, tooltip, "% of participants who value adherence to a culture or religion: ", myData, "% of participants");
+    displayPersonalityTitle(svg, width * 0.7, 450, "ESFP: No trends were found");
+    svg.append("image")
+        .attr('xlink:href', 'images/ESFP.svg')
+        .attr("x", width * 0.7 + mWidth / 2 - (iconDim / 2))
+        .attr("y", 450 + 10)
+        .attr("width", iconDim)
+        .attr("height", iconDim);
+    // let esfpData = getDataByPTypeValue(everyoneData, typesData, "ESFP", "Adhering to my culture or religion");
+    // displayPersonalityTitle(svg, width * 0.7, 450, "ESFP: Bold");
+    // displayerPersonalityIcon(svg, width * 0.7, 450, "ESFP");
+    // drawSingleYIcon(svg, width * 0.7, 450, "religion");
+    // setUpSingleLineGraph(svg, width * 0.7, 450, "ESFP", esfpData, tooltip, "% of participants who value adherence to a culture or religion: ", myData, "% of participants");
 
     setUpLeftPersonalityTitleIcon(svg, "observers", "The Observers");
 }
@@ -241,7 +248,7 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
     svg.append("text")
         .attr("x", x + mWidth * 0.7)
         .attr("y", y + mHeight + 15)
-        .text("group")
+        .text("everyone")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "middle")
@@ -262,7 +269,7 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
         .domain([0, d3.max([data[0].percent, data[1].percent])])
         .range([y + mHeight - 10, y + 30]);
 
-    // draw line 
+    // draw line
     for (var i = 0; i < data.length; i++) {
     	var d = data[i];
     	var xLine = x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 5;
@@ -286,7 +293,7 @@ function setUpSingleLineGraph(svg, x, y, personality, data, tooltip, tooltipText
         })
         .style('opacity', 0)
         .on("mousemove", function(d, i) {
-            let titleText = (i == 0) ? personality : "GROUP";
+            let titleText = (i == 0) ? personality : "EVERYONE";
             let text = "<b>" + titleText + "</b></br></br>" +
                 tooltipText + (d.percent * 100).toFixed(2) + "%";
 
@@ -304,7 +311,7 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
     svg.append("text")
         .attr("x", x + mWidth * 0.7)
         .attr("y", y + mHeight + 15)
-        .text("group")
+        .text("everyone")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "middle")
@@ -326,14 +333,14 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
         .range([y + mHeight - 10, y + 30]);
 
 
-    // draw data1 line 
+    // draw data1 line
     for (var i = 0; i < data1.length; i++) {
     	var d = data1[i];
     	var x1 = x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i - 10;
     	drawImperfectVerticalLine(svg, yScale(d.percent), yScale(0), x1, dashArray[d.fAttitude], colorHexArray[d.fMood]);
     }
 
-    // draw data2 lines 
+    // draw data2 lines
    for (var i = 0; i < data2.length; i++) {
     	var d = data2[i];
     	var x2 = x + mWidth / 4 + iconDim / 2 + mWidth * 0.3 * i;
@@ -354,7 +361,7 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
         })
         .style('opacity', 0)
         .on("mousemove", function() {
-            let titleText = "GROUP";
+            let titleText = "EVERYONE";
             let text = "<b>" + titleText + "</b></br></br>" +
                 tooltipText + ((data1[1].percent + data2[1].percent) * 100).toFixed(2) + "%";
 

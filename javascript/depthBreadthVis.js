@@ -162,35 +162,35 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
             tooltip.style("visibility", "hidden");
         });
 
-    drawPlantLegend(svg, padding * 7, height * 0.68);
-    svg.append("text")
-        .attr("x", padding * 7.9)
-        .attr("y", height * 0.63)
-        .text("length of root")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", padding * 7.9)
-        .attr("y", height * 0.65)
-        .text("and width of plant represents")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", padding * 7.9)
-        .attr("y", height * 0.67)
-        .text("% of time spent on a specific")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", padding * 7.9)
-        .attr("y", height * 0.69)
-        .text("number of activities*")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
+    // drawPlantLegend(svg, padding * 7, height * 0.68);
+    // svg.append("text")
+    //     .attr("x", padding * 7.9)
+    //     .attr("y", height * 0.63)
+    //     .text("length of root")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 7.9)
+    //     .attr("y", height * 0.65)
+    //     .text("and width of plant represents")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 7.9)
+    //     .attr("y", height * 0.67)
+    //     .text("% of time spent on a specific")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 7.9)
+    //     .attr("y", height * 0.69)
+    //     .text("number of activities*")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
 
     // mode activity legend
     svg.append("text")
@@ -308,7 +308,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
     drawMoodHalfLegend(svgClass, "Most frequent mood");
 
     // add title
-    drawTitle(svg, "Breadth vs. Depth");
+    drawTitle(svg, "Remembered vs. Experienced Breadth and Depth");
 }
 
 function drawArrow(svg, xFactor, yFactor) {

@@ -123,9 +123,9 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
             let attitude = (d.x).split(":")[1];
             let tooltipText = "<b>ATTITUDE:</b> " + attitude +
                 "</br></br><b>FREQUENCY: </b>" + d.count +
-                "</br></br><b>AVERAGE TIME SPENT: </b>" + Math.trunc(d.y * 100) + "%" +
-                "</br></br><b>MIN TIME SPENT: </b>" + Math.trunc(d.min * 100) + "%" +
-                "</br></br><b>MAX TIME SPENT: </b>" + Math.trunc(d.max * 100) + "%";
+                "</br></br><b>AVERAGE %: </b>" + Math.trunc(d.y * 100) + "%" +
+                "</br></br><b>MIN %: </b>" + Math.trunc(d.min * 100) + "%" +
+                "</br></br><b>MAX %: </b>" + Math.trunc(d.max * 100) + "%";
 
             if (myData != null && myData == (d.x).split(":")[0]) {
                 tooltipText += "</br></br><b>YOU ARE IN THIS BALANCE GROUP</b>";
@@ -190,7 +190,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
             return colorHexArray[moodList[d.avg]];
         });
 
-    
+
     // add dots for group avg of each category
     svg.selectAll(".balanceAvgDots")
         .data(avgStdDataForGraph)
@@ -270,7 +270,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("text")
         .attr("x", padding * 4)
         .attr("y", yScale(0.85))
-        .text("% of time spent")
+        .text("% of records")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "end")
@@ -289,11 +289,12 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
         .style("fill", textColor)
         .style("font-size", 11);
 
+
     // add takeaway
     svg.append("text")
         .attr("x", bWidth * 0.715)
         .attr("y", height * 0.01)
-        .text("There are two types of self-proclaimed")
+        .text("For unbalanced and unhappy people, the attitude")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
@@ -302,7 +303,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("text")
         .attr("x", bWidth * 0.715)
         .attr("y", height * 0.01 + 15)
-        .text("unbalanced and unhappy people: passion")
+        .text("averages may be close but this masks that there")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
@@ -311,7 +312,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("text")
         .attr("x", bWidth * 0.715)
         .attr("y", height * 0.01 + 30)
-        .text("seekers (people who do what they want)")
+        .text("are two extreme clusters: passion seekers")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
@@ -320,7 +321,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("text")
         .attr("x", bWidth * 0.715)
         .attr("y", height * 0.01 + 45)
-        .text("and obligators (people who do what they")
+        .text("(people who do what they want) and hustlers")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
@@ -329,7 +330,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("text")
         .attr("x", bWidth * 0.715)
         .attr("y", height * 0.01 + 60)
-        .text("have to do).")
+        .text("(people who do what they have to do).")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
@@ -375,5 +376,5 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     drawMoodHalfLegend(svgClass, "Most frequent mood");
 
     // add title
-    drawTitle(svg, "Balanced vs. Unbalanced");
+    drawTitle(svg, "Attitude Prevalence by Balance Type");
 }
