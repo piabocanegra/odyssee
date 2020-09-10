@@ -15,7 +15,7 @@ body {
     font-size: 35px;
     font-family: minion-pro-caption, serif;
     font-weight: 400;
-    font-style: italic;
+
 }
 
 #content {
@@ -24,11 +24,10 @@ body {
 }
 
 h4 {
-    font-size: 35px;
+    font-size: 25px;
     color: #484848;
-    font-family: minion-pro-caption, serif;
+    font-family: Courier New;
     font-weight: 400;
-    font-style: italic;
 }
 
 #text {
@@ -41,14 +40,14 @@ h4 {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 30%;
+    width: 15%;
 }
 
 #reflection {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 30%;
+    width: 15%;
 }
 
 #vulnerability {
