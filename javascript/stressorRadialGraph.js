@@ -6,15 +6,36 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
         alignment: "middle"
     };
 
-    svg.append("text")
-        .attr("x", center.x)
-        .attr("y", center.y)
-        .text("Stressors")
-        .style("font-family", titleAttr.fontFamily)
-        .style("font-size", titleAttr.fontSize)
-        .style("fill", textColor)
-        .style("text-anchor", titleAttr.textAnchor)
-        .style("alignment-baseline", titleAttr.alignment);
+
+    // Which of the following daily/long-term stressors is most significant for you?
+
+    drawText(svg, "Which of the following", {
+        x: center.x,
+        y: center.y - 16,
+        // fontWeight: "bold"
+    });
+
+    drawText(svg, "daily/long-term stressors is", {
+        x: center.x,
+        y: center.y,
+        // fontWeight: "bold"
+    });
+
+    drawText(svg, "most significant for you?", {
+        x: center.x,
+        y: center.y + 16,
+        // fontWeight: "bold"
+    });
+
+    // svg.append("text")
+    //     .attr("x", center.x)
+    //     .attr("y", center.y)
+    //     .text("Stressors")
+    //     .style("font-family", titleAttr.fontFamily)
+    //     .style("font-size", titleAttr.fontSize)
+    //     .style("fill", textColor)
+    //     .style("text-anchor", titleAttr.textAnchor)
+    //     .style("alignment-baseline", titleAttr.alignment);
 
     drawText(svg, innerText, {
         x: center.x,
@@ -22,6 +43,11 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
     });
 
     drawImperfectCircle(svg, center, circleRadius + circleRadiusIncrement, { strokeWidth: 1.5 });
+
+    drawText(svg, "percentage of Bad/Awful records", {
+        x: center.x,
+        y: center.y + circleRadius + circleRadiusIncrement + 12
+    });
 
     drawText(svg, outerText, {
         x: center.x,
@@ -41,10 +67,12 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     let height = svg.attr("height");
     let width = svg.attr("width");
 
+    drawTitle(svg, "Stressors and Corresponding Negative Activities");
+
     // console.log(personalityData);
     // console.log(everyoneData);
 
-    let circleRadius = 160;
+    let circleRadius = 170;
     let circleRadiusIncrement = 100;
 
     let center = {
@@ -209,8 +237,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
             fontWeight: "bold",
             textAnchor: "middle",
             alignment: "middle",
-            x: center.x + (innerRadius - 12 - iconSize) * Math.cos(radialScale(category) + Math.PI / 4),
-            y: center.y + (innerRadius - 12 - iconSize) * Math.sin(radialScale(category) + Math.PI / 4)
+            x: center.x + (innerRadius - 36 - iconSize) * Math.cos(radialScale(category) + Math.PI / 4),
+            y: center.y + (innerRadius - 36 - iconSize) * Math.sin(radialScale(category) + Math.PI / 4)
         };
         textAttr.transform = "rotate(" + (angle < -45 ? angle + 180 : angle) + " " + (textAttr.x) + " " + (textAttr.y) + ")";
         drawText(svg, category, textAttr);
@@ -240,13 +268,20 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivityMap);
 
     // Add annotation.
+    // The sources of our stress are related to the activities we feel most negatively about. 
+    // For instance, those whose short term stressor is work are most stressed about collaborative virtual communication.
     let baseY = height * 0.14
-    drawText(svg, "The sources of our stress are somewhat related to", {
+    drawText(svg, "The sources of our stress are related to the activities we feel", {
+        x: width / 2,
+        y: baseY - 16,
+        fontWeight: "bold"
+    });
+    drawText(svg, "most negatively about. Those whose short term stressor is work", {
         x: width / 2,
         y: baseY,
         fontWeight: "bold"
     });
-    drawText(svg, "the activities we feel most negatively about.", {
+    drawText(svg, "are most stressed about collaborative virtual communication.", {
         x: width / 2,
         y: baseY + 16,
         fontWeight: "bold"
@@ -303,10 +338,10 @@ function drawStressorRadialGraphBar(constants, type, myData) {
 
     let termAttr = {
         size: type == "long" ? constants.iconSize * 0.8 : constants.iconSize * 0.5,
-        x: center.x + (outerRadius[type] + 12) * Math.cos(radialScale(category) + Math.PI / 4 + angleOffset),
-        y: center.y + (outerRadius[type] + 12) * Math.sin(radialScale(category) + Math.PI / 4 + angleOffset)
+        x: center.x + (innerRadius - iconSize / 2 - constants.iconSize * 0.7) * Math.cos(radialScale(category) + Math.PI / 4 + angleOffset),
+        y: center.y + (innerRadius - iconSize / 2 - constants.iconSize * 0.7) * Math.sin(radialScale(category) + Math.PI / 4 + angleOffset)
     }
-    termAttr.transform = "rotate(" + (angle) + " " + (termAttr.x) + " " + (termAttr.y) + ")"
+    termAttr.transform = "rotate(" + (angle + 180) + " " + (termAttr.x) + " " + (termAttr.y) + ")"
 
     let g = svg.append("g")
 
@@ -380,56 +415,57 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
     let width = svg.attr("width");
     let interLegendPadding = 24;
 
-    // Draw most negative activity.
-    let mostNegAttr = {
-        x: padding,
-        y: height - padding * 2.5,
-        width: width / 3 / 2 - interLegendPadding,
-    };
-    let mostNegLegend = svg.append("g")
-        .attr("width", mostNegAttr.width)
-        .attr("transform", "translate(" + mostNegAttr.x + "," + mostNegAttr.y + ")");
+    // // Draw most negative activity.
+    // let mostNegAttr = {
+    //     x: padding,
+    //     y: height - padding * 2.5,
+    //     width: width / 3 / 2 - interLegendPadding,
+    // };
+    // let mostNegLegend = svg.append("g")
+    //     .attr("width", mostNegAttr.width)
+    //     .attr("transform", "translate(" + mostNegAttr.x + "," + mostNegAttr.y + ")");
 
-    // Add text.
-    mostNegLegend.append("text")
-        .text("Most negative activity")
-        .attr("x", mostNegAttr.width / 2)
-        .attr("y", 15)
-        .attr("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("fill", textColor)
-        .style("font-size", 12);
+    // // Add text.
+    // mostNegLegend.append("text")
+    //     .text("Most negative activity")
+    //     .attr("x", mostNegAttr.width / 2)
+    //     .attr("y", 15)
+    //     .attr("text-anchor", "middle")
+    //     .style("font-family", "Courier new")
+    //     .style("fill", textColor)
+    //     .style("font-size", 12);
 
     // Setup icon size and filter.
-    let iconSize = 36;
-    svg.append('filter')
-        .attr('id', 'Text')
-        .append('feColorMatrix')
-        .attr('type', 'matrix')
-        .attr('color-interpolation-filters', 'sRGB')
-        .attr('values', "0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 1 0");
+    // let iconSize = 36;
+    // svg.append('filter')
+    //     .attr('id', 'Text')
+    //     .append('feColorMatrix')
+    //     .attr('type', 'matrix')
+    //     .attr('color-interpolation-filters', 'sRGB')
+    //     .attr('values', "0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 0 0.3 0 0 0 1 0");
 
-    // Calculate most negative activity (long-term).
-    let longTermMaxPercent = d3.max(categories, category => { return categoryActivityMap[category]["long"]; });
+    // // Calculate most negative activity (long-term).
+    // let longTermMaxPercent = d3.max(categories, category => { return categoryActivityMap[category]["long"]; });
 
-    categories.forEach(category => {
-        if (categoryActivityMap[category]["long"] == longTermMaxPercent) {
-            // Add icon.
-            mostNegLegend.append("image")
-                .attr("xlink:href", "images/" + categoryActivityMap[category]["long"] + ".svg")
-                .attr("x", mostNegAttr.width / 2 - iconSize / 2)
-                .attr("y", (padding * 2.5) / 2 - iconSize / 2 - 12)
-                .attr("width", iconSize)
-                .attr("height", iconSize)
-                .style("filter", function() { return "url(#Text)"; });
-        }
-    });
+    // categories.forEach(category => {
+    //     if (categoryActivityMap[category]["long"] == longTermMaxPercent) {
+    //         // Add icon.
+    //         mostNegLegend.append("image")
+    //             .attr("xlink:href", "images/" + categoryActivityMap[category]["long"] + ".svg")
+    //             .attr("x", mostNegAttr.width / 2 - iconSize / 2)
+    //             .attr("y", (padding * 2.5) / 2 - iconSize / 2 - 12)
+    //             .attr("width", iconSize)
+    //             .attr("height", iconSize)
+    //             .style("filter", function() { return "url(#Text)"; });
+    //     }
+    // });
 
     // Draw mood legend.
     let moodLegendAttr = {
-        x: width / 3 / 2 + interLegendPadding + padding,
+        x: padding,
+        // x: width / 3 / 2 + interLegendPadding + padding,
         y: height - padding * 2.5,
-        width: width / 3 / 2 - interLegendPadding - padding,
+        width: width / 3 / 2 - interLegendPadding,
     };
     let moodLegend = svg.append("g")
         .attr("class", "moodLegend")
@@ -440,9 +476,9 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw line legend.
     let lineLegendAttr = {
-        x: width / 3 + padding / 2 + interLegendPadding / 2,
+        x: moodLegendAttr.x + moodLegendAttr.width + interLegendPadding / 2,
         y: height - padding * 2.5,
-        width: width / 3 - interLegendPadding,
+        width: width / 2,
         iconSize: {
             long: 32,
             short: 22
@@ -499,30 +535,30 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
         textAnchor: shortStressorTextAttr.textAnchor
     });
 
-    lineLegend.append("line")
-        .attr("x1", lineLegendAttr.width / 2)
-        .attr("x2", lineLegendAttr.width / 2)
-        .attr("y1", 15 + 20)
-        .attr("y2", 15 + 20 + 24)
-        .attr("stroke", textColor)
-        .attr("stroke-width", 2.5)
-        .style("stroke-linecap", "round")
-        .style("stroke-dasharray", dashArray["I have to"]);
+    // lineLegend.append("line")
+    //     .attr("x1", lineLegendAttr.width / 2)
+    //     .attr("x2", lineLegendAttr.width / 2)
+    //     .attr("y1", 15 + 20)
+    //     .attr("y2", 15 + 20 + 24)
+    //     .attr("stroke", textColor)
+    //     .attr("stroke-width", 2.5)
+    //     .style("stroke-linecap", "round")
+    //     .style("stroke-dasharray", dashArray["I have to"]);
 
-    let lengthTextAttr = {
-        x: lineLegendAttr.width / 2,
-        alignmentBaseline: "hanging"
-    }
-    drawText(lineLegend, "length represents ratio of", {
-        x: lengthTextAttr.x,
-        y: textLineYPos[2],
-        alignmentBaseline: "hanging"
-    });
-    drawText(lineLegend, "Bad/Awful records to total records", {
-        x: lengthTextAttr.x,
-        y: textLineYPos[3],
-        alignmentBaseline: lengthTextAttr.alignmentBaseline
-    });
+    // let lengthTextAttr = {
+    //     x: lineLegendAttr.width / 2,
+    //     alignmentBaseline: "hanging"
+    // }
+    // drawText(lineLegend, "length represents ratio of", {
+    //     x: lengthTextAttr.x,
+    //     y: textLineYPos[2],
+    //     alignmentBaseline: "hanging"
+    // });
+    // drawText(lineLegend, "Bad/Awful records to total records", {
+    //     x: lengthTextAttr.x,
+    //     y: textLineYPos[3],
+    //     alignmentBaseline: lengthTextAttr.alignmentBaseline
+    // });
 
     // Draw attitude legend.
     let attitudeLegendAttr = {

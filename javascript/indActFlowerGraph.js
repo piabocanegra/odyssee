@@ -13,8 +13,8 @@ function drawIndActivityFlower(svgClass, title, personData) {
     let categoryMap = getFrequencyByKey("Activity", personData);
     let categoryFullMap = getFrequencyByKey("Activity", personData, 1);
 
-    // Show top 7 activities or activities with more than 5 records, whichever is fewer.
-    let numIcons = 7;
+    // Show top 5 activities or activities with more than 5 records, whichever is fewer.
+    let numIcons = 5;
     let keyList = Array.from(categoryMap.keys()).slice(0, numIcons);
     let keyListFiltered = keyList.filter(k => { return categoryMap.get(k) > 5 });
     keyList = keyListFiltered.length != 0 && keyListFiltered.length < keyList.length ? keyListFiltered : keyList;
@@ -244,29 +244,29 @@ function drawIndActivityFlower(svgClass, title, personData) {
             .domain([0, attitudes.length - 1])
             .range([-Math.PI, 0]);
 
-        // Add text.
-        flowerLegend.append("text")
-            .attr("x", 0)
-            .attr("y", flowerCenter.y - flowerPetalLength - flowerPadding)
-            .style("text-anchor", "middle")
-            .style("font-family", "Courier new")
-            .style("fill", textColor)
-            .style("font-size", 12)
-            .text(text[0]);
-
         // Add petals.
         attitudes.forEach(attitude => {
             flowerLegend.append("line")
                 .attr("x1", flowerCenter.x + innerRadius * Math.cos(radialScale(count)))
                 .attr("x2", flowerCenter.x + outerRadius * Math.cos(radialScale(count)))
-                .attr("y1", flowerCenter.y + innerRadius * Math.sin(radialScale(count)))
-                .attr("y2", flowerCenter.y + outerRadius * Math.sin(radialScale(count)))
+                .attr("y1", flowerCenter.y + innerRadius * Math.sin(radialScale(count)) - 16)
+                .attr("y2", flowerCenter.y + outerRadius * Math.sin(radialScale(count)) - 16)
                 .attr("stroke", textColor)
                 .attr("stroke-width", 2.5)
                 .style("stroke-linecap", "round")
                 .style("stroke-dasharray", dashArray[attitude])
             count += 1;
         });
+
+        // Add text.
+        flowerLegend.append("text")
+            .attr("x", 0)
+            .attr("y", padding * 1.65 - 16)
+            .style("text-anchor", "middle")
+            .style("font-family", "Courier new")
+            .style("fill", textColor)
+            .style("font-size", 12)
+            .text(text[0]);
 
         // Add text.
         flowerLegend.append("text")
