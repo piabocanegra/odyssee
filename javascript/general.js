@@ -109,6 +109,26 @@ function drawStdDevAvgLegend(svg) {
         .style("text-anchor", "start")
         .style("fill", textColor)
         .style("font-size", 12);
+    svg.append("circle")
+        .attr("cx", width * 0.85+40)
+        .attr("cy", height - padding * 1.4)
+        .attr("r", 5)
+        .style("fill", colorHexArray[moodList[3]]);
+    svg.append("circle")
+        .attr("cx", width * 0.85+40)
+        .attr("cy", height - padding * 1.4)
+        .attr("r", 15)
+        .attr("fill", "none")
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 1.5);
+    svg.append("text")
+        .attr("x", width * 0.9)
+        .attr("y", height - padding * 1.4)
+        .text("you")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "start")
+        .style("fill", textColor)
+        .style("font-size", 12);
 }
 
 function drawMoodLegendData(moodLegend, moodList) {
