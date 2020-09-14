@@ -52,7 +52,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
 
     let rootScale = d3.scaleLinear()
         .domain([0, 1])
-        .range([height * 0.3, height]);
+        .range([height * 0.41, height]);
 
     let tooltip = addTooltip("depthBreadthTooltip");
 
@@ -60,22 +60,22 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
     drawImperfectHorizontalLine(svg, padding * 2, width - padding * 2, rootScale(0));
 
     // add text labels
-    svg.append("text")
-        .attr("x", padding * 2 - 15)
-        .attr("y", rootScale(0))
-        .text("breadth")
-        .style("text-anchor", "end")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", width - padding * 2 + 15)
-        .attr("y", rootScale(0))
-        .text("depth")
-        .style("text-anchor", "start")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 2 - 15)
+    //     .attr("y", rootScale(0))
+    //     .text("breadth")
+    //     .style("text-anchor", "end")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", width - padding * 2 + 15)
+    //     .attr("y", rootScale(0))
+    //     .text("depth")
+    //     .style("text-anchor", "start")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
     svg.append("text")
         .attr("x", width / 2)
         .attr("y", rootScale(0) - 15)
@@ -92,7 +92,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
         .attr('xlink:href', 'images/depth_plant.svg')
         .attr('id', 'depthPlant')
         .attr('x', width * 0.55)
-        .attr('y', height * 0.14)
+        .attr('y', height * 0.25)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
@@ -128,7 +128,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("image")
         .attr('xlink:href', 'images/breadth_plant.svg')
         .attr('x', width * 0.15)
-        .attr('y', height * 0.14)
+        .attr('y', height * 0.25)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
@@ -162,6 +162,40 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
             tooltip.style("visibility", "hidden");
         });
 
+    // add text annotations
+    svg.append("text")
+        .attr("x", width/2)
+        .attr("y", rootScale(0) - padding*3)
+        .text("Width of plant represents % of time spent on all activities")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", width/2)
+        .attr("y", rootScale(0) - padding*3 + 15)
+        .text("except the top 3 most frequent activities")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", width/2)
+        .attr("y", rootScale(0.4))
+        .text("Length of root represents % of time spent")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", width/2)
+        .attr("y", rootScale(0.4)+15)
+        .text("on 3 most frequent activities")
+        .style("font-family", "Courier new")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
+
     // drawPlantLegend(svg, padding * 7, height * 0.68);
     // svg.append("text")
     //     .attr("x", padding * 7.9)
@@ -193,75 +227,75 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
     //     .style("fill", textColor);
 
     // mode activity legend
-    svg.append("text")
-        .attr("x", padding * 1.5)
-        .attr("y", height * 0.6)
-        .text("Mode activity flow type")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("line")
-        .attr("x1", padding * 2)
-        .attr("x2", padding * 2)
-        .attr("y1", height * 0.65)
-        .attr("y2", height * 0.7)
-        .attr("stroke", textColor)
-        .attr("stroke-width", 2)
-        .style("stroke-linecap", "round");
-    svg.append("line")
-        .attr("x1", padding * 4)
-        .attr("x2", padding * 4)
-        .attr("y1", height * 0.65)
-        .attr("y2", height * 0.7)
-        .attr("stroke", textColor)
-        .attr("stroke-width", 2)
-        .style("stroke-linecap", "round");
-    svg.append("text")
-        .attr("x", padding * 2)
-        .attr("y", height * 0.73)
-        .text("inflow")
-        .style("font-family", "Courier new")
-        .style("text-anchor", "middle")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", padding * 4)
-        .attr("y", height * 0.73)
-        .text("bi-directional")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", padding * 3)
-        .attr("y", height * 0.76)
-        .text("each shape represents")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
-    svg.append("text")
-        .attr("x", padding * 3)
-        .attr("y", height * 0.78)
-        .text("a distinct activity*")
-        .style("text-anchor", "middle")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
-        .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 1.5)
+    //     .attr("y", height * 0.6)
+    //     .text("Mode activity flow type")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("line")
+    //     .attr("x1", padding * 2)
+    //     .attr("x2", padding * 2)
+    //     .attr("y1", height * 0.65)
+    //     .attr("y2", height * 0.7)
+    //     .attr("stroke", textColor)
+    //     .attr("stroke-width", 2)
+    //     .style("stroke-linecap", "round");
+    // svg.append("line")
+    //     .attr("x1", padding * 4)
+    //     .attr("x2", padding * 4)
+    //     .attr("y1", height * 0.65)
+    //     .attr("y2", height * 0.7)
+    //     .attr("stroke", textColor)
+    //     .attr("stroke-width", 2)
+    //     .style("stroke-linecap", "round");
+    // svg.append("text")
+    //     .attr("x", padding * 2)
+    //     .attr("y", height * 0.73)
+    //     .text("inflow")
+    //     .style("font-family", "Courier new")
+    //     .style("text-anchor", "middle")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 4)
+    //     .attr("y", height * 0.73)
+    //     .text("bi-directional")
+    //     .style("text-anchor", "middle")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 3)
+    //     .attr("y", height * 0.76)
+    //     .text("each shape represents")
+    //     .style("text-anchor", "middle")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
+    // svg.append("text")
+    //     .attr("x", padding * 3)
+    //     .attr("y", height * 0.78)
+    //     .text("a distinct activity*")
+    //     .style("text-anchor", "middle")
+    //     .style("font-family", "Courier new")
+    //     .style("font-size", 12)
+    //     .style("fill", textColor);
 
     // symbols for legend
-    drawArrow(svg, 2, 0.656);
-    drawArrow(svg, 2, 0.667);
-    drawArrow(svg, 2, 0.677);
-    drawArrow(svg, 2, 0.687);
-    drawDiamond(svg, 4, 0.654);
-    drawDiamond(svg, 4, 0.668);
-    drawDiamond(svg, 4, 0.682);
+    // drawArrow(svg, 2, 0.656);
+    // drawArrow(svg, 2, 0.667);
+    // drawArrow(svg, 2, 0.677);
+    // drawArrow(svg, 2, 0.687);
+    // drawDiamond(svg, 4, 0.654);
+    // drawDiamond(svg, 4, 0.668);
+    // drawDiamond(svg, 4, 0.682);
 
     // add takeaway
     svg.append("text")
         .attr("x", width - padding * 5)
-        .attr("y", height * 0.5 + 20)
+        .attr("y", height * 0.6 + 20)
         .text("Self-proclaimed breadth and depth")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
@@ -270,7 +304,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
         .style("fill", textColor);
     svg.append("text")
         .attr("x", width - padding * 5)
-        .attr("y", height * 0.5 + 35)
+        .attr("y", height * 0.6 + 35)
         .text("people don't differ in the")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
@@ -279,7 +313,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
         .style("fill", textColor);
     svg.append("text")
         .attr("x", width - padding * 5)
-        .attr("y", height * 0.5 + 50)
+        .attr("y", height * 0.6 + 50)
         .text("breadth and depth of activities")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")
@@ -288,7 +322,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
         .style("fill", textColor);
     svg.append("text")
         .attr("x", width - padding * 5)
-        .attr("y", height * 0.5 + 65)
+        .attr("y", height * 0.6 + 65)
         .text("they do.")
         .style("text-anchor", "start")
         .style("font-family", "Courier new")

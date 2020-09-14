@@ -111,8 +111,12 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
             var offset = key2 == "want to" ? 15 : -25;
             return xScale(key1) - offset;
         })
-        .attr('y', yScale(0.82))
-        .attr('height', yScale(0) - yScale(0.82))
+        .attr('y', function(d) {
+          return yScale(d.max) - 15;
+        })
+        .attr('height', function(d){
+          return yScale(0) - yScale(d.max) + 15;
+        })
         .attr('width', 30)
         .attr('fill', '#c4c4c41a')
         .attr('opacity', 0)
@@ -229,8 +233,8 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
         .attr("stroke-width", 1.5);
     }
 
-    // add icons on x axis
     for (var category of balanceKeys) {
+        // add icons on x axis
         svg.append('image')
             .attr('xlink:href', 'images/' + category + '.svg')
             .attr('x', xScale(category) - 10)
@@ -254,6 +258,29 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
             .style("font-size", 11)
             .style("fill", textColor);
     }
+
+    // add labels for want to and have to
+    svg.selectAll(".haveToWantToLabels")
+        .data(avgStdDataForGraph)
+        .enter()
+        .append("text")
+        .attr("x", function(d) {
+            var key1 = (d.x).split(":")[0];
+            var key2 = (d.x).split(":")[1];
+            var offset = key2 == "want to" ? 0 : 40;
+            return xScale(key1) + offset;
+        })
+        .attr("y", function(d) {
+            return yScale(d.max) - 25;
+        })
+        .text(function(d) {
+          var key2 = (d.x).split(":")[1];
+          return key2 == "want to" ? "want to" : "have to";
+        })
+        .style("font-family", "Courier new")
+        .style("text-anchor", "middle")
+        .style("font-size", 12)
+        .style("fill", textColor);
 
     //add x axis label
     svg.append("text")
@@ -292,35 +319,44 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
 
     // add takeaway
     svg.append("text")
-        .attr("x", bWidth * 0.715)
-        .attr("y", height * 0.01)
-        .text("For unbalanced and unhappy people, the attitude")
+        .attr("x", bWidth * 0.76)
+        .attr("y", height * 0.13)
+        .text("For unbalanced and unhappy people")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
-        .attr("x", bWidth * 0.715)
-        .attr("y", height * 0.01 + 15)
-        .text("averages may be close but this masks that there")
+        .attr("x", bWidth * 0.76)
+        .attr("y", height * 0.13 + 15)
+        .text("the attitude averages may be close but")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
-        .attr("x", bWidth * 0.715)
-        .attr("y", height * 0.01 + 30)
-        .text("are two extreme clusters: passion seekers")
+        .attr("x", bWidth * 0.76)
+        .attr("y", height * 0.13 + 30)
+        .text("this masks that there are two extreme")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
-        .attr("x", bWidth * 0.715)
-        .attr("y", height * 0.01 + 45)
+        .attr("x", bWidth * 0.76)
+        .attr("y", height * 0.13 + 45)
+        .text(" clusters: passion seekers")
+        .style("font-family", "Courier new")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start")
+        .style("font-size", 12)
+        .style("fill", textColor);
+    svg.append("text")
+        .attr("x", bWidth * 0.76)
+        .attr("y", height * 0.13 + 60)
         .text("(people who do what they want) and hustlers")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
@@ -328,35 +364,35 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
         .style("font-size", 12)
         .style("fill", textColor);
     svg.append("text")
-        .attr("x", bWidth * 0.715)
-        .attr("y", height * 0.01 + 60)
+        .attr("x", bWidth * 0.76)
+        .attr("y", height * 0.13 + 75)
         .text("(people who do what they have to do).")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
         .style("text-anchor", "start")
         .style("font-size", 12)
         .style("fill", textColor);
-    svg.append("line")
-        .attr("x1", bWidth * 0.715)
-        .attr("x2", bWidth * 0.715)
-        .attr("y1", yScale(0.78))
-        .attr("y2", yScale(0.8))
-        .style("stroke", "#cdcdcd")
-        .style("stroke-width", 2.5);
-    svg.append("line")
-        .attr("x1", bWidth * 0.715)
-        .attr("x2", bWidth * 0.765)
-        .attr("y1", yScale(0.8))
-        .attr("y2", yScale(0.8))
-        .style("stroke", "#cdcdcd")
-        .style("stroke-width", 2.5);
-    svg.append("line")
-        .attr("x1", bWidth * 0.765)
-        .attr("x2", bWidth * 0.765)
-        .attr("y1", yScale(0.78))
-        .attr("y2", yScale(0.8))
-        .style("stroke", "#cdcdcd")
-        .style("stroke-width", 2.5);
+    // svg.append("line")
+    //     .attr("x1", bWidth * 0.715)
+    //     .attr("x2", bWidth * 0.715)
+    //     .attr("y1", yScale(0.78))
+    //     .attr("y2", yScale(0.8))
+    //     .style("stroke", "#cdcdcd")
+    //     .style("stroke-width", 2.5);
+    // svg.append("line")
+    //     .attr("x1", bWidth * 0.715)
+    //     .attr("x2", bWidth * 0.765)
+    //     .attr("y1", yScale(0.8))
+    //     .attr("y2", yScale(0.8))
+    //     .style("stroke", "#cdcdcd")
+    //     .style("stroke-width", 2.5);
+    // svg.append("line")
+    //     .attr("x1", bWidth * 0.765)
+    //     .attr("x2", bWidth * 0.765)
+    //     .attr("y1", yScale(0.78))
+    //     .attr("y2", yScale(0.8))
+    //     .style("stroke", "#cdcdcd")
+    //     .style("stroke-width", 2.5);
 
     // add legends
     drawStdDevAvgLegend(svg);

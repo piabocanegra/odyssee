@@ -140,9 +140,17 @@ function drawPersonalityKey(svgClass) {
     let svg = d3.select(svgClass);
 
     svg.append("text")
+      .attr("x", width * 0.3)
+      .attr("y", height * 0.25 - padding)
+      .text("Personalities")
+      .style("font-family", "Courier new")
+      .style("text-anchor", "middle")
+      .style("font-size", 25)
+      .style("fill", textColor);
+    svg.append("text")
         .attr("x", width * 0.3)
         .attr("y", height * 0.25)
-        .text("PERSONALITY DIMENSIONS")
+        .text("DIMENSIONS")
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
         .style("font-weight", "bold")
