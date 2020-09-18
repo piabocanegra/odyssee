@@ -12,7 +12,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
     // console.log(ikigaiData);
 
     // Add title.
-    drawTitle(svg, 'Ikigai');
+    drawTitle(svg, 'The Pillars of Ikigai');
 
     // Add ikigai chart.
     let imageAttr = {
@@ -29,7 +29,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
         .attr('xlink:href', 'images/ikigai.svg')
         .attr('x', imageAttr.x)
         .attr('y', imageAttr.y)
-        .attr('width', imageAttr.width)
+        .attr('width', imageAttr.width + 12)
         .attr('height', imageAttr.height);
 
     // Order for legend: Zen Master, Bohemian, Citizen, Profiteer
@@ -185,6 +185,19 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
             let interLinePadding = 14
             let typeAverage = ikigaiMap['total'][type];
             let categoryAverage = ikigaiMap[category][type];
+
+            console.log(type)
+            if (type == "Happiness") {
+                ikigaiGraph.append("rect")
+                    .attr("x", -18)
+                    .attr("y", 0)
+                    .attr("height", 100)
+                    .attr("width", interLinePadding * 6)
+                    .attr("fill", "none")
+                    .attr("stroke", greyColor)
+                    .attr("stroke-width", 1.5)
+                    .attr("rx", 12)
+            }
 
             // Add line for all entries.
             ikigaiGraph.append('line')

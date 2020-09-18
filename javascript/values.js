@@ -174,7 +174,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     let staticWidth = valueImageSize + horizontalPadding * 4 + imageSize * 2;
     let lengthXScale = d3.scaleLinear()
         .domain([minUserCount, maxUserCount])
-        .range([staticWidth + ikigaiWidth, width - imageSize]);
+        .range([staticWidth + ikigaiWidth, width - imageSize - 150]);
     let ikigaiXScale = d3.scaleBand()
         .domain(ikigaiGroups)
         .range([staticWidth, staticWidth + ikigaiWidth]);
@@ -182,6 +182,21 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     // Add tooltip.
     let tooltipId = 'valuesVisTooltipId';
     let tooltip = addTooltip(tooltipId);
+
+    let valueShortened = {
+        "Stability": "stability",
+        "enjoying life": "enjoying",
+        "Personal Success": "success",
+        "Looking out": "community"
+    }
+
+    let hoverRect = svg.append("rect")
+        .attr("height", graphEnd)
+        .attr("fill", "none")
+        .attr("rx", 8)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2)
+        .attr("visibility", "hidden")
 
     mostFrequentValues.forEach((d, i) => {
         let y = valueYScale(i);
@@ -198,6 +213,12 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
             .attr("y", y - valueImageSize / 2)
             .attr("width", valueImageSize)
             .attr("height", valueImageSize);
+        drawText(g, valueShortened[valueLongtoShort[d.value]], {
+            x: 0,
+            y: y + valueImageSize / 2 + 4,
+            alignmentBaseline: "hanging",
+            textAnchor: "start"
+        })
         g.append("line")
             .attr("x1", valueImageSize + horizontalPadding)
             .attr("x2", lengthXScale(d.count) + imageSize)
@@ -275,6 +296,11 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
             .attr("y", y - personalityImageSize - 12)
             .attr("width", personalityImageSize)
             .attr("height", personalityImageSize);
+        drawText(g, d.count + " individuals", {
+            x: lengthXScale(d.count) + imageSize + 12,
+            y: y,
+            textAnchor: "start"
+        })
 
         let hoverTargets = [{
             x: 0,
@@ -336,8 +362,13 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
                                 return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
                             }
                         })
+                        // hoverRect.attr("x", targetRect.x)
+                        //     .attr("y", graphStart - valueImageSize - 22)
+                        //     .attr("width", targetRect.width)
+                        //     .attr("visibility", "visible")
                 }).on("mouseout", function() {
                     tooltip.style("visibility", "hidden");
+                    // hoverRect.attr("visibility", "hidden")
                 });
         });
     });
@@ -386,9 +417,10 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
         .attr("transform", "translate(" + overrepTextLegendAttr.x + "," + overrepTextLegendAttr.y + ")");
 
     let overrepTextLegendText = [
-        { extraPadding: 0, lines: ["distance from line", "represents how far", "ikigai group is from the average"] },
-        { extraPadding: 16 * 3, lines: ["line represents", "value group's average"] },
-        { extraPadding: 16 * 5, lines: ["length of line represents", "# of participants with", "that value"] }
+        { extraPadding: 16 * 3, lines: ["distance from line", " represents how far ikigai", "group is from the average"] },
+        // { extraPadding: 0, lines: ["distance from line", "represents how far", "ikigai group is from the average"] },
+        // { extraPadding: 16 * 3, lines: ["line represents", "value group's average"] },
+        // { extraPadding: 16 * 5, lines: ["length of line represents", "# of participants with", "that value"] }
     ];
 
     overrepTextLegendText.forEach((paragraph, ip) => {

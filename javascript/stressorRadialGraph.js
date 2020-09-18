@@ -12,19 +12,19 @@ function drawStressorRadialGraphSetup(svg, center, circleRadius, circleRadiusInc
     drawText(svg, "Which of the following", {
         x: center.x,
         y: center.y - 16,
-        // fontWeight: "bold"
+        fontWeight: "bold"
     });
 
     drawText(svg, "daily/long-term stressors is", {
         x: center.x,
         y: center.y,
-        // fontWeight: "bold"
+        fontWeight: "bold"
     });
 
     drawText(svg, "most significant for you?", {
         x: center.x,
         y: center.y + 16,
-        // fontWeight: "bold"
+        fontWeight: "bold"
     });
 
     // svg.append("text")

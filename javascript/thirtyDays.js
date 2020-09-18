@@ -31,7 +31,7 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    drawTitle(svg, "30 days");
+    drawTitle(svg, "30 days of odyssee: Most Frequent Activities");
 
     let dateTimeParser = d3.timeParse("%m/%d/%y %H:%M %p");
     timeData.forEach(d => {
@@ -315,5 +315,5 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
         .attr("transform", "translate(" + activityLegendAttr.x + "," + activityLegendAttr.y + ")");
 
     drawMoodLegend(moodLegend, "Most frequent mood", moodList);
-    drawActivityLegend(activityLegend);
+    // drawActivityLegend(activityLegend);
 }

@@ -99,10 +99,19 @@ function drawMorningNightVis(svgClass, timeData, email = null) {
             .attr("x2", timeXScale(timeSegment.start))
             .attr("y1", 0)
             .attr("y2", graphAttr.height - graphAttr.verticalPadding - iconSize / 2)
-            .attr("stroke", colorHexArray[averageMood])
-            .style("stroke-dasharray", dashArray[mostFrequentAttitude])
+            .attr("stroke", greyColor)
             .attr("stroke-width", 2)
+            .attr("opacity", 0.25)
             .style("stroke-linecap", "round");
+        // morningNightGraph.append("line")
+        //     .attr("x1", timeXScale(timeSegment.start))
+        //     .attr("x2", timeXScale(timeSegment.start))
+        //     .attr("y1", 0)
+        //     .attr("y2", graphAttr.height - graphAttr.verticalPadding - iconSize / 2)
+        //     .attr("stroke", colorHexArray[averageMood])
+        //     .style("stroke-dasharray", dashArray[mostFrequentAttitude])
+        //     .attr("stroke-width", 2)
+        //     .style("stroke-linecap", "round");
 
         // Draw clock image.
         morningNightGraph.append("image")
@@ -332,5 +341,5 @@ function drawMorningNightVis(svgClass, timeData, email = null) {
 
     // Draw mood and attitude legend.
     drawMoodHalfLegend(svgClass, "Average mood for part of day for morning & night people");
-    drawAttitudeHalfLegend(svgClass, attitudeList, "Most frequent attitude for morning & night people");
+    // drawAttitudeHalfLegend(svgClass, attitudeList, "Most frequent attitude for morning & night people");
 }

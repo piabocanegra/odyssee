@@ -13,7 +13,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
     let interGraphVerticalPadding = 24;
     let lineWidth = 1.5;
 
-    drawTitle(svg, "Occupation");
+    drawTitle(svg, "Occupations and corresponding overrepresented activities");
     // console.log(typesData);
 
     let ikigaiList = [{
@@ -127,7 +127,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
         .domain([0, Object.keys(occupations).length - 1])
         .range([graphAttr.textWidth + graphAttr.horizontalPadding * 4, graphAttr.width - graphAttr.horizontalPadding * 4]);
     let usersScale = d3.scaleLinear()
-        .domain([0, maxUsers])
+        .domain([0, 1])
         .range([graphAttr.height / 2, 0]);
 
     // Add tooltip.
@@ -143,7 +143,9 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
             let occupation = occupations[o];
             let overRepresentedActivity = "none";
             let numRecords = ikigai[o].records.length;
-            let numUsers = ikigai[o].users.length;
+            let numUsers = ikigai[o].users.length / ikigai.users.length;
+            // console.log(ikigai)
+
             let imageSize = baseImageSize;
             let g = ikigaiGraph.append("g");
 
@@ -159,6 +161,12 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
                     .attr("y", graphAttr.height / 2)
                     .attr("width", imageWidth)
                     .attr("height", imageHeight);
+
+                drawText(g, occupation.title.toLowerCase(), {
+                    x: occupationScale(i),
+                    y: graphAttr.height / 2 + imageWidth + 24,
+                    alignmentBaseline: "hanging"
+                });
             });
 
             if (numRecords > 0) {
@@ -188,12 +196,24 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
                 overRepresentedActivity = activityShortToLong[maxActivity];
             }
 
+            console.log(occupation)
             if (occupation.average > 0) {
+                averagePercent = 0
+                ikigaiList.forEach(ikigai2 => {
+                    Object.keys(occupations).forEach(o2 => {
+                        // console.log(o)
+                        if (o == o2) {
+                            averagePercent += ikigai2[o2].users.length / ikigai2.users.length;
+                        }
+                    })
+                })
+
+                averagePercent = averagePercent / Object.keys(occupations).length
                 g.append("line")
                     .attr("x1", occupationScale(i) - averageLineWidth / 2)
                     .attr("x2", occupationScale(i) + averageLineWidth / 2)
-                    .attr("y1", usersScale(occupation.average))
-                    .attr("y2", usersScale(occupation.average))
+                    .attr("y1", usersScale(averagePercent))
+                    .attr("y2", usersScale(averagePercent))
                     .attr("stroke", greyColor)
                     .attr("stroke-width", lineWidth)
                     .attr("stroke-linecap", "round");
@@ -201,7 +221,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
 
             let tooltipText = "<b>IKIGAI GROUP:</b> " + ikigai.title +
                 "</br></br><b>OCCUPATION: </b>" + occupations[o].description.toLowerCase() +
-                "</br></br><b>NUMBER OF USERS: </b>" + numUsers +
+                "</br></br><b>PERCENT OF USERS: </b>" + Math.floor(numUsers * 10000) / 100 + "%" +
                 "</br></br><b>OVER-REPRESENTED ACTIVITY: </b>" + overRepresentedActivity.toLowerCase();
 
             if (myData != null && myData.ikigai == ikigai.category && myData.occupation == occupations[o].description) {
@@ -225,7 +245,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
             });
         });
 
-        drawText(ikigaiGraph, "users", {
+        drawText(ikigaiGraph, "% of users", {
             x: graphAttr.textWidth,
             y: usersScale(maxUsers),
             textAnchor: "end"
