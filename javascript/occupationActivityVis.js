@@ -13,7 +13,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
     let interGraphVerticalPadding = 24;
     let lineWidth = 1.5;
 
-    drawTitle(svg, "Occupations and corresponding overrepresented activities");
+    drawTitle(svg, "Occupations and Corresponding Overrepresented Activities");
     // console.log(typesData);
 
     let ikigaiList = [{
@@ -74,7 +74,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
     // Get denominator for activity multiples.
     let activityCountMap = {};
     Object.keys(activityShortToLong).forEach(a => {
-        // Number of records for "a" activities in entire group (across all ikigai + all occupations) divided by 
+        // Number of records for "a" activities in entire group (across all ikigai + all occupations) divided by
         // number of records for all activities in entire group).
         activityCountMap[a] = everyoneData.filter(d => {
             return d[keys.everyone.activity].substring(0, 2) == a
