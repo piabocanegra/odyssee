@@ -110,12 +110,12 @@ function drawStdDevAvgLegend(svg) {
         .style("fill", textColor)
         .style("font-size", 12);
     svg.append("circle")
-        .attr("cx", width * 0.85+40)
+        .attr("cx", width * 0.85 + 40)
         .attr("cy", height - padding * 1.4)
         .attr("r", 5)
         .style("fill", colorHexArray[moodList[3]]);
     svg.append("circle")
-        .attr("cx", width * 0.85+40)
+        .attr("cx", width * 0.85 + 40)
         .attr("cy", height - padding * 1.4)
         .attr("r", 15)
         .attr("fill", "none")
@@ -221,7 +221,7 @@ function drawAttitudeLegendData(attitudeLegend, attitudeList) {
         .append('line')
         .attr("x1", function(d, i) { return xScale(i); })
         .attr("x2", function(d, i) { return xScale(i); })
-        .attr("y1", padding * 1.2)
+        .attr("y1", padding * 1.2 + 4)
         .attr("y2", 35)
         .attr("stroke", textColor)
         .attr("stroke-width", 2.5)
