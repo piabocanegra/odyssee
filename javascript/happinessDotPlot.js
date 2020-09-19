@@ -92,7 +92,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
         drawText(svg, i == 5 ? "5 - Strongly Agree" : i, {
             x: experiencedScale(0) - graphPadding,
             y: rememberedScale(i),
-            textAnchor: "start"
+            textAnchor: "end"
         });
     }
     for (let i = 1; i <= 5; i++) {
@@ -153,20 +153,21 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     });
 
     svg.append("line")
-        .attr("x1", plotLineAttr.remembered.x)
-        .attr("x2", plotLineAttr.remembered.x)
+        .attr("x1", experiencedScale(0) + 18)
+        .attr("x2", experiencedScale(0) + 18)
         .attr("y1", plotLineAttr.remembered.y1)
         .attr("y2", plotLineAttr.remembered.y2)
         .attr("stroke", greyColor)
         .attr("stroke-width", 2);
 
-    drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y1, "horizontal");
-    drawTab(svg, plotLineAttr.remembered.x, plotLineAttr.remembered.y2, "horizontal");
+    drawTab(svg, experiencedScale(0) + 18, plotLineAttr.remembered.y1, "horizontal");
+    drawTab(svg, experiencedScale(0) + 18, plotLineAttr.remembered.y2, "horizontal");
 
     drawText(svg, "remembered happiness", {
-        x: plotLineAttr.remembered.x - plotLineTextOffset,
+        x: experiencedScale(0),
+        // x: plotLineAttr.remembered.x - plotLineTextOffset,
         y: rememberedScale(groupAverage.remembered),
-        transform: "rotate(270 " + (plotLineAttr.remembered.x - plotLineTextOffset) + " " + rememberedScale(groupAverage.remembered) + ")"
+        transform: "rotate(270 " + (experiencedScale(0)) + " " + rememberedScale(groupAverage.remembered) + ")"
     });
 
     let tooltipId = "happinessDotPlotTooltipId"
@@ -271,7 +272,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     let moodLegendAttr = {
         x: 2 * padding,
         y: height - padding * 2.5,
-        width: (width - 4 * padding) * 2 / 3,
+        width: (width - 4 * padding) / 2,
     };
     let moodLegend = svg.append("g")
         .attr("class", "moodLegend")
@@ -279,7 +280,87 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
         .attr("transform", "translate(" + moodLegendAttr.x + "," + moodLegendAttr.y + ")");
 
     drawMoodLegend(moodLegend, "Most frequent mood", moodList);
-    drawStdDevAvgLegend(svg);
+
+    let stdLegendAttr = {
+        x: moodLegendAttr.x + moodLegendAttr.width + padding,
+        y: height - padding * 2.5,
+        width: (width - 4 * padding) / 2,
+    };
+    let stdLegend = svg.append("g")
+        .attr("width", stdLegendAttr.width)
+        .attr("transform", "translate(" + stdLegendAttr.x + "," + stdLegendAttr.y + ")");
+
+    drawText(stdLegend, "standard", {
+        x: 12,
+        y: 12,
+        textAnchor: "start"
+    })
+    drawText(stdLegend, "deviation", {
+        x: 12,
+        y: 12 + 16,
+        textAnchor: "start"
+    })
+    let stdAttr = {
+        height: 72,
+        x: 90,
+        y: 0,
+        width: 16
+    }
+    stdLegend.append("line")
+        .attr("x1", stdAttr.x)
+        .attr("x2", stdAttr.x + stdAttr.width)
+        .attr("y1", stdAttr.y)
+        .attr("y2", stdAttr.y)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2)
+        .attr("stroke-linecap", "round")
+
+    stdLegend.append("line")
+        .attr("x1", stdAttr.x)
+        .attr("x2", stdAttr.x + stdAttr.width)
+        .attr("y1", stdAttr.y + stdAttr.height)
+        .attr("y2", stdAttr.y + stdAttr.height)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2)
+        .attr("stroke-linecap", "round")
+
+    stdLegend.append("line")
+        .attr("x1", stdAttr.x + stdAttr.width / 2)
+        .attr("x2", stdAttr.x + stdAttr.width / 2)
+        .attr("y1", stdAttr.y)
+        .attr("y2", stdAttr.y + stdAttr.height)
+        .attr("stroke", greyColor)
+        .attr("stroke-width", 2)
+        .attr("stroke-linecap", "round")
+
+    drawText(stdLegend, "an individual", {
+        x: stdAttr.x + stdAttr.width + 12,
+        y: (stdAttr.y * 2 + stdAttr.height) / 2 - 12,
+        textAnchor: "start",
+        alignmentBaseline: "bottom"
+    })
+
+    stdLegend.append("circle")
+        .attr("fill", colorHexArray["Good"])
+        .attr("r", 4)
+        .attr("cx", stdAttr.x + stdAttr.width + 12 + 2)
+        .attr("cy", (stdAttr.y * 2 + stdAttr.height) / 2)
+
+    stdLegend.append("circle")
+        .attr("fill", textColor)
+        .attr("r", 5)
+        .attr("cx", stdAttr.x + stdAttr.width + 12 + 2 + 24)
+        .attr("cy", (stdAttr.y * 2 + stdAttr.height) / 2)
+
+    drawText(stdLegend, "group average", {
+        x: stdAttr.x + stdAttr.width + 12 + 2 + 24 - 3,
+        y: (stdAttr.y * 2 + stdAttr.height) / 2 + 10,
+        textAnchor: "start",
+        alignmentBaseline: "hanging"
+    })
+
+
+    // drawStdDevAvgLegend(svg);
 
     let baseAnnotationY = rememberedScale(5);
     let annotation = ["Remembered happiness", "varies more than", "experienced happiness."];
