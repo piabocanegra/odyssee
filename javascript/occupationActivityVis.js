@@ -108,12 +108,13 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
 
     console.log(ikigaiList);
 
-    let maxUsers = d3.max(ikigaiList, i => {
-        return d3.max(Object.keys(occupations), o => {
-            return i[o].users.length
-        })
-    });
-    // console.log(maxUsers);
+    // let maxUsers = d3.max(ikigaiList, i => {
+    //     return d3.max(Object.keys(occupations), o => {
+    //         return i[o].users.length
+    //     })
+    // });
+    let maxUsers = 0.55
+        // console.log(maxUsers);
 
     let graphAttr = {
         textWidth: 100,
@@ -127,7 +128,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
         .domain([0, Object.keys(occupations).length - 1])
         .range([graphAttr.textWidth + graphAttr.horizontalPadding * 4, graphAttr.width - graphAttr.horizontalPadding * 4]);
     let usersScale = d3.scaleLinear()
-        .domain([0, 1])
+        .domain([0, maxUsers])
         .range([graphAttr.height / 2, 0]);
 
     // Add tooltip.
