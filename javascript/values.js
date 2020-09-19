@@ -198,6 +198,9 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
         .attr("stroke-width", 2)
         .attr("visibility", "hidden")
 
+    let hoverText = drawText(svg, "", { x: 0, y: 0, alignmentBaseline: "bottom" })
+        .attr("visibility", "hidden")
+
     mostFrequentValues.forEach((d, i) => {
         let y = valueYScale(i);
         let underOverRepActivities = getMinMaxOfCountMap(d.activity);
@@ -278,13 +281,13 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
                     .attr("r", ikigaiRadius - lineWidth / 2)
                     .attr("fill", "none")
                     .attr("stroke", ikigaiColorHexArray[i])
-                    .attr("stroke-width", lineWidth);
+                    .attr("stroke-width", lineWidth)
             } else {
                 g.append("circle")
                     .attr("cx", ikigaiXScale(i))
                     .attr("cy", ikigaiYScale(d.ikigai[i]))
                     .attr("r", ikigaiRadius)
-                    .attr("fill", ikigaiColorHexArray[i]);
+                    .attr("fill", ikigaiColorHexArray[i])
             }
         });
         // console.log(d.value + ": " + getMinMaxOfCountMap(d.personality).max)
@@ -302,6 +305,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
             textAnchor: "start"
         })
 
+        let ikigaiHoverRectWidth = ikigaiXScale(ikigaiGroups[ikigaiGroups.length - 1]) - ikigaiXScale(ikigaiGroups[0]) + ikigaiRadius * 4
         let hoverTargets = [{
             x: 0,
             y: y - valueImageSize / 2,
@@ -310,6 +314,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
             text: "</br></br><b>OVER-REPRESENTED ATTITUDE: </b>" + attitudeLongtoShort[getMinMaxOfCountMap(d.attitude).max].toLowerCase()
 
         }, {
+            title: "occupation",
             x: valueImageSize + horizontalPadding * 2,
             y: y - imageSize,
             height: imageSize * 2,
@@ -317,6 +322,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
             text: "</br></br><b>OVER-REPRESENTED OCCUPATION: </b>" + underOverRepOccupation.max.toLowerCase() +
                 "</br></br><b>UNDER-REPRESENTED OCCUPATION: </b>" + underOverRepOccupation.min.toLowerCase()
         }, {
+            title: "activity",
             x: valueImageSize + horizontalPadding * 3 + imageSize,
             y: y - imageSize,
             height: imageSize * 2,
@@ -324,10 +330,35 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
             text: "</br></br><b>OVER-REPRESENTED ACTIVITY: </b>" + activityShortToLong[underOverRepActivities.max].toLowerCase() +
                 "</br></br><b>UNDER-REPRESENTED ACTIVITY: </b>" + activityShortToLong[underOverRepActivities.min].toLowerCase()
         }, {
-            x: ikigaiXScale(ikigaiGroups[0]) - ikigaiRadius * 2,
+            title: "zen master",
+            x: ikigaiXScale(ikigaiGroups[0]) - ikigaiRadius * 2 - 11,
             y: y - imageSize,
             height: imageSize * 2,
-            width: ikigaiXScale(ikigaiGroups[ikigaiGroups.length - 1]) - ikigaiXScale(ikigaiGroups[0]) + ikigaiRadius * 4,
+            width: (ikigaiHoverRectWidth) / 4,
+            text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.max].toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.min].toLowerCase()
+        }, {
+            title: "bohemian",
+            x: ikigaiXScale(ikigaiGroups[0]) - ikigaiRadius * 2 + (ikigaiHoverRectWidth) / 4 - 3,
+            y: y - imageSize,
+            height: imageSize * 2,
+            width: (ikigaiHoverRectWidth) / 4,
+            text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.max].toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.min].toLowerCase()
+        }, {
+            title: "citizen",
+            x: ikigaiXScale(ikigaiGroups[0]) - ikigaiRadius * 2 + (ikigaiHoverRectWidth) / 4 * 2 + 3,
+            y: y - imageSize,
+            height: imageSize * 2,
+            width: (ikigaiHoverRectWidth) / 4,
+            text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.max].toLowerCase() +
+                "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.min].toLowerCase()
+        }, {
+            title: "profiteer",
+            x: ikigaiXScale(ikigaiGroups[0]) - ikigaiRadius * 2 + (ikigaiHoverRectWidth) / 4 * 3 + 11,
+            y: y - imageSize,
+            height: imageSize * 2,
+            width: (ikigaiHoverRectWidth) / 4,
             text: "</br></br><b>OVER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.max].toLowerCase() +
                 "</br></br><b>UNDER-REPRESENTED IKIGAI: </b>" + ikigaiKeyToLabel[underOverRepIkigai.min].toLowerCase()
         }, {
@@ -362,13 +393,21 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
                                 return event.pageX - document.getElementById(tooltipId).clientWidth - 20 + "px";
                             }
                         })
-                        // hoverRect.attr("x", targetRect.x)
-                        //     .attr("y", graphStart - valueImageSize - 22)
-                        //     .attr("width", targetRect.width)
-                        //     .attr("visibility", "visible")
+                    if (targetRect.title != null) {
+                        hoverRect.attr("x", targetRect.x)
+                            .attr("y", graphStart - valueImageSize - 22)
+                            .attr("width", targetRect.width)
+                            .attr("visibility", "visible")
+                        hoverText.attr("x", targetRect.x + targetRect.width / 2)
+                            .attr("y", graphStart - valueImageSize - 22 - 12)
+                            .attr("visibility", "visible")
+                            .text(targetRect.title)
+                    }
                 }).on("mouseout", function() {
                     tooltip.style("visibility", "hidden");
-                    // hoverRect.attr("visibility", "hidden")
+                    hoverRect.attr("visibility", "hidden")
+                    hoverText.attr("visibility", "hidden")
+
                 });
         });
     });
