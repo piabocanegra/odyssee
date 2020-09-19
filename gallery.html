@@ -38,6 +38,7 @@
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="indBursts"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="indBursts2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="aggActFlower"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="balance"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1050" class="happinessDotPlot"></svg>
@@ -252,7 +253,8 @@
             drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Moods for Most Frequent Activities", false);
             drawMoodByActivityBursts(".indBursts2", categoryMap, categoryFullMap, personData3, "Moods for Most Frequent Activities", true);
 
-            drawIndActivityFlower(".indActFlower", "Activity", personData3);
+            drawIndActivityFlower(".indActFlower", "My Activity", personData3);
+            drawIndActivityFlower(".aggActFlower", "Aggregate Activity", everyoneData);
 
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData, email);
