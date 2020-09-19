@@ -489,7 +489,7 @@ function setTooltipText(tooltip, text, leftOffset, rightOffset) {
         .style("text-align", "left")
         .style("color", textColor)
         .style("visibility", "visible")
-        .style("max-width", 250)
+        .style("max-width", 255)
         .style("top", event.pageY + 20)
         .style("left", function() {
             if (d3.event.clientX < 750) {
