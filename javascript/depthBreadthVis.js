@@ -92,7 +92,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
         .attr('xlink:href', 'images/depth_plant.svg')
         .attr('id', 'depthPlant')
         .attr('x', width * 0.55)
-        .attr('y', height * 0.25)
+        .attr('y', height * 0.25 - 5)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
@@ -128,7 +128,7 @@ function drawDepthBreadthPlot(svgClass, everyoneData, personalityData, mEmail) {
     svg.append("image")
         .attr('xlink:href', 'images/breadth_plant.svg')
         .attr('x', width * 0.15)
-        .attr('y', height * 0.25)
+        .attr('y', height * 0.25 - 2)
         .attr('width', 300)
         .attr('height', 300)
         .on("mousemove", function() {
