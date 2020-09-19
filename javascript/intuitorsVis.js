@@ -282,9 +282,9 @@ function drawPersonalityKey(svgClass) {
     addTextLabel(svg, width * 0.65, height * 0.53, "We categorized personality types by", true, false);
     addTextLabel(svg, width * 0.65, height * 0.53 + 15, "their dominant function (i.e. Intuitors,", true, false);
     addTextLabel(svg, width * 0.65, height * 0.53 + 30, "Observers, Thinkers, and Feelers).", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 45, "In this visualization, we show how", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 60, "self-reported data coincides with each", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 75, "personality-specific archetype.", true, false, true);
+    addTextLabel(svg, width * 0.65, height * 0.53 + 60, "In this visualization, we show how", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.53 + 75, "self-reported data coincides with each", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.53 + 90, "personality-specific archetype.", true, false, true);
 }
 
 function addTextLabel(svg, x, y, text, isBold, isMiddle = true, isLink = false) {
