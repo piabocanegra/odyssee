@@ -4,7 +4,7 @@
  *   personData: list of data entries
  *   returns void, draws data vis for individual activity flowers
  */
-function drawIndActivityFlower(svgClass, title, personData) {
+function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr('height');
     let width = svg.attr('width');
@@ -37,7 +37,9 @@ function drawIndActivityFlower(svgClass, title, personData) {
     drawTitle(svg, title);
 
     // Function for drawing flower.
-    function drawFlower(svgClass, centerX, centerY, length, flowerMap, n) {
+    function drawFlower(svgClass, centerX, centerY, length, flowerMap, n, petalDivisor) {
+        console.log("NNNNNNNNNNNN")
+        console.log(n)
         let svg = d3.select(svgClass);
 
         // n: Number of petals.
@@ -89,7 +91,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
 
     // Check if there are more than 40 entries.
     let maxPoints = d3.max(keyList, d => { return getPersonDataByActivity(personData, d).length });
-    let petalDivisor = maxPoints > 40 ? 2 : 1;
+    let petalDivisor = maxPoints > 40 ? divisor ? divisor : 2 : 1;
 
     // Setup tooltip.
     let tooltipId = "indActFlowerGraphTooltipId"
@@ -141,7 +143,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
         newMoodList.forEach(mood => {
             attitudeList.forEach(attitude => {
                 let num = flowerDataMap[mood][attitude];
-                if (petalDivisor == 1 || num % 2 == 0) {
+                if (petalDivisor == 1 || num % petalDivisor == 0) {
                     num = num / petalDivisor;
                 } else {
                     // Alternate between rounding up and rounding down.
@@ -195,7 +197,7 @@ function drawIndActivityFlower(svgClass, title, personData) {
             });
 
         // Draw flower.
-        drawFlower(svgClass, flowerCenter.x, flowerCenter.y, length, flowerDataMap, n);
+        drawFlower(svgClass, flowerCenter.x, flowerCenter.y, length, flowerDataMap, n, petalDivisor);
     });
 
     // Add legends.
