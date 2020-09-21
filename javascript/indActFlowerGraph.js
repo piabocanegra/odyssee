@@ -239,7 +239,7 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
         let innerRadius = 0;
         let outerRadius = innerRadius + flowerPetalLength;
 
-        let text = petalDivisor == 1 ? ["all records", "for an activity"] : ["one petal represents", "two records for an activity"]
+        let text = petalDivisor == 1 ? ["all records", "for an activity"] : ["one petal represents", petalDivisor + " records for an activity"]
 
         // Setup scales.
         let radialScale = d3.scaleLinear()
