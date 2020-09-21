@@ -254,7 +254,7 @@
             drawMoodByActivityBursts(".indBursts2", categoryMap, categoryFullMap, personData3, "Moods for Most Frequent Activities", true);
 
             drawIndActivityFlower(".indActFlower", "My Activity", personData3);
-            drawIndActivityFlower(".aggActFlower", "Aggregate Activity", everyoneData, 15);
+            drawIndActivityFlower(".aggActFlower", "Most Frequent Activities", everyoneData, 15);
 
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData, email);
