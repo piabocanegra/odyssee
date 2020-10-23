@@ -43,7 +43,7 @@ function drawIntuitorsVis(svgClass, everyoneData, personalityData, typesData, mE
     drawSingleYIcon(svg, width * 0.7, 450, "welfare", "VALUE", "understanding and advancing the welfare of all people");
     setUpSingleLineGraph(svg, width * 0.7, 450, "ENTP", entpData, tooltip, "% of participants who value understanding and advancing the welfare of all people: ", myData, "% of participants");
 
-    setUpLeftPersonalityTitleIcon(svg, "intuitors", "The Intuitors");
+    setUpLeftPersonalityTitleIcon(svg, "Intuitors", "The Intuitors");
 }
 
 function drawFeelerThinkerVis(svgClass, everyoneData, personalityData, typesData, mEmail) {
@@ -80,8 +80,8 @@ function drawFeelerThinkerVis(svgClass, everyoneData, personalityData, typesData
     drawSingleYIcon(svg, width * 0.55, 450, "Depth", "PREFERENCE", "depth", true);
     setUpSingleLineGraph(svg, width * 0.55, 450, "ENFJ", enfjData, tooltip, "% of participants who prefer depth over breadth: ", myData, "% of participants");
 
-    setUpLeftPersonalityTitleIcon(svg, "feelers", "The Feelers");
-    setUpRightPersonalityTitleIcon(svg, "thinkers", "The Thinkers");
+    setUpLeftPersonalityTitleIcon(svg, "Feelers", "The Feelers");
+    setUpRightPersonalityTitleIcon(svg, "Thinkers", "The Thinkers");
 
     addTextLabel(svg, width, height*0.55+15, "There were no dominant thinkers", false, false);
     addTextLabel(svg, width, height*0.55+30, "found in our data.", false, false);
@@ -134,7 +134,7 @@ function drawObserverVis(svgClass, everyoneData, personalityData, typesData, mEm
     // drawSingleYIcon(svg, width * 0.7, 450, "religion");
     // setUpSingleLineGraph(svg, width * 0.7, 450, "ESFP", esfpData, tooltip, "% of participants who value adherence to a culture or religion: ", myData, "% of participants");
 
-    setUpLeftPersonalityTitleIcon(svg, "observers", "The Observers");
+    setUpLeftPersonalityTitleIcon(svg, "Observers", "The Observers");
 }
 
 function drawPersonalityKey(svgClass) {
