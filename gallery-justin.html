@@ -753,13 +753,11 @@
 
       var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
       var categoryFullMap3 = getFrequencyByKey("Activity", everyoneData, 1);
-      drawMoodByActvitiy(".univariate_activity", categoryMap2, categoryFullMap3, "Everyone's last 2 weeks", everyoneData);
 
       // TODO for Jamal + Yanlam: parameters change for personalized/not personalized
       drawMoodByActivityBursts(".mood_by_activity_vis", categoryMap2, categoryFullMap3, everyoneData, "Moods for Most Frequent Activities", false);
 
-      // drawIndActivityFlower(".indActFlower", "My Activity", personData3);
-      // drawIndActivityFlower(".aggActFlower", "Most Frequent Activities", everyoneData, 15);
+      drawIndActivityFlower(".univariate_activity", "Most Frequent Activities", everyoneData, 15);
 
       var personalityData = await d3.csv("personality.csv");
       drawStressorRadialGraph(".stressor_radial_vis", everyoneData, personalityData, email);

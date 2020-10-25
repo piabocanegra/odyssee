@@ -97,6 +97,7 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
     let tooltipId = "indActFlowerGraphTooltipId"
     let tooltip = d3.select("body")
         .append("div")
+        .attr("class", "tooltip")
         .attr("id", tooltipId)
         .style("padding", 10)
         .style("position", "absolute")
@@ -178,13 +179,14 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
                 var tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].split("(")[0].toLowerCase() +
                     "</br></br><b>FREQUENCY: </b>" + data.length;
                 tooltip.html(tooltipText)
-                    .style("font-family", "Courier new")
-                    .style("font-size", 12)
                     .style("text-align", "left")
                     .style("color", textColor)
                     .style("visibility", "visible")
                     .style("max-width", 250)
-                    .style("top", event.pageY + 20)
+                    .style("top", function() {
+                      return (d3.event.clientY < 550
+                        ? event.pageY + 20 + "px" : event.pageY - 90 + "px");
+                    })
                     .style("left", function() {
                         if (d3.event.clientX < 750) {
                             return event.pageX + 20 + "px";
