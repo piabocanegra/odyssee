@@ -260,7 +260,10 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
                     // Show tooltip.
                     tooltip.html(tooltipText)
                         .style("visibility", "visible")
-                        .style("top", event.pageY + 20)
+                        .style("top", function() {
+                          return (d3.event.clientY < 500
+                            ? event.pageY + 20 + "px" : event.pageY - 150 + "px");
+                        })
                         .style("left", function() {
                             if (d3.event.clientX < 750) {
                                 return event.pageX + 20 + "px";

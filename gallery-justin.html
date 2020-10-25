@@ -8,6 +8,24 @@
   <link rel="stylesheet" type="text/css" href="styles/gallery.css" media="all" />
   <link rel="stylesheet" href="https://use.typekit.net/qep5qwj.css">
   <link rel="icon" type="image/png" href="./gallery-images/icon.png">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="https://d3js.org/d3-drag.v1.min.js"></script>
+  <script src="./javascript/hardcoded_values.js"></script>
+  <script type="text/javascript" src="javascript/helper.js"></script>
+  <script type="text/javascript" src="javascript/general.js"></script>
+  <script type="text/javascript" src="javascript/indActFlowerGraph.js"></script>
+  <script type="text/javascript" src="javascript/MoodByActivityVis.js"></script>
+  <script type="text/javascript" src="javascript/MoodByActivityBursts.js"></script>
+  <script type="text/javascript" src="javascript/stressorRadialGraph.js"></script>
+  <script type="text/javascript" src="javascript/happinessDotPlot.js"></script>
+  <script type="text/javascript" src="javascript/balanceVis.js"></script>
+  <script type="text/javascript" src="javascript/depthBreadthVis.js"></script>
+  <script type="text/javascript" src="javascript/ikigaiVis.js"></script>
+  <script type="text/javascript" src="javascript/morningNightVis.js"></script>
+  <script type="text/javascript" src="javascript/thirtyDays.js"></script>
+  <script type="text/javascript" src="javascript/intuitorsVis.js"></script>
+  <script type="text/javascript" src="javascript/occupationActivityVis.js"></script>
+  <script type="text/javascript" src="javascript/values.js"></script>
 </head>
 
 <body>
@@ -50,7 +68,7 @@
         </g>
     </svg>
     </div>
-    
+
     <div class="escaping-div">
       <img class="odyssee-logo" src="./gallery-images/title.svg" />
       <h2>ESCAPING THE TUNNEL</h2>
@@ -110,7 +128,7 @@
       </tr>
     </table>
     </div>
-  
+
   <div class="section" id="stat-section">
 
     <div class="line" id="stat-line">
@@ -126,12 +144,12 @@
         <h2 class="stat-number">30</h2>
         <h2>days</h2>
       </div>
-  
+
       <div class="stat-div">
         <h2 class="stat-number">50</h2>
         <h2>participants</h2>
       </div>
-  
+
       <div class="stat-div">
         <h2 class="stat-number">12</h2>
         <h2>cities</h2>
@@ -140,7 +158,7 @@
       <div class="stat-div">
         <img src="./gallery-images/cities.gif" height="200px"/>
       </div>
-  
+
       <div class="stat-div">
         <h2 class="stat-number">5k</h2>
         <h2>records</h2>
@@ -239,63 +257,63 @@
         </div>
         <span class="activity-label">CONSUMING ART</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="internet search, fb">
         <div class="imgHover">
           <img src="./gallery-images/Exploratory.svg" class="activity-icon">
         </div>
         <span class="activity-label">EXPLORATORY</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="">
         <div class="imgHover">
           <img src="./gallery-images/Eating and drinking.svg" class="activity-icon">
         </div>
         <span class="activity-label">EATING/DRINKING</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="">
         <div class="imgHover">
           <img src="./gallery-images/Exercise.svg" class="activity-icon">
         </div>
         <span class="activity-label">EXERCISE</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="drinking, games">
         <div class="imgHover">
           <img src="./gallery-images/Fun.svg" class="activity-icon">
         </div>
         <span class="activity-label">FUN</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="reading, researching, attending lecture">
         <div class="imgHover">
           <img src="./gallery-images/Learning.svg" class="activity-icon">
         </div>
         <span class="activity-label">LEARNING</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="strolling, birdwatching">
         <div class="imgHover">
           <img src="./gallery-images/Observation.svg" class="activity-icon">
         </div>
         <span class="activity-label">OBSERVATION</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="rolling in bed, waiting">
         <div class="imgHover">
           <img src="./gallery-images/Rest.svg" class="activity-icon">
         </div>
         <span class="activity-label">REST</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="grooming, pooping">
         <div class="imgHover">
           <img src="./gallery-images/Self-care.svg" class="activity-icon">
         </div>
         <span class="activity-label">SELF-CARE</span>
       </div>
-  
+
       <div class="inflow-item" data-examples="">
         <div class="imgHover">
           <img src="./gallery-images/Inflow - Other.svg" class="activity-icon">
@@ -313,77 +331,77 @@
         <span class="activity-row-label">BI-DIRECTIONAL</span>
         <span class="activity-label"></span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="emailing">
         <div class="imgHover">
           <img src="./gallery-images/Communication - Virtual, Collaborative.svg" class="activity-icon">
         </div>
         <span class="activity-label">COMMUNICATION<br>(COLLABORATIVE)</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="messaging">
         <div class="imgHover">
           <img src="./gallery-images/Communication - Virtual, Social.svg" class="activity-icon">
         </div>
         <span class="activity-label">COMMUNICATION<br>(SOCIAL)</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="meeting, appointment">
         <div class="imgHover">
           <img src="./gallery-images/Collaboration.svg" class="activity-icon">
         </div>
         <span class="activity-label">COLLABORATION</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="painting">
         <div class="imgHover">
           <img src="./gallery-images/Creative.svg" class="activity-icon">
         </div>
         <span class="activity-label">CREATIVE</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="writing, coding">
         <div class="imgHover">
           <img src="./gallery-images/Intellectual.svg" class="activity-icon">
         </div>
         <span class="activity-label">INTELLECTUAL</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="planning, commuting, errands">
         <div class="imgHover">
           <img src="./gallery-images/Logistical.svg" class="activity-icon">
         </div>
         <span class="activity-label">LOGISTICAL</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="housework">
         <div class="imgHover">
           <img src="./gallery-images/Manual work.svg" class="activity-icon">
         </div>
         <span class="activity-label">MANUAL WORK</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="date">
         <div class="imgHover">
           <img src="./gallery-images/Romantic.svg" class="activity-icon">
         </div>
         <span class="activity-label">ROMANTIC</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="partying, meal">
         <div class="imgHover">
           <img src="./gallery-images/Socializing.svg" class="activity-icon">
         </div>
         <span class="activity-label">SOCIALIZING</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="meditating, praying">
         <div class="imgHover">
           <img src="./gallery-images/Spiritual.svg" class="activity-icon">
         </div>
         <span class="activity-label">SPIRITUAL</span>
       </div>
-  
+
       <div class="bidirectional-item" data-examples="">
         <div class="imgHover">
           <img src="./gallery-images/Bi-Directional - Other.svg" class="activity-icon">
@@ -405,7 +423,7 @@
   </div>
 
   <div class="section" id="five">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+    <svg style="margin-top: 10;" height="700" width="1000" class="univariate_activity"></svg>
   </div>
 
   <div class="line">
@@ -416,8 +434,8 @@
     </svg>
   </div>
 
-  <div class="section" id="six">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1300px" id="six">
+    <svg style="margin-top: 10;" height="750" width="1300" class="occupation_vis"></svg>
   </div>
 
     <div class="line">
@@ -430,8 +448,8 @@
     </svg>
     </div>
 
-  <div class="section" id="five">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1000px" id="five">
+    <svg style="margin-top: 20;" height="700" width="1000" class="depth_breadth_vis"></svg>
   </div>
 
   <div class="line">
@@ -445,7 +463,7 @@
   </div>
 
   <div class="section" id="six">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+    <svg style="margin-top: 0;" height="750" width="1000" class="values_vis"></svg>
   </div>
 
   <div class="section-lined" id="time">
@@ -477,8 +495,8 @@
   </svg>
   </div>
 
-  <div class="section" id="seven">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1300px" id="seven">
+    <svg style="margin-top: 20" height="700" width="1300" class="thirty_days_vis"></svg>
   </div>
 
   <div class="line">
@@ -489,8 +507,8 @@
     </svg>
   </div>
 
-  <div class="section" id="eight">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1200px" id="eight">
+    <svg style="margin-top: 20" height="700" width="1200" class="morning_night_vis"></svg>
   </div>
 
   <div class="section-lined" id="mood" style="overflow: hidden;">
@@ -521,8 +539,8 @@
     </svg>
   </div>
 
-  <div class="section" id="nine">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1000px" id="nine">
+    <svg style="margin-top: 0" height="700" width="1200" class="mood_by_activity_vis"></svg>
   </div>
 
   <div class="line">
@@ -533,8 +551,8 @@
     </svg>
   </div>
 
-  <div class="section" id="ten">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1050px" id="ten">
+    <svg style="margin-top: 20" height="700" width="1050" class="happiness_vis"></svg>
   </div>
 
   <div class="line">
@@ -547,8 +565,8 @@
   </svg>
   </div>
 
-  <div class="section" id="nine">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1000px" id="nine">
+    <svg style="margin-top: 20" height="1000" width="1000" class="stressor_radial_vis"></svg>
   </div>
 
   <div class="line">
@@ -561,8 +579,8 @@
   </svg>
   </div>
 
-  <div class="section" id="ten">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1400px" id="ten">
+    <svg style="margin-top: 20;" height="800" width="1400" class="ikigai_vis"></svg>
   </div>
 
   <div class="line">
@@ -595,8 +613,8 @@
     </div>
   </div>
 
-  <div class="section" id="eleven">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 1200px" id="eleven">
+    <svg style="margin-top: 10;" height="700" width="1300" class="balance_vis"></svg>
   </div>
 
   <div class="line">
@@ -607,8 +625,20 @@
   </svg>
   </div>
 
-  <div class="section" id="twelve">
-    <img class="dataviz" src="./gallery-images/Dataviz - Mockup.png" width="100%">
+  <div class="section" style="min-width: 900px" id="twelve">
+    <svg style="margin-top: 0" height="750" width="1000" class="personality_key_vis"></svg>
+  </div>
+
+  <div class="section" style="min-width: 900px; margin-right: 200px" id="twelve">
+    <svg style="margin-top: 0" height="750" width="1000" class="intuitors_vis"></svg>
+  </div>
+
+  <div class="section" style="min-width: 1200px; margin-right: 200px" id="twelve">
+    <svg style="margin-top: 0" height="750" width="1300" class="feeler_thinker_vis"></svg>
+  </div>
+
+  <div class="section" style="min-width: 900px; margin-right: 200px" id="twelve">
+    <svg style="margin-top: 0" height="750" width="1000" class="observer_vis"></svg>
   </div>
 
   <div class="line">
@@ -707,7 +737,63 @@
       <p class="disclaimer-note">We take privacy seriously, and will only use participant data for the creation of visualizations as well as their personal information to contact them if needed. We respect their trust and protect their privacy, and therefore will never sell or share this data with third parties.</p>
     </div>
   </div>
-  <script src="index.js"></script>
+  <script>
+  const getData = async() => {
+      // TODO for Jamal: replace next two lines with json list
+      var everyoneData = await d3.csv("odyssee_data.csv");
+      var personData3 = getPersonData(everyoneData, email);
+
+      everyoneData.forEach(e => {
+          let activity = e["Activity"];
+          activityShortToLong[activity.split(":")[0]] = (activity.split(":")[1]).substring(1).split("(")[0]
+      });
+
+      var categoryMap = getFrequencyByKey("Activity", personData3);
+      var categoryFullMap = getFrequencyByKey("Activity", personData3, 1);
+
+      var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
+      var categoryFullMap3 = getFrequencyByKey("Activity", everyoneData, 1);
+      drawMoodByActvitiy(".univariate_activity", categoryMap2, categoryFullMap3, "Everyone's last 2 weeks", everyoneData);
+
+      // TODO for Jamal + Yanlam: parameters change for personalized/not personalized
+      drawMoodByActivityBursts(".mood_by_activity_vis", categoryMap2, categoryFullMap3, everyoneData, "Moods for Most Frequent Activities", false);
+
+      // drawIndActivityFlower(".indActFlower", "My Activity", personData3);
+      // drawIndActivityFlower(".aggActFlower", "Most Frequent Activities", everyoneData, 15);
+
+      var personalityData = await d3.csv("personality.csv");
+      drawStressorRadialGraph(".stressor_radial_vis", everyoneData, personalityData, email);
+
+      drawBalanceGraph(".balance_vis", everyoneData, personalityData, email);
+
+      drawHappinessDotPlot(".happiness_vis", everyoneData, personalityData, email);
+      drawDepthBreadthPlot(".depth_breadth_vis", everyoneData, personalityData, email);
+
+      var ikigaiData = await d3.csv("ikigai.csv");
+      drawIkigaiVis(".ikigai_vis", ikigaiData, email);
+
+      let timeData = await d3.csv("time.csv");
+      drawMorningNightVis(".morning_night_vis", timeData, email);
+      drawThirtyDaysVis(".thirty_days_vis", timeData);
+
+      let mbtiData = await d3.csv("types.csv");
+      drawIntuitorsVis(".intuitors_vis", everyoneData, personalityData, mbtiData, email);
+      drawFeelerThinkerVis(".feeler_thinker_vis", everyoneData, personalityData, mbtiData, email);
+      drawObserverVis(".observer_vis", everyoneData, personalityData, mbtiData, email);
+      drawPersonalityKey(".personality_key_vis");
+
+      drawOccupationVis(".occupation_vis", ikigaiData, mbtiData, everyoneData, email);
+      drawValuesVis(".values_vis", ikigaiData, mbtiData, everyoneData, email);
+
+  }
+
+  function main() {
+      setUpFilters(".univariate_activity");
+      getData();
+  }
+
+  main();
+  </script>
 </body>
 
 </html>

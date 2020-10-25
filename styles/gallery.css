@@ -110,7 +110,7 @@ h3 {
   font-size: 18px;
   color: #484848;
   font-family: 'Courier New', Courier;
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 p {
@@ -126,6 +126,13 @@ ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+div.tooltip {
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  width: 16%;
 }
 
 .end-section-text {
@@ -365,9 +372,9 @@ text-decoration: white line-through;
   }
 
   .sticky-nav-dot {
-    background-color: lightgray; 
-    border-radius: 100%; 
-    width: 1em; 
+    background-color: lightgray;
+    border-radius: 100%;
+    width: 1em;
     height: 1em;
     position: relative;
   }
@@ -405,7 +412,7 @@ text-decoration: white line-through;
   .statistic-text {
     font-size: 24px;
   }
-  
+
   .statistic-percent {
     font-size: 40px;
     margin-block-start: 0.50em;
@@ -435,16 +442,16 @@ text-decoration: white line-through;
   }
 
   .escaping-container {
-    display: flex; 
-    align-items: center; 
-    flex-direction: row; 
-    position: relative; 
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    position: relative;
     justify-content: flex-end;
     min-width: 2000px;
   }
 
   .escaping-div {
-    justify-content: center; 
+    justify-content: center;
     width: 900px;
     margin-right: 200px;
     padding-bottom: 4em;
@@ -563,7 +570,7 @@ text-decoration: white line-through;
   .blob-desktop {
     display: block;
   }
-  
+
   .blob-mobile {
     display: none;
   }
@@ -624,7 +631,7 @@ text-decoration: white line-through;
   }
 
   #desktop-background-line {
-    background-image: url('../gallery-images/lines/line 1.svg'); 
+    background-image: url('../gallery-images/lines/line 1.svg');
     min-width: 2160px;
   }
 

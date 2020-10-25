@@ -106,7 +106,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
         });
     });
 
-    console.log(ikigaiList);
+    // console.log(ikigaiList);
 
     // let maxUsers = d3.max(ikigaiList, i => {
     //     return d3.max(Object.keys(occupations), o => {
@@ -197,7 +197,7 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
                 overRepresentedActivity = activityShortToLong[maxActivity];
             }
 
-            console.log(occupation)
+            // console.log(occupation)
             if (occupation.average > 0) {
                 averagePercent = 0
                 ikigaiList.forEach(ikigai2 => {
@@ -233,7 +233,10 @@ function drawOccupationVis(svgClass, ikigaiData, typesData, everyoneData, email 
                 // Show tooltip.
                 tooltip.html(tooltipText)
                     .style("visibility", "visible")
-                    .style("top", event.pageY + 20)
+                    .style("top", function() {
+                      return (d3.event.clientY < 500
+                        ? event.pageY + 20 + "px" : event.pageY - 150 + "px");
+                    })
                     .style("left", function() {
                         if (d3.event.clientX < 750) {
                             return event.pageX + 20 + "px";

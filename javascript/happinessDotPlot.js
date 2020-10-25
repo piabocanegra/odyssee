@@ -6,7 +6,7 @@
  */
 function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = null) {
     let baseSvg = d3.select(svgClass);
-    let height = baseSvg.attr("height");
+    let height = 700;
     let width = baseSvg.attr("width");
     let svgX = width / 2 - (width - 400) / 2;
     let svg = baseSvg.append("svg")
@@ -173,6 +173,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     let tooltipId = "happinessDotPlotTooltipId"
     let tooltip = d3.select("body")
         .append("div")
+        .attr("class", "tooltip")
         .attr("id", tooltipId)
         .style("padding", 10)
         .style("position", "absolute")
@@ -182,8 +183,6 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
         .style("background-color", backgroundColor)
         .style("border-radius", "15px")
         .style("border", "1px solid #cdcdcd")
-        .style("font-family", "Courier new")
-        .style("font-size", 12)
         .style("text-align", "left")
         .style("color", textColor)
         .style("max-width", 250);
@@ -252,7 +251,10 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     function showTooltip(html, rect) {
         tooltip.html(html)
             .style("visibility", "visible")
-            .style("top", event.pageY + 20)
+            .style("top", function() {
+              return (d3.event.clientY < 550
+                ? event.pageY + 20 + "px" : event.pageY - 90 + "px");
+            })
             .style("left", function() {
                 if (d3.event.clientX < 750) {
                     return event.pageX + 20 + "px";
