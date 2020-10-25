@@ -1,6 +1,6 @@
 /**
  *   svgClass: tag for svg clas, must include the '.'
- *   categoryMap: map of short activity keys ("b5") to frequency 
+ *   categoryMap: map of short activity keys ("b5") to frequency
  *   categoryFullMap: map of full activity keys ("Intellectual") to frequency
  *   title: title of graph
  *   personData: list of data entries
@@ -35,7 +35,8 @@ function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, perso
     // add tooltip
     let tooltip = d3.select("body")
         .append("div")
-        .style("padding", 10)
+        .attr("class", "tooltip")
+        .attr("id", "tooltip")
         .style("position", "absolute")
         .style("z-index", "10")
         .style("visibility", "hidden")
@@ -46,7 +47,7 @@ function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, perso
 
     // create initial bars
     for (var i of keyList) {
-        drawImperfectVerticalLine(svg, yScale(categoryMap.get(i)), yScale(0)+5, 
+        drawImperfectVerticalLine(svg, yScale(categoryMap.get(i)), yScale(0)+5,
             xScale(i)+10, dashArray[reasonMap[i]], colorHexArray[moodList[avgMap[i]]], );
     }
 
@@ -64,20 +65,20 @@ function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, perso
             .on("mousemove", function() {
                 let tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].split("(")[0].toLowerCase() + "</br></br><b>FREQUENCY: </b>" + categoryMap.get(d) + "</br></br><b>AVERAGE MOOD: </b>" + moodList[avgMap[keyList[i]]].toLowerCase() +
                     "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[reasonMap[keyList[i]]];
+
                 tooltip
                     .html(tooltipText)
-                    .style("font-family", "Courier new")
-                    .style("font-size", 12)
                     .style("text-align", "left")
                     .style("color", textColor)
                     .style("visibility", "visible")
-                    .style("max-width", 250)
-                    .style("top", event.pageY + 20)
+                    .style("top", function() {
+                      return event.pageY + 20 + "px";
+                    })
                     .style("left", function() {
                         if (d3.event.clientX < 750) {
                             return event.pageX + 20 + "px";
                         } else {
-                            return event.pageX - 250 + "px";
+                            return event.pageX - 270 + "px";
                         }
                     });
             }).on("mouseout", function(d) {
@@ -91,16 +92,17 @@ function drawMoodByActvitiy(svgClass, categoryMap, categoryFullMap, title, perso
     //add y axis
     let yAxis = d3.select(svgClass)
         .append("g")
-        .attr("class", "y_axis")
+        .attr("id", "y_axis_moodByActivity")
         .attr("transform", "translate(" + (padding * 1.5) + ", 0)")
         .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d, i, n) {
             return n[i + 1] ? d : d + " records";
-        }));
+        }).tickSize(0));
     yAxis.selectAll("text")
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
         .style("fill", textColor)
         .style("font-size", 12);
+    d3.select("g#y_axis_moodByActivity").select("path").remove();
 
     // Add legends.
     drawMoodHalfLegend(svgClass);

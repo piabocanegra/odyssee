@@ -59,7 +59,7 @@ function drawBurst(svgClass, data, centerX, centerY, activity, mood, avgMood, di
         .on('mousemove', function() {
             let tooltipText = "<b>ACTIVITY:</b> " + activity + "</br></br><b>FREQUENCY: </b>" + totalTicks + "</br></br><b>MOOD: </b>" + mood.toLowerCase() +
                 " (<b>AVERAGE: </b> " + avgMood + ")" + "</br></br><b>MOST FREQUENT ATTITUDE: </b>" + attitudeLongtoShort[getKeyWithHighestValue(data)];
-            setTooltipText(tooltip, tooltipText, 20, 250);
+            setTooltipText(tooltip, tooltipText, 20, 270);
         }).on("mouseout", function(d) {
             tooltip.style("visibility", "hidden");
         });
@@ -177,11 +177,11 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
     //add y axis
     let yAxis = d3.select(svgClass)
         .append("g")
-        .attr("class", "y_axis")
+        .attr("id", "y_axis_bursts")
         .attr("transform", "translate(" + (padding+100) + ", 0)")
         .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d) {
             return moodList[d];
-        }));
+        }).tickSize(0));
     yAxis.selectAll("text")
         .style("font-family", "Courier new")
         .style("font-weight", "bold")
@@ -190,6 +190,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
             return colorHexArray[moodList[d]];
         })
         .style("font-size", 12);
+    d3.select("g#y_axis_bursts").select("path").remove();
 
     // add title
     drawTitle(svg, title);

@@ -54,7 +54,7 @@ function drawMorningNightVis(svgClass, timeData, email = null) {
         .domain([graphAttr.horizontalPadding, graphAttr.width - 3.5 * graphAttr.horizontalPadding])
         .range([0, 24]);
 
-    console.log(timeData);
+    // console.log(timeData);
 
     let myData = null;
     if (email != null) {
@@ -322,7 +322,10 @@ function drawMorningNightVis(svgClass, timeData, email = null) {
             // Show tooltip.
             tooltip.html(tooltipText)
                 .style("visibility", "visible")
-                .style("top", event.pageY + 20)
+                .style("top", function() {
+                  return (d3.event.clientY < 400
+                    ? event.pageY + 20 + "px" : event.pageY - 150 + "px");
+                })
                 .style("left", function() {
                     if (d3.event.clientX < 750) {
                         return event.pageX + 20 + "px";

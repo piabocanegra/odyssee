@@ -1,6 +1,6 @@
 /**
  *   svgClass: tag for svg class, must include the '.'
- *   ikigaiData: 
+ *   ikigaiData:
  *   everyoneData: records for everyone
  *   returns void, draws data vis for happiness dot plot
  */
@@ -163,6 +163,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
     let tooltipId = 'ikigaiVisTooltipId'
     let tooltip = d3.select('body')
         .append('div')
+        .attr("class", "tooltip")
         .attr('id', tooltipId)
         .style('padding', 10)
         .style('position', 'absolute')
@@ -172,8 +173,6 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
         .style('background-color', backgroundColor)
         .style('border-radius', '15px')
         .style('border', '1px solid #cdcdcd')
-        .style('font-family', 'Courier new')
-        .style('font-size', 12)
         .style('text-align', 'left')
         .style('color', textColor)
         .style('max-width', 250);
@@ -244,7 +243,10 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
                 .on("mousemove", function() {
                     tooltip.html(tooltipText)
                         .style("visibility", "visible")
-                        .style("top", event.pageY + 20)
+                        .style("top", function() {
+                          return (d3.event.clientY < 550
+                            ? event.pageY + 20 + "px" : event.pageY - 90 + "px");
+                        })
                         .style("left", function() {
                             if (d3.event.clientX < 750) {
                                 return event.pageX + 20 + "px";

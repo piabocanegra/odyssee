@@ -85,7 +85,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
         .domain(categories)
         .range([0, Math.PI * 2]);
 
-    // For each category stressor tagged by user in personalityData, look through the activity with highest 
+    // For each category stressor tagged by user in personalityData, look through the activity with highest
     // percentage of bad and awful records. These will be the activities that fall into the group.
     let categoryActivityCountMap = {};
     let categoryActivityMap = {};
@@ -194,8 +194,8 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     let tooltipId = "stressorRadialGraphTooltipId"
     let tooltip = d3.select("body")
         .append("div")
+        .attr("class", "tooltip")
         .attr("id", tooltipId)
-        .style("padding", 10)
         .style("position", "absolute")
         .style("z-index", "10")
         .style("visibility", "hidden")
@@ -268,7 +268,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivityMap);
 
     // Add annotation.
-    // The sources of our stress are related to the activities we feel most negatively about. 
+    // The sources of our stress are related to the activities we feel most negatively about.
     // For instance, those whose short term stressor is work are most stressed about collaborative virtual communication.
     let baseY = height * 0.14
     drawText(svg, "The sources of our stress are related to the activities we feel", {
@@ -397,7 +397,10 @@ function drawStressorRadialGraphBar(constants, type, myData) {
             .style("color", textColor)
             .style("visibility", "visible")
             .style("max-width", 250)
-            .style("top", event.pageY + 20)
+            .style("top", function() {
+              return (d3.event.clientY < 500
+                ? event.pageY + 20 + "px" : event.pageY - 150 + "px");
+            })
             .style("left", function() {
                 if (d3.event.clientX < 750) {
                     return event.pageX + 20 + "px";
