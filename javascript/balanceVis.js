@@ -306,15 +306,17 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
     let yAxis = d3.select(svgClass)
         .append("g")
         .attr("class", "y_axis")
+        .attr("id", "y_axis_balance")
         .attr("transform", "translate(" + (padding * 3.5) + ", 0)")
         .call(d3.axisRight(yScale).ticks(5).tickFormat(function(d, i, n) {
             return n[i + 1] ? d * 100 : "";
-        }));
+        }).tickSize(0));
     yAxis.selectAll("text")
         .style("font-family", "Courier new")
         .style("text-anchor", "end")
         .style("fill", textColor)
         .style("font-size", 11);
+    d3.select("g#y_axis_balance").select("path").remove();
 
 
     // add takeaway
