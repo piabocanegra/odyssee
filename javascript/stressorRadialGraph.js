@@ -198,6 +198,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
         .attr("id", tooltipId)
         .style("position", "absolute")
         .style("z-index", "10")
+        .style("padding", 10)
         .style("visibility", "hidden")
         .attr("white-space", "pre-line")
         .style("background-color", backgroundColor)

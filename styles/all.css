@@ -9,6 +9,13 @@ body {
     margin: 30px;
 }
 
+div.tooltip {
+  padding: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  width: 16%;
+}
+
 #titleText {
     width: 800px;
     margin: 0 auto;
