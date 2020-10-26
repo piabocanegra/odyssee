@@ -760,28 +760,28 @@
       drawIndActivityFlower(".univariate_activity", "Most Frequent Activities", everyoneData, 15);
 
       var personalityData = await d3.csv("personality.csv");
-      drawStressorRadialGraph(".stressor_radial_vis", everyoneData, personalityData, email);
+      drawStressorRadialGraph(".stressor_radial_vis", everyoneData, personalityData);
 
-      drawBalanceGraph(".balance_vis", everyoneData, personalityData, email);
+      drawBalanceGraph(".balance_vis", everyoneData, personalityData);
 
-      drawHappinessDotPlot(".happiness_vis", everyoneData, personalityData, email);
-      drawDepthBreadthPlot(".depth_breadth_vis", everyoneData, personalityData, email);
+      drawHappinessDotPlot(".happiness_vis", everyoneData, personalityData);
+      drawDepthBreadthPlot(".depth_breadth_vis", everyoneData, personalityData);
 
       var ikigaiData = await d3.csv("ikigai.csv");
-      drawIkigaiVis(".ikigai_vis", ikigaiData, email);
+      drawIkigaiVis(".ikigai_vis", ikigaiData);
 
       let timeData = await d3.csv("time.csv");
-      drawMorningNightVis(".morning_night_vis", timeData, email);
+      drawMorningNightVis(".morning_night_vis", timeData);
       drawThirtyDaysVis(".thirty_days_vis", timeData);
 
       let mbtiData = await d3.csv("types.csv");
-      drawIntuitorsVis(".intuitors_vis", everyoneData, personalityData, mbtiData, email);
-      drawFeelerThinkerVis(".feeler_thinker_vis", everyoneData, personalityData, mbtiData, email);
-      drawObserverVis(".observer_vis", everyoneData, personalityData, mbtiData, email);
+      drawIntuitorsVis(".intuitors_vis", everyoneData, personalityData, mbtiData);
+      drawFeelerThinkerVis(".feeler_thinker_vis", everyoneData, personalityData, mbtiData);
+      drawObserverVis(".observer_vis", everyoneData, personalityData, mbtiData);
       drawPersonalityKey(".personality_key_vis");
 
-      drawOccupationVis(".occupation_vis", ikigaiData, mbtiData, everyoneData, email);
-      drawValuesVis(".values_vis", ikigaiData, mbtiData, everyoneData, email);
+      drawOccupationVis(".occupation_vis", ikigaiData, mbtiData, everyoneData);
+      drawValuesVis(".values_vis", ikigaiData, mbtiData, everyoneData);
 
   }
 
