@@ -1,4 +1,4 @@
-function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail) {
+function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail = null) {
     let svg = d3.select(svgClass);
     let balanceData = groupMapByValue(createMapFromPersonality(personalityData, "Balanced", balanceLongToShort));
 

@@ -33,26 +33,24 @@
     <p style="font-family:Courier New; font-size: 23; text-align: center; margin-left:auto; margin-right:auto; padding-top:50;">Welcome to your odyssee portal!</p>
 
     <div style="text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
-        <svg style="margin-top: 100; margin-bottom: 100" height="700" width="1000" class="indTwoWeeks"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="aggTwoWeeks"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="indBursts"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="indBursts2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="aggActFlower"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="balance"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1050" class="happinessDotPlot"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="thirtyDays"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="indBursts2"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="thirtyDaysInd"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="intuitorsVis"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1300" class="feelerThinkerVis"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="observerVis"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="personalityKey"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1300" class="occupationActivityVis"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="valuesVis"></svg>
+    </div>
+    <p style="font-family:Courier New; font-size: 23; text-align: center; margin-left:auto; margin-right:auto; padding-top:50;">Everyone’s data</p>
+    <div style="text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1300" class="occupationActivityVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="valuesVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1050" class="happinessDotPlot"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="balance"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="personalityKey"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="intuitorsVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="observerVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1300" class="feelerThinkerVis"></svg>
     </div>
 
     <script>
@@ -243,18 +241,18 @@
 
             var categoryMap = getFrequencyByKey("Activity", personData3);
             var categoryFullMap = getFrequencyByKey("Activity", personData3, 1);
-            drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks", personData3);
+            // drawMoodByActvitiy(".indTwoWeeks", categoryMap, categoryFullMap, "Your last 2 weeks", personData3);
 
             var categoryMap2 = getFrequencyByKey("Activity", everyoneData);
             var categoryFullMap3 = getFrequencyByKey("Activity", everyoneData, 1);
-            drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap3, "Everyone's last 2 weeks", everyoneData);
+            // drawMoodByActvitiy(".aggTwoWeeks", categoryMap2, categoryFullMap3, "Everyone's last 2 weeks", everyoneData);
 
             // TODO for Jamal + Yanlam: parameters change for personalized/not personalized
-            drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Moods for Most Frequent Activities", false);
+            // drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Moods for Most Frequent Activities", false);
             drawMoodByActivityBursts(".indBursts2", categoryMap, categoryFullMap, personData3, "Moods for Most Frequent Activities", true);
 
             drawIndActivityFlower(".indActFlower", "My Activity", personData3);
-            drawIndActivityFlower(".aggActFlower", "Most Frequent Activities", everyoneData, 15);
+            // drawIndActivityFlower(".aggActFlower", "Most Frequent Activities", everyoneData, 15);
 
             var personalityData = await d3.csv("personality.csv");
             drawStressorRadialGraph(".stressorRadial", everyoneData, personalityData, email);
@@ -269,7 +267,7 @@
 
             let timeData = await d3.csv("time.csv");
             drawMorningNightVis(".morningNightVis", timeData, email);
-            drawThirtyDaysVis(".thirtyDays", timeData);
+            // drawThirtyDaysVis(".thirtyDays", timeData);
             drawThirtyDaysVis(".thirtyDaysInd", timeData, email);
 
             let mbtiData = await d3.csv("types.csv");
@@ -284,7 +282,7 @@
         }
 
         function main() {
-            setUpFilters(".indTwoWeeks");
+            setUpFilters(".indActFlower");
             getData();
         }
 
