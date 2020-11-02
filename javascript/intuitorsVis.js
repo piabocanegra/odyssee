@@ -20,28 +20,28 @@ function drawIntuitorsVis(svgClass, everyoneData, personalityData, typesData, mE
 
     // console.log(typesData);
     let infjData = getDataByPType(everyoneData, typesData, "INFJ", "b4", getPersonDataByActivity);
-    displayPersonalityTitle(svg, width * 0.3, 100, "INFJ: Creative");
-    displayerPersonalityIcon(svg, width * 0.3, 100, "INFJ");
-    drawSingleYIcon(svg, width * 0.3, 100, "b4", "ACTIVITY", "creative", true);
-    setUpSingleLineGraph(svg, width * 0.3, 100, "INFJ", infjData, tooltip, "% of records that are creative: ", myData, "% of records");
+    displayPersonalityTitle(svg, width * 0.3, 80, "INFJ: Creative");
+    displayerPersonalityIcon(svg, width * 0.3, 80, "INFJ");
+    drawSingleYIcon(svg, width * 0.3, 80, "b4", "ACTIVITY", "creative", true);
+    setUpSingleLineGraph(svg, width * 0.3, 80, "INFJ", infjData, tooltip, "% of records that are creative: ", myData, "% of records");
 
     let intjData = getDataByPType(everyoneData, typesData, "INTJ", "b5", getPersonDataByActivity);
-    displayPersonalityTitle(svg, width * 0.7, 100, "INTJ: Hard-working & Determined");
-    displayerPersonalityIcon(svg, width * 0.7, 100, "INTJ");
-    drawSingleYIcon(svg, width * 0.7, 100, "b5", "ACTIVITY", "intellectual", true);
-    setUpSingleLineGraph(svg, width * 0.7, 100, "INTJ", intjData, tooltip, "% of records that are intellectual: ", myData, "% of records");
+    displayPersonalityTitle(svg, width * 0.7, 80, "INTJ: Hard-working & Determined");
+    displayerPersonalityIcon(svg, width * 0.7, 80, "INTJ");
+    drawSingleYIcon(svg, width * 0.7, 80, "b5", "ACTIVITY", "intellectual", true);
+    setUpSingleLineGraph(svg, width * 0.7, 80, "INTJ", intjData, tooltip, "% of records that are intellectual: ", myData, "% of records");
 
     let enfpData = getDataByPType(everyoneData, typesData, "ENFP", "i", getPersonDataByActivityType);
-    displayPersonalityTitle(svg, width * 0.3, 450, "ENFP: Knows how to relax & Curious");
-    displayerPersonalityIcon(svg, width * 0.3, 450, "ENFP");
-    drawSingleYIcon(svg, width * 0.3, 450, "i10", "ACTIVITY TYPE", "inflow", true);
-    setUpSingleLineGraph(svg, width * 0.3, 450, "ENFP", enfpData, tooltip, "% of records that are inflow activities: ", myData, "% of records");
+    displayPersonalityTitle(svg, width * 0.3, 420, "ENFP: Knows how to relax & Curious");
+    displayerPersonalityIcon(svg, width * 0.3, 420, "ENFP");
+    drawSingleYIcon(svg, width * 0.3, 420, "i10", "ACTIVITY TYPE", "inflow", true);
+    setUpSingleLineGraph(svg, width * 0.3, 420, "ENFP", enfpData, tooltip, "% of records that are inflow activities: ", myData, "% of records");
 
     let entpData = getDataByPTypeValue(everyoneData, typesData, "ENTP", "Understanding and advancing the welfare of all people");
-    displayPersonalityTitle(svg, width * 0.7, 450, "ENTP: Knowledgable");
-    displayerPersonalityIcon(svg, width * 0.7, 450, "ENTP");
-    drawSingleYIcon(svg, width * 0.7, 450, "welfare", "VALUE", "understanding and advancing the welfare of all people");
-    setUpSingleLineGraph(svg, width * 0.7, 450, "ENTP", entpData, tooltip, "% of participants who value understanding and advancing the welfare of all people: ", myData, "% of participants");
+    displayPersonalityTitle(svg, width * 0.7, 420, "ENTP: Knowledgable");
+    displayerPersonalityIcon(svg, width * 0.7, 420, "ENTP");
+    drawSingleYIcon(svg, width * 0.7, 420, "welfare", "VALUE", "understanding and advancing the welfare of all people");
+    setUpSingleLineGraph(svg, width * 0.7, 420, "ENTP", entpData, tooltip, "% of participants who value understanding and advancing the welfare of all people: ", myData, "% of participants");
 
     setUpLeftPersonalityTitleIcon(svg, "Intuitors", "The Intuitors");
 }
@@ -56,29 +56,29 @@ function drawFeelerThinkerVis(svgClass, everyoneData, personalityData, typesData
     }
 
     let isfpData = getDataByPType(everyoneData, typesData, "ISFP", communicationList, getPersonDataByActivities)
-    displayPersonalityTitle(svg, width * 0.15, 100, "ISFP: Fiercely Independent");
-    displayerPersonalityIcon(svg, width * 0.15, 100, "ISFP");
-    drawMultipleYIcons(svg, width * 0.15, 100, communicationList);
-    setUpSingleLineGraph(svg, width * 0.15, 100, "ISFP", isfpData, tooltip, "% of records that are considered a form of communication: ", myData, "% of records");
+    displayPersonalityTitle(svg, width * 0.15, 80, "ISFP: Fiercely Independent");
+    displayerPersonalityIcon(svg, width * 0.15, 80, "ISFP");
+    drawMultipleYIcons(svg, width * 0.15, 80, communicationList);
+    setUpSingleLineGraph(svg, width * 0.15, 80, "ISFP", isfpData, tooltip, "% of records that are considered a form of communication: ", myData, "% of records");
 
     let infpData = getDataByPTypeValue(everyoneData, typesData, "INFP", "Enjoying life");
-    displayPersonalityTitle(svg, width * 0.55, 100, "INFP: Open-Minded & Flexible");
-    displayerPersonalityIcon(svg, width * 0.55, 100, "INFP");
-    drawSingleYIcon(svg, width * 0.55, 100, "enjoying life", "VALUE", "enjoying and exploring life");
-    setUpSingleLineGraph(svg, width * 0.55, 100, "INFP", infpData, tooltip, "% of participants who value exploring and enjoying life: ", myData, "% of participants");
+    displayPersonalityTitle(svg, width * 0.55, 80, "INFP: Open-Minded & Flexible");
+    displayerPersonalityIcon(svg, width * 0.55, 80, "INFP");
+    drawSingleYIcon(svg, width * 0.55, 80, "enjoying life", "VALUE", "enjoying and exploring life");
+    setUpSingleLineGraph(svg, width * 0.55, 80, "INFP", infpData, tooltip, "% of participants who value exploring and enjoying life: ", myData, "% of participants");
 
     let esfjDataBad = getDataByPType(everyoneData, typesData, "ESFJ", communicationList, getPersonDataByActivitiesAndMood, ["Bad"])
     let esfjDataAwful = getDataByPType(everyoneData, typesData, "ESFJ", communicationList, getPersonDataByActivitiesAndMood, ["Awful"])
-    displayPersonalityTitle(svg, width * 0.15, 450, "ESFJ: Sensitive & Warm");
-    displayerPersonalityIcon(svg, width * 0.15, 450, "ESFJ");
-    drawMultipleYIcons(svg, width * 0.15, 450, communicationList);
-    setUpMultipleLinesGraph(svg, width * 0.15, 450, "ESFJ", esfjDataBad, esfjDataAwful, tooltip, " % of records that are “bad” or “awful” for any form of communication: ", myData, "% of records");
+    displayPersonalityTitle(svg, width * 0.15, 420, "ESFJ: Sensitive & Warm");
+    displayerPersonalityIcon(svg, width * 0.15, 420, "ESFJ");
+    drawMultipleYIcons(svg, width * 0.15, 420, communicationList);
+    setUpMultipleLinesGraph(svg, width * 0.15, 420, "ESFJ", esfjDataBad, esfjDataAwful, tooltip, " % of records that are “bad” or “awful” for any form of communication: ", myData, "% of records");
 
     let enfjData = getDataByPTypePData(everyoneData, typesData, personalityData, "ENFJ", "Do you prefer breadth or depth in life?", "Depth");
-    displayPersonalityTitle(svg, width * 0.55, 450, "ENFJ: Tolerant & Reliable");
-    displayerPersonalityIcon(svg, width * 0.55, 450, "ENFJ");
-    drawSingleYIcon(svg, width * 0.55, 450, "Depth", "PREFERENCE", "depth", true);
-    setUpSingleLineGraph(svg, width * 0.55, 450, "ENFJ", enfjData, tooltip, "% of participants who prefer depth over breadth: ", myData, "% of participants");
+    displayPersonalityTitle(svg, width * 0.55, 420, "ENFJ: Tolerant & Reliable");
+    displayerPersonalityIcon(svg, width * 0.55, 420, "ENFJ");
+    drawSingleYIcon(svg, width * 0.55, 420, "Depth", "PREFERENCE", "depth", true);
+    setUpSingleLineGraph(svg, width * 0.55, 420, "ENFJ", enfjData, tooltip, "% of participants who prefer depth over breadth: ", myData, "% of participants");
 
     setUpLeftPersonalityTitleIcon(svg, "Feelers", "The Feelers");
     setUpRightPersonalityTitleIcon(svg, "Thinkers", "The Thinkers");
@@ -142,7 +142,7 @@ function drawPersonalityKey(svgClass) {
 
     svg.append("text")
       .attr("x", width * 0.3)
-      .attr("y", height * 0.25 - padding)
+      .attr("y", height * 0.15 - padding)
       .text("Personalities")
       .style("font-family", "Courier new")
       .style("text-anchor", "middle")
@@ -150,7 +150,7 @@ function drawPersonalityKey(svgClass) {
       .style("fill", textColor);
     svg.append("text")
         .attr("x", width * 0.3)
-        .attr("y", height * 0.25)
+        .attr("y", height * 0.15)
         .text("DIMENSIONS")
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
@@ -161,66 +161,66 @@ function drawPersonalityKey(svgClass) {
     svg.append("image")
         .attr('xlink:href', 'images/Introversion.svg')
         .attr("x", width * 0.03+30)
-        .attr("y", height * 0.3+50)
+        .attr("y", height * 0.2+50)
         .attr("width", 25)
         .attr("height", 25);
-    addTextLabel(svg, width * 0.03 + 50, height * 0.3 + 100 + 20, "introversion (I)", false);
+    addTextLabel(svg, width * 0.03 + 50, height * 0.2 + 100 + 20, "introversion (I)", false);
     svg.append("image")
         .attr('xlink:href', 'images/Extroversion.svg')
         .attr("x", width * 0.18+30)
-        .attr("y", height * 0.3+50)
+        .attr("y", height * 0.2+50)
         .attr("width", 25)
         .attr("height", 25);
-    addTextLabel(svg, width * 0.18 + 50, height * 0.3 + 100 + 20, "extroversion (E)", false);
-    addTextLabel(svg, width * (0.03 + 0.18)/2 + 50, height * 0.3 + 65, "vs.", false);
+    addTextLabel(svg, width * 0.18 + 50, height * 0.2 + 100 + 20, "extroversion (E)", false);
+    addTextLabel(svg, width * (0.03 + 0.18)/2 + 50, height * 0.2 + 65, "vs.", false);
 
     svg.append("image")
         .attr('xlink:href', 'images/Thinking.svg')
         .attr("x", width * 0.03)
-        .attr("y", height * 0.57)
+        .attr("y", height * 0.47)
         .attr("width", 100)
         .attr("height", 100);
-    addTextLabel(svg, width * 0.03 + 50, height * 0.57 + 100 + 20, "thinking (T)", false);
+    addTextLabel(svg, width * 0.03 + 50, height * 0.47 + 100 + 20, "thinking (T)", false);
     svg.append("image")
         .attr('xlink:href', 'images/Feeling.svg')
         .attr("x", width * 0.18)
-        .attr("y", height * 0.57)
+        .attr("y", height * 0.47)
         .attr("width", 100)
         .attr("height", 100);
-    addTextLabel(svg, width * 0.18 + 50, height * 0.57 + 100 + 20, "feeling (F)", false);
-    addTextLabel(svg, width * (0.03 + 0.18)/2 + 50, height * 0.57 + 50, "vs.", false);
+    addTextLabel(svg, width * 0.18 + 50, height * 0.47 + 100 + 20, "feeling (F)", false);
+    addTextLabel(svg, width * (0.03 + 0.18)/2 + 50, height * 0.47 + 50, "vs.", false);
 
     svg.append("image")
         .attr('xlink:href', 'images/Intuition.svg')
         .attr("x", width * 0.35)
-        .attr("y", height * 0.3)
+        .attr("y", height * 0.2)
         .attr("width", 100)
         .attr("height", 100);
-    addTextLabel(svg, width * 0.35 + 50, height * 0.3 + 100 + 20, "intuition (N)", false);
+    addTextLabel(svg, width * 0.35 + 50, height * 0.2 + 100 + 20, "intuition (N)", false);
     svg.append("image")
         .attr('xlink:href', 'images/Observing.svg')
         .attr("x", width * 0.5)
-        .attr("y", height * 0.3)
+        .attr("y", height * 0.2)
         .attr("width", 100)
         .attr("height", 100);
-    addTextLabel(svg, width * 0.5 + 50, height * 0.3 + 100 + 20, "observing (S)", false);
-    addTextLabel(svg, width * (0.35 + 0.5)/2 + 50, height * 0.3 + 50, "vs.", false);
+    addTextLabel(svg, width * 0.5 + 50, height * 0.2 + 100 + 20, "observing (S)", false);
+    addTextLabel(svg, width * (0.35 + 0.5)/2 + 50, height * 0.2 + 50, "vs.", false);
 
     svg.append("image")
         .attr('xlink:href', 'images/Perceiving.svg')
         .attr("x", width * 0.35)
-        .attr("y", height * 0.57 + 15)
+        .attr("y", height * 0.47 + 15)
         .attr("width", 75)
         .attr("height", 75);
-    addTextLabel(svg, width * 0.35 + 37, height * 0.57 + 100 + 20, "perceiving (P)", false);
+    addTextLabel(svg, width * 0.35 + 37, height * 0.47 + 100 + 20, "perceiving (P)", false);
     svg.append("image")
         .attr('xlink:href', 'images/Judging.svg')
         .attr("x", width * 0.5)
-        .attr("y", height * 0.57 + 15)
+        .attr("y", height * 0.47 + 15)
         .attr("width", 75)
         .attr("height", 75);
-    addTextLabel(svg, width * 0.5 + 37, height * 0.57 + 100 + 20, "judging (j)", false);
-    addTextLabel(svg, width * (0.35 + 0.5)/2 + 37, height * 0.57 + 50, "vs.", false);
+    addTextLabel(svg, width * 0.5 + 37, height * 0.47 + 100 + 20, "judging (j)", false);
+    addTextLabel(svg, width * (0.35 + 0.5)/2 + 37, height * 0.47 + 50, "vs.", false);
 
     //
     // svg.append("image")
@@ -273,18 +273,18 @@ function drawPersonalityKey(svgClass) {
     svg.append("image")
         .attr('xlink:href', 'images/ESTP.svg')
         .attr("x", width * 0.3 - 75)
-        .attr("y", height * 0.85)
+        .attr("y", height * 0.75)
         .attr("width", 150)
         .attr("height", 150);
-    addTextLabel(svg, width * 0.2 - 20, height * 0.85, "example:", false, false);
-    addTextLabel(svg, width * 0.2 - 20, height * 0.85 + 15, "ESTP", false, false);
+    addTextLabel(svg, width * 0.2 - 20, height * 0.75, "example:", false, false);
+    addTextLabel(svg, width * 0.2 - 20, height * 0.75 + 15, "ESTP", false, false);
 
-    addTextLabel(svg, width * 0.65, height * 0.53, "We categorized personality types by", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 15, "their dominant function (i.e. Intuitors,", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 30, "Observers, Thinkers, and Feelers).", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 60, "In this visualization, we show how", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 75, "self-reported data coincides with each", true, false);
-    addTextLabel(svg, width * 0.65, height * 0.53 + 90, "personality-specific archetype.", true, false, true);
+    addTextLabel(svg, width * 0.65, height * 0.43, "We categorized personality types by", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.43 + 15, "their dominant function (i.e. Intuitors,", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.43 + 30, "Observers, Thinkers, and Feelers).", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.43 + 60, "In this visualization, we show how", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.43 + 75, "self-reported data coincides with each", true, false);
+    addTextLabel(svg, width * 0.65, height * 0.43 + 90, "personality-specific archetype.", true, false, true);
 }
 
 function addTextLabel(svg, x, y, text, isBold, isMiddle = true, isLink = false) {
@@ -547,7 +547,7 @@ function setUpMultipleLinesGraph(svg, x, y, personality, data1, data2, tooltip, 
 function setUpLeftPersonalityTitleIcon(svg, img, title) {
     svg.append("text")
         .attr("x", width * 0.07)
-        .attr("y", height * 0.5)
+        .attr("y", height * 0.5 -20)
         .text(title)
         .style("font-family", "Courier new")
         .style("text-anchor", "middle")
@@ -558,7 +558,7 @@ function setUpLeftPersonalityTitleIcon(svg, img, title) {
     svg.append("image")
         .attr('xlink:href', 'images/' + img + '.svg')
         .attr("x", width * 0.03)
-        .attr("y", height * 0.53)
+        .attr("y", height * 0.53-20)
         .attr("width", 75)
         .attr("height", 75);
 }

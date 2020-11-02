@@ -21,9 +21,9 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
     };
 
     imageAttr.x = width / 2 - imageAttr.width / 2;
-    imageAttr.y = height / 2 - imageAttr.height / 2;
+    imageAttr.y = height / 2 - (imageAttr.height / 2) - 20;
     imageAttr.centerX = imageAttr.x + imageAttr.width / 2;
-    imageAttr.centerY = imageAttr.y + imageAttr.height / 2;
+    imageAttr.centerY = imageAttr.y + (imageAttr.height / 2) - 20;
 
     svg.append('image')
         .attr('xlink:href', 'images/ikigai.svg')
@@ -185,7 +185,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
             let typeAverage = ikigaiMap['total'][type];
             let categoryAverage = ikigaiMap[category][type];
 
-            console.log(type)
+            // console.log(type)
             if (type == "Happiness") {
                 ikigaiGraph.append("rect")
                     .attr("x", -18)
@@ -262,7 +262,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
 
     let colorLegendAttr = {
         x: width - (width / 8) - 24,
-        y: height - padding * 2.5,
+        y: height - padding * 4,
         width: width / 8,
         circleRadius: 4,
         verticalPadding: 18,
@@ -277,7 +277,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
 
     let lineLegendAttr = {
         x: colorLegendAttr.x - (width / 8) - 24,
-        y: height - padding * 2.5,
+        y: height - padding * 4.25,
         width: width / 8,
         lineHeight: 24,
         verticalPadding: 12,
@@ -338,7 +338,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
             fontWeight: "bold"
         });
     });
-    baseAnnotationY = height * 0.7;
+    baseAnnotationY = height * 0.7 - 30;
     annotation = [
         "Zen masters are the happiest and profiteers",
         "are the saddest."
