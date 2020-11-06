@@ -1,4 +1,4 @@
-let mWidth = 300;
+flet mWidth = 300;
 let mHeight = 175;
 let iconDim = 100;
 let communicationList = ["b1", "b2", "b3", "b8", "b9"];
@@ -196,14 +196,14 @@ function drawPersonalityKey(svgClass) {
         .attr("y", height * 0.2)
         .attr("width", 100)
         .attr("height", 100);
-    addTextLabel(svg, width * 0.35 + 50, height * 0.2 + 100 + 20, "intuition (N)", false);
+    addTextLabel(svg, width * 0.35 + 50, height * 0.2 + 100 + 20, "intuitive (N)", false);
     svg.append("image")
         .attr('xlink:href', 'images/Observing.svg')
         .attr("x", width * 0.5)
         .attr("y", height * 0.2)
         .attr("width", 100)
         .attr("height", 100);
-    addTextLabel(svg, width * 0.5 + 50, height * 0.2 + 100 + 20, "observing (S)", false);
+    addTextLabel(svg, width * 0.5 + 50, height * 0.2 + 100 + 20, "observant (S)", false);
     addTextLabel(svg, width * (0.35 + 0.5)/2 + 50, height * 0.2 + 50, "vs.", false);
 
     svg.append("image")

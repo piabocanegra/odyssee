@@ -326,7 +326,7 @@ function drawIkigaiVis(svgClass, ikigaiData, email = null) {
 
     let baseAnnotationY = 72;
     let annotation = [
-        "Based on the four ikigai pillars, we found",
+        "Based on the four ikigai pillars, we determined",
         "four different profiles of people: profiteers,",
         "citizens, bohemians, and zen masters."
     ];
