@@ -219,7 +219,7 @@ function drawPersonalityKey(svgClass) {
         .attr("y", height * 0.47 + 15)
         .attr("width", 75)
         .attr("height", 75);
-    addTextLabel(svg, width * 0.5 + 37, height * 0.47 + 100 + 20, "judging (j)", false);
+    addTextLabel(svg, width * 0.5 + 37, height * 0.47 + 100 + 20, "judging (J)", false);
     addTextLabel(svg, width * (0.35 + 0.5)/2 + 37, height * 0.47 + 50, "vs.", false);
 
     //
