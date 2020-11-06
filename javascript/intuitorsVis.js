@@ -1,4 +1,4 @@
-flet mWidth = 300;
+let mWidth = 300;
 let mHeight = 175;
 let iconDim = 100;
 let communicationList = ["b1", "b2", "b3", "b8", "b9"];
