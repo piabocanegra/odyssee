@@ -67,18 +67,36 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     let height = svg.attr("height");
     let width = svg.attr("width");
 
-    drawTitle(svg, "Stressors and Corresponding Negative Activities");
+    // drawTitle(svg, "Stressors and Corresponding Negative Activities");
+    // draw custom title
+    svg.append('text')
+        .attr('x', 5)
+        .attr('y', height*0.3)
+        .text("Stressors and Corresponding")
+        .style("font-family", "Courier new")
+        .style("font-size", 25)
+        .style("fill", textColor)
+        .style("text-anchor", "start");
+      svg.append('text')
+          .attr('x', 5)
+          .attr('y', height*0.3 + 35)
+          .text("Negative Activities")
+          .style("font-family", "Courier new")
+          .style("font-size", 25)
+          .style("fill", textColor)
+          .style("text-anchor", "start");
 
     // console.log(personalityData);
     // console.log(everyoneData);
 
     let circleRadius = 170;
-    let circleRadiusIncrement = 100;
+    let circleRadiusIncrement = 70;
 
     let center = {
-        x: width / 2,
-        y: (height - padding * 2.5) / 2
+        x: width / 2 + 75,
+        y: (height - padding * 2.5) / 2 - padding*2.25
     };
+
 
     // Setup scales.
     let radialScale = d3.scaleBand()
@@ -271,33 +289,33 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     // Add annotation.
     // The sources of our stress are related to the activities we feel most negatively about.
     // For instance, those whose short term stressor is work are most stressed about collaborative virtual communication.
-    let baseY = height * 0.14
+    let baseY = height * 0.045
     drawText(svg, "The sources of our stress are related to the activities we feel", {
-        x: width / 2,
+        x: width / 2 + 75,
         y: baseY - 16,
         fontWeight: "bold"
     });
     drawText(svg, "most negatively about. Those whose short term stressor is work", {
-        x: width / 2,
+        x: width / 2 + 75,
         y: baseY,
         fontWeight: "bold"
     });
     drawText(svg, "are most stressed about collaborative virtual communication.", {
-        x: width / 2,
+        x: width / 2 + 75,
         y: baseY + 16,
         fontWeight: "bold"
     });
     svg.append("line")
-        .attr("x1", width / 2)
-        .attr("x2", width / 2)
+        .attr("x1", width / 2 + 75)
+        .attr("x2", width / 2 + 75)
         .attr("y1", baseY + 16 * 2)
         .attr("y2", baseY + 16 * 2 + 56)
         .attr("stroke", greyColor)
         .attr("stroke-width", 1.5)
         .attr("stroke-linecap", "round");
     svg.append("line")
-        .attr("x1", width * 0.37)
-        .attr("x2", width * 0.63)
+        .attr("x1", width * 0.41 + 75)
+        .attr("x2", width * 0.59 + 75)
         .attr("y1", baseY + 16 * 2 + 56)
         .attr("y2", baseY + 16 * 2 + 56)
         .attr("stroke", greyColor)
@@ -466,9 +484,9 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw mood legend.
     let moodLegendAttr = {
-        x: padding,
+        x: width - padding*5.25,
         // x: width / 3 / 2 + interLegendPadding + padding,
-        y: height - padding * 2.5,
+        y: height - padding * 10,
         width: width / 3 / 2 - interLegendPadding,
     };
     let moodLegend = svg.append("g")
@@ -480,9 +498,9 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw line legend.
     let lineLegendAttr = {
-        x: moodLegendAttr.x + moodLegendAttr.width + interLegendPadding / 2,
-        y: height - padding * 2.5,
-        width: width / 2,
+        x: width / 3 * 2 + interLegendPadding / 2 + padding*3.5,
+        y: height - padding * 11.5,
+        width: width / 2 - padding*8,
         iconSize: {
             long: 32,
             short: 22
@@ -566,8 +584,8 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw attitude legend.
     let attitudeLegendAttr = {
-        x: width / 3 * 2 + interLegendPadding / 2 + padding,
-        y: height - padding * 2.5,
+        x: width / 3 * 2 + interLegendPadding / 2 + padding*1.25,
+        y: height - padding * 8,
         width: width / 3 - interLegendPadding * 2 - padding,
     };
     let attitudeLegend = svg.append("g")

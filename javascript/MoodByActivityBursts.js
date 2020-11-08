@@ -193,7 +193,7 @@ function drawMoodByActivityBursts(svgClass, categoryMap, categoryFullMap, person
     d3.select("g#y_axis_bursts").select("path").remove();
 
     // add title
-    drawTitle(svg, title);
+    drawTitle(svg, title, 25);
 
     // add avg line + std legend
     svg.append("line")

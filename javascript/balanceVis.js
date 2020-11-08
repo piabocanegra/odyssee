@@ -397,7 +397,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail = null
     //     .style("stroke-width", 2.5);
 
     // add legends
-    drawStdDevAvgLegend(svg);
+    drawStdDevAvgLegend(svg, mEmail);
 
     let attitudeLegendAttr = {
         x: bWidth * 0.55,

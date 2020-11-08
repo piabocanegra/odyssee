@@ -273,7 +273,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
     // Draw mood legend.
     let moodLegendAttr = {
         x: 2 * padding,
-        y: height - padding * 2.5,
+        y: height - padding * 3.5,
         width: (width - 4 * padding) / 2,
     };
     let moodLegend = svg.append("g")
@@ -285,7 +285,7 @@ function drawHappinessDotPlot(svgClass, everyoneData, personalityData, email = n
 
     let stdLegendAttr = {
         x: moodLegendAttr.x + moodLegendAttr.width + padding,
-        y: height - padding * 2.5,
+        y: height - padding * 3.5,
         width: (width - 4 * padding) / 2,
     };
     let stdLegend = svg.append("g")

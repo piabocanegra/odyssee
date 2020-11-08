@@ -36,16 +36,16 @@
     <div style="text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
         <svg style="margin-top: 20; margin-bottom: 100" height="500" width="1000" class="indActFlower"></svg>
         <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="indBursts2"></svg>
-        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="thirtyDaysInd"></svg>
+        <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1400" class="thirtyDaysInd"></svg>
     </div>
     <p style="font-family:Courier New; font-size: 23; text-align: center; margin-left:auto; margin-right:auto; padding-top:50;"><b>Everyone’s data</b></p>
     <div style="text-align: center; color: #fff8eb; margin-bottom: 20px; display:block;">
       <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1300" class="occupationActivityVis"></svg>
       <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1000" class="depthBreadth"></svg>
-      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="valuesVis"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1200" class="valuesVis"></svg>
       <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1200" class="morningNightVis"></svg>
       <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1050" class="happinessDotPlot"></svg>
-      <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1000" class="stressorRadial"></svg>
+      <svg style="margin-top: 20; margin-bottom: 100" height="1000" width="1300" class="stressorRadial"></svg>
       <svg style="margin-top: 20; margin-bottom: 100" height="800" width="1400" class="ikigaiVis"></svg>
       <svg style="margin-top: 20; margin-bottom: 100" height="700" width="1300" class="balance"></svg>
       <svg style="margin-top: 20; margin-bottom: 100" height="750" width="1000" class="personalityKey"></svg>
@@ -250,9 +250,9 @@
 
             // TODO for Jamal + Yanlam: parameters change for personalized/not personalized
             // drawMoodByActivityBursts(".indBursts", categoryMap2, categoryFullMap3, everyoneData, "Moods for Most Frequent Activities", false);
-            drawMoodByActivityBursts(".indBursts2", categoryMap, categoryFullMap, personData3, "Moods for Most Frequent Activities", true);
+            drawMoodByActivityBursts(".indBursts2", categoryMap, categoryFullMap, personData3, "Moods for Your Most Frequent Activities", true);
 
-            drawIndActivityFlower(".indActFlower", "My Activity", personData3);
+            drawIndActivityFlower(".indActFlower", "Your Most Frequent Activities", personData3);
             // drawIndActivityFlower(".aggActFlower", "Most Frequent Activities", everyoneData, 15);
 
             var personalityData = await d3.csv("personality.csv");

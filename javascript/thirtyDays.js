@@ -31,7 +31,12 @@ function drawThirtyDaysVis(svgClass, timeData, email = null) {
     let svg = d3.select(svgClass);
     let height = svg.attr("height");
     let width = svg.attr("width");
-    drawTitle(svg, "30 days of odyssee: Most Frequent Activities");
+
+    if (email == null ) {
+      drawTitle(svg, "30 days of odyssee: Most Frequent Activities");
+    } else {
+      drawTitle(svg, "Your 30 days of odyssee: Most Frequent Activities");
+    }
 
     let dateTimeParser = d3.timeParse("%m/%d/%y %H:%M %p");
     timeData.forEach(d => {

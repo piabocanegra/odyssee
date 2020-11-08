@@ -34,12 +34,12 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
         .range([padding * 2, width - padding * 2]);
 
     // Add title.
-    drawTitle(svg, title);
+    drawTitle(svg, title, 150);
 
     // Function for drawing flower.
     function drawFlower(svgClass, centerX, centerY, length, flowerMap, n, petalDivisor) {
-        console.log("NNNNNNNNNNNN")
-        console.log(n)
+        // console.log("NNNNNNNNNNNN")
+        // console.log(n)
         let svg = d3.select(svgClass);
 
         // n: Number of petals.
@@ -108,11 +108,11 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
         .style("border-radius", "15px")
         .style("border", "1px solid #cdcdcd");
 
-    let petalChartBottomPadding = 140
-    let petalChartTopPadding = 80
+    let petalChartBottomPadding = padding * 5;
+    let petalChartTopPadding = 80;
 
-    let interFlowerPadding = 16
-    let flowerGraphWidth = width - padding * 4
+    let interFlowerPadding = 16;
+    let flowerGraphWidth = width - padding * 4;
     let petalScaleMaxYOptions = [
         (height - petalChartBottomPadding - petalChartTopPadding) / 2,
         (flowerGraphWidth - interFlowerPadding * (keyList.length - 1)) / keyList.length / 2
@@ -205,12 +205,12 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
     // Add legends.
     let moodLegendAttr = {
         x: padding,
-        y: height - padding * 2.5,
+        y: height - petalChartBottomPadding,
         width: width / 2 - (padding * 4)
     }
     let attitudeLegendAttr = {
         x: width / 2 + (padding * 3),
-        y: height - padding * 2.5,
+        y: height - petalChartBottomPadding,
         width: width - (width / 2 + (padding * 3)) - padding
     }
 
@@ -234,7 +234,7 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
         let attitudes = ["I want to", "I have to", "I want to and have to", "of something else; I neither want to nor have to"];
 
         let flowerPadding = 12;
-        let flowerCenter = { x: 0, y: padding * 1.65 - flowerPadding - 12 };
+        let flowerCenter = { x: 0, y: padding * 1.65 - flowerPadding - 12 - padding*2};
         let flowerPetalLength = 24;
 
         let count = 0;
@@ -265,7 +265,7 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
         // Add text.
         flowerLegend.append("text")
             .attr("x", 0)
-            .attr("y", padding * 1.65 - 16)
+            .attr("y", padding * 1.65 - 16 - padding*2)
             .style("text-anchor", "middle")
             .style("font-family", "Courier new")
             .style("fill", textColor)
@@ -275,7 +275,7 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
         // Add text.
         flowerLegend.append("text")
             .attr("x", 0)
-            .attr("y", padding * 1.65)
+            .attr("y", padding * 1.65 - padding*2)
             .style("text-anchor", "middle")
             .style("font-family", "Courier new")
             .style("fill", textColor)
