@@ -400,7 +400,7 @@ function drawBalanceGraph(svgClass, everyoneData, personalityData, mEmail = null
     drawStdDevAvgLegend(svg, mEmail);
 
     let attitudeLegendAttr = {
-        x: bWidth * 0.55,
+        x: bWidth * 0.6,
         y: height - padding * 2.5,
         width: bWidth * 0.1,
     };

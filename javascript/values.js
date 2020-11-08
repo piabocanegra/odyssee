@@ -162,7 +162,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
 
     // console.log(mostFrequentValues);
 
-    let graphStart = titleVerticalPadding + verticalPadding;
+    let graphStart = titleVerticalPadding + verticalPadding + 25;
     let graphEnd = height - legendVerticalPadding - valueImageSize - verticalPadding*2;
     let graphHeight = Math.floor((graphEnd - graphStart) / 4);
     let valueYScale = d3.scaleLinear()
@@ -192,7 +192,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     }
 
     let hoverRect = svg.append("rect")
-        .attr("height", graphEnd+padding*0.75)
+        .attr("height", graphEnd+padding*0.75 - 25)
         .attr("fill", "none")
         .attr("rx", 8)
         .attr("stroke", greyColor)
