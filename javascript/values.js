@@ -9,11 +9,12 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     let width = svg.attr("width");
     let titleVerticalPadding = 70;
     let legendVerticalPadding = padding * 2.5;
-    let verticalPadding = 72;
+    let verticalPadding = padding*0.75;
     let lineWidth = 2;
     let valueImageSize = 48;
     let imageSize = 56;
     let horizontalPadding = 24;
+    let horizontalShift = 150;
 
     drawTitle(svg, "Values");
     // console.log(typesData);
@@ -162,7 +163,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     // console.log(mostFrequentValues);
 
     let graphStart = titleVerticalPadding + verticalPadding;
-    let graphEnd = height - legendVerticalPadding - valueImageSize - verticalPadding;
+    let graphEnd = height - legendVerticalPadding - valueImageSize - verticalPadding*2;
     let graphHeight = Math.floor((graphEnd - graphStart) / 4);
     let valueYScale = d3.scaleLinear()
         .domain([0, 3])
@@ -174,10 +175,10 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     let staticWidth = valueImageSize + horizontalPadding * 4 + imageSize * 2;
     let lengthXScale = d3.scaleLinear()
         .domain([minUserCount, maxUserCount])
-        .range([staticWidth + ikigaiWidth, width - imageSize - 150]);
+        .range([staticWidth + ikigaiWidth+ horizontalShift, width - imageSize - 150]);
     let ikigaiXScale = d3.scaleBand()
         .domain(ikigaiGroups)
-        .range([staticWidth, staticWidth + ikigaiWidth]);
+        .range([staticWidth + horizontalShift, staticWidth + ikigaiWidth + horizontalShift]);
 
     // Add tooltip.
     let tooltipId = 'valuesVisTooltipId';
@@ -191,7 +192,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     }
 
     let hoverRect = svg.append("rect")
-        .attr("height", graphEnd)
+        .attr("height", graphEnd+padding*0.75)
         .attr("fill", "none")
         .attr("rx", 8)
         .attr("stroke", greyColor)
@@ -212,18 +213,18 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
 
         g.append("image")
             .attr("xlink:href", "images/" + valueLongtoShort[d.value] + ".svg")
-            .attr("x", 0)
+            .attr("x", horizontalShift)
             .attr("y", y - valueImageSize / 2)
             .attr("width", valueImageSize)
             .attr("height", valueImageSize);
         drawText(g, valueShortened[valueLongtoShort[d.value]], {
-            x: 0,
+            x: horizontalShift,
             y: y + valueImageSize / 2 + 4,
             alignmentBaseline: "hanging",
             textAnchor: "start"
         })
         g.append("line")
-            .attr("x1", valueImageSize + horizontalPadding)
+            .attr("x1", valueImageSize + horizontalPadding + horizontalShift)
             .attr("x2", lengthXScale(d.count) + imageSize)
             .attr("y1", y)
             .attr("y2", y)
@@ -234,28 +235,28 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
         g.append("image")
             .attr("class", "valuesImage")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.max] + ".svg")
-            .attr("x", valueImageSize + horizontalPadding * 2)
+            .attr("x", valueImageSize + horizontalPadding * 2 + horizontalShift)
             .attr("y", y - imageSize)
             .attr("width", imageSize)
             .attr("height", imageSize)
-            .attr("transform", "rotate(180 " + (valueImageSize + horizontalPadding * 2 + imageSize / 2) + " " + (y - imageSize / 2) + ")");
+            .attr("transform", "rotate(180 " + (valueImageSize + horizontalPadding * 2 + imageSize / 2 + horizontalShift) + " " + (y - imageSize / 2) + ")");
         g.append("image")
             .attr("class", "valuesImage")
             .attr("xlink:href", "images/" + occupationLongtoShort[underOverRepOccupation.min] + ".svg")
-            .attr("x", valueImageSize + horizontalPadding * 2)
+            .attr("x", valueImageSize + horizontalPadding * 2 + horizontalShift)
             .attr("y", y)
             .attr("width", imageSize)
             .attr("height", imageSize);
         g.append("image")
             .attr("xlink:href", "images/" + underOverRepActivities.max + ".svg")
-            .attr("x", valueImageSize + horizontalPadding * 3 + imageSize)
+            .attr("x", valueImageSize + horizontalPadding * 3 + imageSize + horizontalShift)
             .attr("y", y - imageSize)
             .attr("width", imageSize)
             .attr("height", imageSize)
             .attr("filter", function() { return "url(#Grey)"; });
         g.append("image")
             .attr("xlink:href", "images/" + underOverRepActivities.min + ".svg")
-            .attr("x", valueImageSize + horizontalPadding * 3 + imageSize)
+            .attr("x", valueImageSize + horizontalPadding * 3 + imageSize + horizontalShift)
             .attr("y", y)
             .attr("width", imageSize)
             .attr("height", imageSize)
@@ -315,7 +316,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
 
         }, {
             title: "occupation",
-            x: valueImageSize + horizontalPadding * 2,
+            x: valueImageSize + horizontalPadding * 2 + horizontalShift,
             y: y - imageSize,
             height: imageSize * 2,
             width: imageSize,
@@ -323,7 +324,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
                 "</br></br><b>UNDER-REPRESENTED OCCUPATION: </b>" + underOverRepOccupation.min.toLowerCase()
         }, {
             title: "activity",
-            x: valueImageSize + horizontalPadding * 3 + imageSize,
+            x: valueImageSize + horizontalPadding * 3 + imageSize + horizontalShift,
             y: y - imageSize,
             height: imageSize * 2,
             width: imageSize,
@@ -431,10 +432,11 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     drawIkigaiColorLegend(colorLegend, colorLegendAttr);
 
     let overrepLegendAttr = {
-        x: colorLegendAttr.x + colorLegendAttr.width + 32,
-        y: height - padding * 3,
+        // x: colorLegendAttr.x + colorLegendAttr.width + 32,
+        x: width - padding*9,
+        y: height - padding * 3.75,
         height: padding * 3,
-        width: width * 0.3,
+        width: width * 0.3 - 125,
         imageSize: 44
     };
 
@@ -468,7 +470,7 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
     overrepTextLegendText.forEach((paragraph, ip) => {
         paragraph.lines.forEach((line, il) => {
             drawText(overrepTextLegend, line, {
-                x: 0,
+                x: -25,
                 y: 16 * il + paragraph.extraPadding + 12 * ip,
                 textAnchor: "start"
             });
@@ -477,9 +479,9 @@ function drawValuesVis(svgClass, ikigaiData, typesData, everyoneData, email = nu
 
 
     let attitudeLegendAttr = {
-        x: overrepTextLegendAttr.x + overrepTextLegendAttr.width + 72,
-        y: height - padding * 2.5,
-        width: width - (overrepTextLegendAttr.x + overrepTextLegendAttr.width + 100),
+        x: colorLegendAttr.x + overrepTextLegendAttr.width + 72 + 150,
+        y: height - padding * 2.75,
+        width: width - (overrepTextLegendAttr.x + overrepTextLegendAttr.width + 100) - 150,
     };
 
     let attitudeLegend = svg.append("g")
