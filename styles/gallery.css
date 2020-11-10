@@ -305,7 +305,17 @@ text-decoration: white line-through;
   font-family: 'Courier New', Courier, monospace;
 }
 
+.mobile-overflow-scroll {
+  overflow-x: scroll;
+  max-width: 100vw;
+}
+
 @media (min-width: 768px) {
+  .mobile-overflow-scroll {
+    overflow-x: auto;
+    max-width: none
+  }
+
   .activity-grid-title {
     display: none;
   }
@@ -689,26 +699,6 @@ text-decoration: white line-through;
     margin-bottom: 8vh;
   }
 
-  #six {
-    justify-content: flex-end;
-  }
-
-  #seven {
-    justify-content: center;
-  }
-
-  #eight {
-    justify-content: flex-end;
-  }
-
-  #ten {
-    justify-content: flex-end;
-  }
-
-  #twelve {
-    justify-content: center;
-  }
-
   #time {
     min-width: 1700px;
     align-items: flex-end;
@@ -780,6 +770,73 @@ text-decoration: white line-through;
     justify-content: center;
     width: 100%;
     flex: 1;
+  }
+
+  #ikigai-vis {
+    min-width: 1400px;
+    justify-content: flex-end;
+  }
+
+  #occupation-vis {
+    min-width: 1300px;
+    justify-content: flex-end;
+  }
+
+  #depth-breadth-vis {
+    min-width: 1000px;
+  }
+
+  #values-vis {
+    margin-right: 150px;
+  }
+
+  #thirty-days-vis {
+    min-width: 1300px;
+    justify-content: center;
+  }
+
+  #morning-night-vis {
+    min-width: 1200px;
+    justify-content: flex-end;
+  }
+
+  #mood-by-activity-vis {
+    min-width: 1000px;
+  }
+
+  #happiness-vis {
+    min-width: 1050px;
+    justify-content: flex-end;
+  }
+
+  #stressor-radial-vis {
+    min-width: 1000px;
+    margin-right: 200px;
+  }
+
+  #balance-vis {
+    min-width: 1200px;
+  }
+
+  #personality-key-vis {
+    justify-content: center;
+  }
+
+  #intuitors-vis {
+    margin-right: 300px;
+    margin-left: 200px;
+    justify-content: center;
+  }
+
+  #feeler-thinker-vis {
+    min-width: 1200px;
+    margin-right: 200px;
+    justify-content: center;
+  }
+
+  #observer-vis {
+    margin-right: 200px;
+    justify-content: center;
   }
 
 }
