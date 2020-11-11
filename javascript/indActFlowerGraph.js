@@ -21,12 +21,12 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
 
     let keyList2 = Array.from(categoryFullMap.keys()).slice(0, numIcons);
     let keyList2Filtered = keyList2.filter(k => { return categoryFullMap.get(k) > 5 });
-    keyList2 = keyList2Filtered.length != 0 && keyList2Filtered.length < keyList2.length ? keyList2Filtered : keyList2;
-
+    // keyList2 = keyList2Filtered.length != 0 && keyList2Filtered.length < keyList2.length ? keyList2Filtered : keyList2;
+    keyList2 = keyListFiltered.length != 0 && keyListFiltered.length < keyList.length ? keyList2Filtered : keyList2;
 
     // Sort activities by greatest to least entries.
-    keyList.sort((a, b) => { return compareKeyList(a, b, personData) });
-    keyList2.sort((a, b) => { return compareKeyList(a, b, personData) });
+    // keyList.sort((a, b) => { return compareKeyList(a, b, personData) });
+    // keyList2.sort((a, b) => { return compareKeyList(a, b, personData) });
 
     // Setup scales.
     let xScale = d3.scaleBand()
@@ -125,7 +125,6 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
     // Draw flowers.
     keyList.forEach(function(d, i) {
         let data = getPersonDataByActivity(personData, d);
-        // console.log(data)
 
         // Initialize rounding offset.
         let roundingOffset = Math.round(Math.random());
@@ -176,8 +175,8 @@ function drawIndActivityFlower(svgClass, title, personData, divisor = null) {
             .attr('height', length)
             .style('filter', function() { return 'url(#Grey)'; })
             .on("mousemove", function() {
-                var tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].split("(")[0].toLowerCase() +
-                    "</br></br><b>FREQUENCY: </b>" + data.length;
+                var tooltipText = "<b>ACTIVITY:</b> " + keyList2[i].toLowerCase() +
+                    "</br></br><b>FREQUENCY: </b>" + categoryMap.get(d);
                 tooltip.html(tooltipText)
                     .style("text-align", "left")
                     .style("color", textColor)
