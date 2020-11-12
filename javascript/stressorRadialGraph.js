@@ -70,16 +70,16 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     // drawTitle(svg, "Stressors and Corresponding Negative Activities");
     // draw custom title
     svg.append('text')
-        .attr('x', 5)
-        .attr('y', height*0.3)
+        .attr('x', padding)
+        .attr('y', height*0.2)
         .text("Stressors and Corresponding")
         .style("font-family", "Courier new")
         .style("font-size", 25)
         .style("fill", textColor)
         .style("text-anchor", "start");
       svg.append('text')
-          .attr('x', 5)
-          .attr('y', height*0.3 + 35)
+          .attr('x', padding)
+          .attr('y', height*0.2 + 35)
           .text("Negative Activities")
           .style("font-family", "Courier new")
           .style("font-size", 25)
@@ -93,7 +93,7 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     let circleRadiusIncrement = 70;
 
     let center = {
-        x: width / 2 + 75,
+        x: width / 2 + padding*5,
         y: (height - padding * 2.5) / 2 - padding*2.25
     };
 
@@ -291,31 +291,31 @@ function drawStressorRadialGraph(svgClass, everyoneData, personalityData, email 
     // For instance, those whose short term stressor is work are most stressed about collaborative virtual communication.
     let baseY = height * 0.045
     drawText(svg, "The sources of our stress are related to the activities we feel", {
-        x: width / 2 + 75,
+        x: width / 2 + padding*5,
         y: baseY - 16,
         fontWeight: "bold"
     });
     drawText(svg, "most negatively about. Those whose short term stressor is work", {
-        x: width / 2 + 75,
+        x: width / 2 + padding*5,
         y: baseY,
         fontWeight: "bold"
     });
     drawText(svg, "are most stressed about collaborative virtual communication.", {
-        x: width / 2 + 75,
+        x: width / 2 + padding*5,
         y: baseY + 16,
         fontWeight: "bold"
     });
     svg.append("line")
-        .attr("x1", width / 2 + 75)
-        .attr("x2", width / 2 + 75)
+        .attr("x1", width / 2 + padding*5)
+        .attr("x2", width / 2 + padding*5)
         .attr("y1", baseY + 16 * 2)
         .attr("y2", baseY + 16 * 2 + 56)
         .attr("stroke", greyColor)
         .attr("stroke-width", 1.5)
         .attr("stroke-linecap", "round");
     svg.append("line")
-        .attr("x1", width * 0.41 + 75)
-        .attr("x2", width * 0.59 + 75)
+        .attr("x1", width * 0.41 + padding*5)
+        .attr("x2", width * 0.59 + padding*5)
         .attr("y1", baseY + 16 * 2 + 56)
         .attr("y2", baseY + 16 * 2 + 56)
         .attr("stroke", greyColor)
@@ -484,10 +484,10 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw mood legend.
     let moodLegendAttr = {
-        x: width - padding*5.25,
+        x: (width / 3 - interLegendPadding * 2)/2,
         // x: width / 3 / 2 + interLegendPadding + padding,
-        y: height - padding * 10,
-        width: width / 3 / 2 - interLegendPadding,
+        y: height - padding * 12.5,
+        width: width / 3 / 2 - interLegendPadding - padding*2,
     };
     let moodLegend = svg.append("g")
         .attr("class", "moodLegend")
@@ -498,8 +498,8 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw line legend.
     let lineLegendAttr = {
-        x: width / 3 * 2 + interLegendPadding / 2 + padding*3.5,
-        y: height - padding * 11.5,
+        x: (width / 2 - padding*8)/2,
+        y: height - padding * 14,
         width: width / 2 - padding*8,
         iconSize: {
             long: 32,
@@ -584,8 +584,8 @@ function drawStressorRadialGraphLegend(svg, categoryActivityMap, categoryActivit
 
     // Draw attitude legend.
     let attitudeLegendAttr = {
-        x: width / 3 * 2 + interLegendPadding / 2 + padding*1.25,
-        y: height - padding * 8,
+        x: (width / 3 - interLegendPadding * 2)/4 -padding/2,
+        y: height - padding * 10,
         width: width / 3 - interLegendPadding * 2 - padding,
     };
     let attitudeLegend = svg.append("g")
